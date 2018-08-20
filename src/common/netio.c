@@ -1,6 +1,10 @@
 /*Code inspired on t50 */
-#include "nymphenburg.h"
-#include "common/netio.h"
+#include <arpa/inet.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include "common/common.h"
 
 #define DELIM "."
 

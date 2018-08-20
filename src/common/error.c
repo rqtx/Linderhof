@@ -1,6 +1,4 @@
-#include <signal.h>
-#include <string.h>
-#include "nymphenburg.h"
+#include "common/common.h"
 
 void error_fatal( char * p_error )
 {

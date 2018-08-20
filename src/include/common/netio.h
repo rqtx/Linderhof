@@ -2,12 +2,7 @@
 #ifndef NETBASIC_H
   #define NETBASIC_H
 
-#include <arpa/inet.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <netinet/ip.h>
+#include <netinet/in.h> //struct sockaddr_in
 
 int create_socket( void );
 

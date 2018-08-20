@@ -7,5 +7,7 @@
 #define memalloc(pointer, size) memoryalloc( (void **)pointer, size, __func__)
 
 void memoryalloc( void ** p_ptr, size_t p_size, const char * const p_func );
+void memoryfree(void ** p_ptr);
+void memoryclean();
 
 #endif

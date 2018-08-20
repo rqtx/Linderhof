@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10.3)
-project(Nymphenburg)
+project(LINDERHOF)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
@@ -17,7 +17,7 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c11 -Wall -g -lpthread -D _DEFAULT_SOURCE")
 include_directories(src/include)
 
-set(NYMPHENBURG_SOURCES 
+set(LINDERHOF_SOURCES 
   src/main.c
   src/common/error.c
   src/common/memutils.c
@@ -25,4 +25,4 @@ set(NYMPHENBURG_SOURCES
 )
 
 
-add_executable(Nymphenburg ${NYMPHENBURG_SOURCES})
+add_executable(lhf ${LINDERHOF_SOURCES})
