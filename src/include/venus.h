@@ -6,4 +6,6 @@
 
 #include "common/common.h"
 
+typedef enum Mirror{ MEMCACHED, SSPD } MirrorId;
+
 #endif

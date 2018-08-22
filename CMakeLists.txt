@@ -19,9 +19,14 @@ include_directories(src/include)
 
 set(LINDERHOF_SOURCES 
   src/main.c
+
   src/common/error.c
   src/common/memutils.c
   src/common/netio.c
+
+  src/commander/linderhof/linderhof.c
+  src/commander/linderhof/hom.c
+  src/commander/linderhof/planner.c
 )
 
 
