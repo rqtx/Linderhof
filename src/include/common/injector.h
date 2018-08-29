@@ -26,7 +26,7 @@ typedef struct {
   Packet *pkt;
   int socket;
   unsigned int pktCounter; 
-  unsigned int incFrequency; //Time of throughput increment frequency in minutes
+  unsigned int incFrequency; //Time of throughput increment frequency in seconds
   float incThroughput;
   time_t timer; //Duration of attack in seconds 0 == INF
   pthread_mutex_t lock;
@@ -38,8 +38,8 @@ typedef struct {
  *
  * @param p_pkt[in] Packet pointer to inject.
  * @param p_thp[in] Initial throughput
- * @param p_time[in] Injection time of operation
- * @param p_incTime[in] Injection increment throughput time
+ * @param p_time[in] Injection time of operation (Minutes)
+ * @param p_incTime[in] Injection increment throughput time (Minutes)
  * @param p_incThp[in] Injection throughput increment size
  * @return Injector Id
  */

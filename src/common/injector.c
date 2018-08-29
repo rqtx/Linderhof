@@ -239,7 +239,7 @@ int CreateInjection( Packet *p_pkt, float p_thp, unsigned int p_time, unsigned i
   newInject->socket = create_socket();
   newInject->pktCounter = 0;
   newInject->timer = p_time * 60;
-  newInject->incFrequency = p_incTime;
+  newInject->incFrequency = p_incTime * 60;
   newInject->incThroughput = p_incThp;
   newInject->monitor.status = CREATED;
 
