@@ -85,6 +85,10 @@ void memoryalloc( void ** p_ptr, size_t p_size, const char * const p_func )
 void memoryfree(void ** p_ptr)
 {
 
+  if( NULL == p_ptr  || NULL == *p_ptr ){
+    return;
+  }
+
   for( MemoryData *aux = memoryAllocad; aux != NULL; aux = aux->next )
   {
     if(aux->memory == *p_ptr)

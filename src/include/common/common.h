@@ -14,6 +14,7 @@
 #include "common/error.h"
 #include "common/memutils.h"
 #include "common/netio.h"
+#include "common/list.h"
 
 #define true 1
 #define false 0

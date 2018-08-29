@@ -92,7 +92,7 @@ bool send_data(const void *buf, size_t len, struct sockaddr *saddr)
 
  
 /* return true if IP string is valid, else return false */
-bool Is_valid_ipv4(char * ip_str)
+bool is_valid_ipv4(char * ip_str)
 {
   int dots = 0;
   char ip_copy[16];
@@ -138,4 +138,12 @@ bool Is_valid_ipv4(char * ip_str)
   }
 
   return true;
+}
+
+void release_packet( Packet *p_pkt )
+{
+  memfree( &p_pkt->packet_ptr );
+  memfree( &p_pkt->ip_dest );
+  memfree( &p_pkt->saddr );
+  memfree( &p_pkt );
 }
