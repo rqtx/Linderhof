@@ -15,6 +15,7 @@
 #include "common/memutils.h"
 #include "common/netio.h"
 #include "common/list.h"
+#include "common/signalsHandler.h"
 
 #define true 1
 #define false 0

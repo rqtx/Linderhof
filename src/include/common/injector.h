@@ -8,28 +8,28 @@
 typedef enum { CREATED, RUNNING, PAUSED }InjetorStatus;
 
 typedef struct { 
-  InjetorStatus status;
-  float throughputExpected; //Mb/s (MAX == 0);
-  float throughputCurrent;
+    InjetorStatus status;
+    float throughputExpected; //Mb/s (MAX == 0);
+    float throughputCurrent;
 }InjectionMonitor;
 
 typedef struct {
-  pthread_t id;
-  bool running;  
+    pthread_t id;
+    bool running;  
 }ThreadStat;
 
 typedef struct {
-  int injectorId;
-  InjectionMonitor monitor;
-  ThreadStat *threads;
-  unsigned int bucketSize;
-  Packet *pkt;
-  int socket;
-  unsigned int pktCounter; 
-  unsigned int incFrequency; //Time of throughput increment frequency in seconds
-  float incThroughput;
-  time_t timer; //Duration of attack in seconds 0 == INF
-  pthread_mutex_t lock;
+    int injectorId;
+    int socket;
+    InjectionMonitor monitor;
+    ThreadStat *threads;
+    Packet *pkt;
+    unsigned int bucketSize;
+    unsigned int pktCounter; 
+    float incThroughput;
+    unsigned int incFrequency; //Time of throughput increment frequency in seconds
+    time_t timer; //Duration of attack in seconds 0 == INF
+    pthread_mutex_t lock;
 }Injector;
 
 
@@ -52,7 +52,9 @@ int CreateInjection( Packet *p_pkt, float p_thp, unsigned int p_time, unsigned i
  * @return 1 if SUCCESS 0 if ERROR
  */
 int InjectionResume(int p_id);
+
 int InjectionPause(int p_id);
-int InjectionDestroy(int p_id);
+int InjectionDestroy(int p_id, bool p_track);
+void DestroyAllInjectors();
 
 #endif          /*INJECTOR_H*/

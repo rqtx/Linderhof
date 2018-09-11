@@ -4,7 +4,7 @@
 
 #include "venus.h"
 
-LhfDraft * CreateEmptyDraft();
-void LhfStartController( LhfDraft *p_draft);
+void LinderhofMaster();
+int AddMirrorAttack( LhfDraft p_draft );
 
 #endif

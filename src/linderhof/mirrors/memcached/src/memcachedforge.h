@@ -70,8 +70,8 @@ typedef struct MemcachedSetExtraData {
   uint32_t expiration;
 }MemcachedSetExtra;
 
-void ReleasePacket( Packet ** pkt);
-
 Packet * ForgeMemcachedUDP( char *ip_dest, char *ip_src, int dest_port, int src_port, int opcode );
+Packet * ForgeMemcachedPacket( void *p_arg );
+Packet * ForgeMemcachedCommand(void *p_arg);
 
 #endif

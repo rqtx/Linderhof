@@ -2,26 +2,33 @@
 #ifndef NETIO_H
   #define NETIO_H
 
+#include <arpa/inet.h>  //strcut sockaddr
 #include <netinet/in.h> //struct sockaddr_in
 #include "common/common.h"
 
+#define BLOCK true
+#define NO_BLOCK false
+
+typedef enum { Empty = 1, LHF, UDP, TCP } NetType;
+
 typedef struct  PacketData {
+  NetType type;
   void *packet_ptr;
   size_t pkt_size;
-  char *ip_dest;
+  char ip_dest[16];
   int dest_port;
-  struct sockaddr_in *saddr;
+  struct sockaddr_in saddr;
 }Packet;
 
-int create_socket( void );
+int CreateSocket( NetType p_type, bool p_blk);
+void CloseSocket( int fd);
+int SetSocketFlag( int p_socket, int p_flags );
+int BlockSocket(int p_fd, bool blocking);
 
-void close_socket( int fd);
+Packet * CreateEmptyPacket( );
+void ReleasePacket( Packet *p_pkt );
+int SendPacket( int p_socket, Packet *p_pkt );
 
-bool send_packet(int socket, const void *buf, size_t len, struct sockaddr *saddr);
-
-bool send_data(const void *buf, size_t len, struct sockaddr *saddr);
 
 bool is_valid_ipv4(char * ip_str);
-
-void release_packet( Packet *p_pkt );
 #endif      //NETIO_H

@@ -7,7 +7,7 @@
 typedef struct {
   MirrorType type;
   void * atkData;
-  void *(*atk_cmd)(void *);
+  int (*atk_cmd)(void *);
 }LhfPlan;
 
 typedef struct MirrorStatusData{
@@ -21,7 +21,6 @@ typedef struct MirrorStatusData{
 typedef struct MirrorData{
   pthread_t id;
   LhfPlan *plan;
-  struct MirrorData *next;
 }Mirror;
 
 void HallOfMirrors( LhfPlan *p_plan );

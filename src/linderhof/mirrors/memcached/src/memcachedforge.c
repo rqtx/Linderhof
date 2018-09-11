@@ -6,83 +6,12 @@
 #include <sys/types.h>
 
 #include "strix.h"
-#include "packetforge.h"
+#include "memcachedforge.h"
 
-static uint16_t ip_checksum(const void *buf, size_t hdr_len)
+
+Packet * ForgeMemcachedPacket( void *p_arg )
 {
-  unsigned long sum = 0;
-  const uint16_t *ip1;
- 
-  ip1 = buf;
-  while (hdr_len > 1){
-    sum += *ip1++;
-    if (sum & 0x80000000)
-    sum = (sum & 0xFFFF) + (sum >> 16);
-    hdr_len -= 2;
-  }
- 
-  while (sum >> 16){
-    sum = (sum & 0xFFFF) + (sum >> 16);
-  }
-
-  return(~sum);
-}
-
-static Packet * forgeUDP(char * ip_dest, char * ip_src, int dest_port, int src_port, char * payload_data, int payload_size)
-{
-  
-  char * datagram;
-  struct sockaddr_in *saddr = NULL;
-  Packet *pac = NULL;
-  
-  memalloc( &pac, sizeof(Packet) );
-  memalloc( &pac->ip_dest, strlen(ip_dest)+1);
-  memalloc( (void *)&datagram, sizeof(struct iphdr) + sizeof(struct udphdr) + payload_size );
-  memalloc( &saddr, sizeof(struct sockaddr_in) );
-
-  saddr->sin_family = AF_INET;
-  saddr->sin_port = htons(dest_port);
-  saddr->sin_addr.s_addr = inet_addr(ip_dest);
-
-  struct iphdr *ip_header = (struct iphdr *)datagram;                                  // Pointer to the beginning of ip header
-  struct udphdr *udp_header = (struct udphdr *)(datagram + sizeof(struct iphdr));   // Pointer to the beginning of udp header
-    
-  char * payload_ptr = (datagram + sizeof(struct iphdr) + sizeof(struct udphdr));               // Pointer to the beginning of payload
-  
-  if(NULL != payload_data){
-    memcpy(payload_ptr, payload_data, payload_size);
-  }
-
-  //IP Header
-  ip_header->version = 4;
-  ip_header->ihl = 5;
-  ip_header->tot_len = sizeof (struct iphdr) + sizeof (struct udphdr) + payload_size;
-  ip_header->tos = 0;
-  ip_header->frag_off = 0;		    // no fragment = 0
-  ip_header->ttl = 64;			    // default value = 64
-  ip_header->protocol = IPPROTO_UDP;
-  ip_header->check = ip_checksum(datagram, ip_header->tot_len);
-  inet_pton(AF_INET, ip_dest, (struct in_addr *)&ip_header->daddr);
-  inet_pton(AF_INET, ip_src, (struct in_addr *)&ip_header->saddr);
-
-  //UDP header
-  udp_header->source = htons(src_port);
-  udp_header->dest = htons(dest_port);
-  udp_header->len = htons(sizeof(struct udphdr) + payload_size);
-  udp_header->check = 0;
-  
-  pac->packet_ptr = datagram;
-  pac->pkt_size = ip_header->tot_len;
-  strcpy( pac->ip_dest, ip_dest);
-  pac->dest_port = dest_port;
-  pac->saddr = saddr;
-
-  return pac;
-}
-
-static Packet * forgeMemcached( int opcode )
-{
-
+  int *opcode = (int *)p_arg;
   Packet *pac = NULL;
   char * mem_packet;
   MemcachedRequestHeader * mem_header = NULL; 
@@ -92,7 +21,7 @@ static Packet * forgeMemcached( int opcode )
 
   memalloc( (void *)&pac, sizeof(Packet) );
 
-  switch( opcode ){
+  switch( *opcode ){
     case MEMCACHED_GET :
       packetSize = sizeof( MemcachedRequestHeader ) + MAXSIZE_MEMCACHED_KEY;
       memalloc( (void *)&mem_packet, packetSize );
@@ -149,15 +78,16 @@ static Packet * forgeMemcached( int opcode )
   return pac;
 }
 
-static Packet * createMemcachedCommand(int opcode)
+Packet * ForgeMemcachedCommand(void *p_arg)
 {
+  int *opcode = (int*) p_arg;
   char *cmd = NULL;
   Packet *pac = NULL;
   MemcachedSetCmd *cmdSet = NULL;
 
   memalloc( (void *)&pac, sizeof(Packet) );
 
-  switch( opcode ){
+  switch( *opcode ){
     case MEMCACHED_GET :
       
       memalloc( (void *)&cmd, MAXSIZE_MEMCACHED_KEY + 50 );
@@ -196,41 +126,4 @@ static Packet * createMemcachedCommand(int opcode)
 
   return pac;
 }
-
-Packet * ForgeMemcachedUDP(char* ip_dest, char* ip_src, int dest_port, int src_port, int opcode)
-{
-  Packet *pac = NULL;
-  Packet *memcachedPac;
   
-  switch( opcode )
-  {
-    case MEMCACHED_GET:
-      memcachedPac = forgeMemcached(MEMCACHED_GET);
-      break;
-
-    case MEMCACHED_SET:
-      memcachedPac = forgeMemcached(MEMCACHED_SET);
-      break;
-    
-    case MEMCACHED_STAT:
-    default:
-      memcachedPac = forgeMemcached(MEMCACHED_STAT);
-  }
-   
-  pac = forgeUDP( ip_dest, ip_src, dest_port, src_port, memcachedPac->packet_ptr, memcachedPac->pkt_size);
-  
-  ReleasePacket(&memcachedPac);
-
-  return pac;
-}
-
-void ReleasePacket( Packet ** p_pkt)
-{
-  if(NULL != *p_pkt){
-    memfree((*p_pkt)->packet_ptr);
-    memfree((*p_pkt)->ip_dest);
-    memfree(*p_pkt);
-    *p_pkt = NULL;
-  }
-}
-

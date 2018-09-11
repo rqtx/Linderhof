@@ -7,24 +7,19 @@
 #define FAIL -1
 #define STRIKE 0
 
-int ExecuteAttack( AttackData * atkData )
+int ExecuteAttack( AttackPlan * atkData )
 {
-  if( !send_data(atkData->setPacket->packet_ptr, atkData->setPacket->pkt_size, (struct sockaddr *)atkData->setPacket->saddr) ){
+  int sock = CreateSocket( UDP, false );
+
+  if( SendPacket(sock, atkData->setPacket) < 0 ){
+    CloseSocket(sock);
     return FAIL;
   }
    
   atkData->injectorId = CreateInjection( atkData->getPacket, atkData->initialThroughput, atkData->timer, atkData->incFrequency, atkData->incThroughput );
   InjectionResume( atkData->injectorId );  
   
+  CloseSocket(sock);
   return STRIKE;
-}
-
-void DestroyAttack( AttackData * atkData )
-{
-  if( NULL == atkData ){
-    return;
-  }
-
-  InjectionDestroy(atkData->injectorId);
 }
 

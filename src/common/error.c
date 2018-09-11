@@ -1,12 +1,34 @@
 #include "common/common.h"
 
-void error_fatal( char * p_error )
+void defaultHandler();
+
+typedef struct {
+    void (*func)(int); 
+}Error;
+
+Error err = {
+    .func = defaultHandler
+};
+
+void defaultHandler( int p_errorCode )
 {
-  fputs(p_error, stderr);
-  raise(SIGABRT);
+    memoryclean();
+    exit(p_errorCode);
 }
 
-void error_warning (char * p_error)
+void Efatal( int p_errorCode, char * p_error )
 {
-  perror(p_error);
+    perror(p_error);
+    err.func(p_errorCode);
+}
+
+int Elog(int p_code, char * p_msg)
+{
+    fprintf( stdout, p_msg );
+    return p_code;
+}
+
+void ESetErroAction( void p_func( int ) )
+{
+    err.func = p_func;
 }

@@ -4,9 +4,11 @@
 #include <fcntl.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+
 #include "common/common.h"
 
 #define DELIM "."
+
 
 /* return true if string contain only digits, else return false */
 static bool _valid_digit(char * ip_str)
@@ -22,40 +24,64 @@ static bool _valid_digit(char * ip_str)
   return true;
 }
 
-int create_socket( void )
+int createTCPsocket( bool p_blk )
 {
-  int fd, flag;
-  uint32_t n = 1;
-
-  if ((fd = socket(AF_INET, SOCK_RAW, IPPROTO_RAW)) == -1)
-  {
-    error_fatal("Cannot open raw socket\n");
-  }
-
-/* Try to change the socket mode to NON BLOCKING. */
-  if ((flag = fcntl(fd, F_GETFL)) == -1)
-  {
-    error_fatal("Cannot get socket flags\n");
-  }
-
-  if (fcntl(fd, F_SETFL, flag | O_NONBLOCK) == -1)
-  {
-    error_fatal("Cannot set socket to non-blocking mode\n");
-  }
-
-
-  /* Setting IP_HDRINCL. */
-  /* NOTE: We will provide the IP header, but enabling this option, on linux,
-           still makes the kernel calculates the checksum and total_length. */
-  if ( setsockopt(fd, IPPROTO_IP, IP_HDRINCL, &n, sizeof(n)) == -1 )
-  {
-    error_fatal("Cannot set socket options\n");
-  }
-
-  return fd;
+    int fd;
+    if ( (fd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0)
+    {
+        ELOG(ERROR_NET, "Cannot open TCP socket\n"); 
+    }
+    BlockSocket( fd, p_blk); 
+    return fd;
 }
 
-void close_socket( int fd)
+int createRAWsocket(  bool p_blk )
+{
+    int fd;
+    uint32_t n = 1;
+
+    if ((fd = socket(AF_INET, SOCK_RAW, IPPROTO_RAW)) == -1)
+    {
+        ELOG(ERROR_NET, "Cannot open raw socket\n");
+    }
+    BlockSocket( fd, p_blk ); 
+
+    /* Setting IP_HDRINCL. */
+    /* NOTE: We will provide the IP header, but enabling this option, on linux,
+                still makes the kernel calculates the checksum and total_length. */
+    if ( setsockopt(fd, IPPROTO_IP, IP_HDRINCL, &n, sizeof(n)) == -1 )
+    {
+        ELOG(ERROR_NET, "Cannot set socket options\n");
+    }
+
+    return fd;
+}
+
+/** 
+ * Create socket.
+ *
+ * @param p_type socket type
+ * @param p_blk 0:non-blocking mode, 1:blocking mode
+ *
+ * @return socket file descriptor or error if < 0.
+ **/
+int CreateSocket( NetType p_type, bool p_blk )
+{
+  switch(p_type)
+  {
+    case TCP:
+      return createTCPsocket(p_blk);
+      break;
+    case UDP:
+    default:
+      return createRAWsocket(p_blk);
+      break;
+      
+  }
+}
+
+
+void CloseSocket( int fd )
 {
   /* Close only if the descriptor is valid. */
   if (fd > 0)
@@ -67,29 +93,70 @@ void close_socket( int fd)
   }
 }
 
-bool send_packet(int socket, const void *buf, size_t len, struct sockaddr *saddr)
+int SetSocketFlag( int p_socket, int p_flags )
 {
-  if( -1 == sendto(socket, buf, len, MSG_NOSIGNAL, saddr, sizeof(struct sockaddr_in)) ){
-    if (errno == EPERM){
-      error_warning("Cannot send packet (Permission!?). Please check your firewall rules (iptables?).\n");
+    int flags;
+
+    if ((flags = fcntl(p_socket, F_GETFL)) == -1)
+    {
+        ELOG(ERROR_NET, "Cannot get socket flags\n");
+    }
+    
+    flags |= p_flags;
+
+    if (fcntl(p_socket, F_SETFL, flags) == -1)
+    {
+        ELOG(ERROR_NET, "Cannot set socket flags\n");
     }
 
-    return false;
-  }
-
-  return true;
+    return SUCCESS;
 }
 
-bool send_data(const void *buf, size_t len, struct sockaddr *saddr)
+/** 
+ * Set a file descriptor to blocking or non-blocking mode.
+ *
+ * @param fd The file descriptor
+ * @param blocking 0:non-blocking mode, 1:blocking mode
+ *
+ * @return 0:success, rtn < 0:failure.
+ **/
+int BlockSocket(int p_fd, bool blocking) 
 {
-  int socket = create_socket();
-  bool rtn;
+    int flags = 0;
 
-  rtn = send_packet(socket, buf, len, saddr);
-  close_socket(socket);
-  return rtn;
+    if (blocking)
+        flags &= ~O_NONBLOCK;
+    else
+        flags |= O_NONBLOCK;
+
+    return SetSocketFlag( p_fd, flags );
 }
 
+Packet * CreateEmptyPacket( )
+{
+    Packet *pac = NULL;
+    memalloc( &pac, sizeof(Packet) );
+    pac->type = Empty;
+    return pac;
+}
+
+void ReleasePacket( Packet *p_pkt )
+{
+  memfree( &p_pkt->packet_ptr );
+  memfree( &p_pkt );
+}
+
+int SendPacket(int p_socket, Packet *p_pkt)
+{
+  if( -1 == sendto(p_socket, p_pkt->packet_ptr, p_pkt->pkt_size, MSG_DONTWAIT ,  (struct sockaddr *) &p_pkt->saddr, sizeof(struct sockaddr_in)) )
+  {
+      if( errno != EAGAIN && errno != EWOULDBLOCK)
+      {
+        ELOG(ERROR_NET, "Cannot send packet (Permission!?). Please check your firewall rules (iptables?).\n");
+      }
+  }
+  return SUCCESS;
+}
  
 /* return true if IP string is valid, else return false */
 bool is_valid_ipv4(char * ip_str)
@@ -140,10 +207,4 @@ bool is_valid_ipv4(char * ip_str)
   return true;
 }
 
-void release_packet( Packet *p_pkt )
-{
-  memfree( &p_pkt->packet_ptr );
-  memfree( &p_pkt->ip_dest );
-  memfree( &p_pkt->saddr );
-  memfree( &p_pkt );
-}
+

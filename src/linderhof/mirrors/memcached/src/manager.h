@@ -13,12 +13,7 @@ typedef struct {
   int incThroughput;
   int incFrequency;          
   int timer;             
-}AttackData;
-
-typedef struct {
-  AttackData **atkPlans;
-  int totalPlans;
-}AttackPlan; 
+}AttackPlan;
 
 int StrixManager( void * draft, int draftSize);
 void * CreateDefaultDraft( char* target_ip, char* amp_ip );

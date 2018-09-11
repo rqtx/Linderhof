@@ -57,3 +57,5 @@ build/
 
 #Files
 compile_commands.json
+*.gdbinit
+gdb.txt

@@ -4,12 +4,7 @@
 
 int main( int argc, char **argv)
 {
-  LhfDraft * draft = NULL;
-
-  draft = cliParser(argc, argv);
-  LhfStartController(draft);
-  
+  LinderhofMaster();
   memoryclean();
-
   return 0;
 }

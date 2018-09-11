@@ -6,13 +6,15 @@
 
 #include "common/common.h"
 
-typedef enum { NOTSET, MEMCACHED, SSDP } MirrorType;
+#define DEFAULT_COMPORT 2056
+
+typedef enum { NOTSET, TEST, MEMCACHED, SSDP } MirrorType;
 typedef enum { UP, DOWN } VictimStatus;
 
 typedef struct {
   MirrorType type;
-  char * target_ip;
-  char * amp_ip;
+  char target_ip[16];
+  char amp_ip[16];
   int target_port;
   int amp_port;
   float initialThroughput;

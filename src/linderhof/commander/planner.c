@@ -1,6 +1,7 @@
 #include "venus.h"
 #include "commander/hom.h"
 #include "mirrors/memcached.h"
+#include "mirrors/mirrortest.h"
 
 LhfPlan * Planner( LhfDraft *p_draft )
 {
@@ -16,9 +17,12 @@ LhfPlan * Planner( LhfDraft *p_draft )
         memcpy( plan->atkData, p_draft, sizeof(LhfDraft));
         plan->atk_cmd = ExecuteMemcachedMirror;
         break;
+      case TEST:
       default:
+        plan->type = TEST;
+        memcpy( plan->atkData, p_draft, sizeof(LhfDraft));
+        plan->atk_cmd = ExecuteTestMirror;
         break;
-        //Default attack
     }
 
     return plan;
