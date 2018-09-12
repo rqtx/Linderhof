@@ -16,7 +16,7 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O0")
 #set ( PROJECT_LINK_LIBS libstrix.so )
 #link_directories( libs )
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c11 -Wall -g -lpthread -D _DEFAULT_SOURCE")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c11 -Wall -g -lpthread -lcap -D _DEFAULT_SOURCE")
 include_directories(src/include)
 
 file(GLOB LINDERHOF src/linderhof/main.c src/linderhof/commander/*.c src/interface/*.c src/linderhof/mirrors/*/src/*.c src/common/*.c)

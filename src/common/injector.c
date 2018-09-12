@@ -40,72 +40,82 @@ static List * getInjectorListById( int p_id )
 
 static void *_trafficshapingHandler( void *p_id )
 {
-  int *id = (int *)p_id;
-  Injector *inj = ListToInjector(getInjectorListById(*id));
+    int *id = (int *)p_id;
+    Injector *inj = ListToInjector(getInjectorListById(*id));
   
-  if( NULL == inj ){
-    return NULL; //Keep compiler quiet
-  }
+    if( NULL == inj )
+    {
+        inj->threads[TRAFFIC_SHAPING].running = false;
+        return NULL; //Keep compiler quiet
+    }
 
-  while(1)
-  {
-    inj->bucketSize = (inj->monitor.throughputExpected * MEGABYTE) / inj->pkt->pkt_size;
-    nanosleep(&_onesec, NULL);
-  }
+    while(1)
+    {
+        inj->bucketSize = (inj->monitor.throughputExpected * MEGABYTE) / inj->pkt->pkt_size;
+        nanosleep(&_onesec, NULL);
+    }
     
-  return NULL; //kepp compiler quiet
+    return NULL; //kepp compiler quiet
 }
 
 static void *_throughputMonitorHandler( void *p_id )
 {
-  float sample = 0;
-  int *id = (int *)p_id;
-  Injector *inj = ListToInjector(getInjectorListById(*id));
+    float sample = 0;
+    int *id = (int *)p_id;
+    Injector *inj = ListToInjector(getInjectorListById(*id));
   
-  if( NULL == inj ){
-    return NULL; //Keep compiler quiet
-  }
-  
-  while(1)
-  {
-    for(int i = 0; i < SAMPLING; i++)
-    { 
-      inj->pktCounter = 0;
-      nanosleep(&_onesec, NULL);
-      sample += inj->pkt->pkt_size * inj->pktCounter;
+    if( NULL == inj )
+    {
+        inj->threads[MONITOR].running = false;
+        return NULL;
     }
+  
+    while(1)
+    {
+        for(int i = 0; i < SAMPLING; i++)
+        { 
+            inj->pktCounter = 0;
+            nanosleep(&_onesec, NULL);
+            sample += inj->pkt->pkt_size * inj->pktCounter;
+        }
  
-    inj->monitor.throughputCurrent = (sample/SAMPLING)/MEGABYTE;
-    sample = 0;
-    nanosleep(&_onesec, NULL);
-  };
+        inj->monitor.throughputCurrent = (sample/SAMPLING)/MEGABYTE;
+        sample = 0;
+        nanosleep(&_onesec, NULL);
+    }
 
   return NULL; //Keep compiler quiet
 }
 
 static void *_injectorHandler( void *p_id )
 { 
-    int *id = (int *)p_id;
+    int *id = (int *)p_id; 
     Injector *inj = ListToInjector(getInjectorListById(*id));
     if( NULL == inj )
     {
-        return NULL; //Keep compiler quiet
+        inj->threads[INJECTOR].running = false;
+        return NULL;
     }
     
-    inj->socket = CreateSocket( UDP, false );
     while(1)
     {
         while( inj->bucketSize || ( inj->monitor.throughputExpected <= 0 ) )
         {
             pthread_mutex_lock(&inj->lock);
-            if( SendPacket(inj->socket, inj->pkt) != 0 )
+            
+            if(-1 == inj->socket)
             {
-                CloseSocket(inj->socket);
-                inj->threads[INJECTOR].running = false;
-                Efatal( ERROR_NET, "Injection ERROR_INJECTOR\n");
+                int on=1;
+                inj->socket = CreateSocket( UDP, NO_BLOCK );
+                setsockopt(inj->socket, SOL_SOCKET, SO_BROADCAST, &on, sizeof(on));
             }
-            inj->bucketSize--;
-            inj->pktCounter++;
+
+            if( 0 == SendPacket(inj->socket, inj->pkt) )
+            {
+                //Packet was sent
+                inj->bucketSize--;
+                inj->pktCounter++;
+            }
             pthread_mutex_unlock(&inj->lock);
         }
   };
@@ -115,30 +125,34 @@ static void *_injectorHandler( void *p_id )
 
 static void *_timerHandler( void *p_id )
 {
-  int *id = (int *)p_id;
-  Injector *inj = ListToInjector(getInjectorListById(*id));
-  struct timespec timeWait;
+    int *id = (int *)p_id;
+    Injector *inj = ListToInjector(getInjectorListById(*id));
+    struct timespec timeWait;
 
-  if( NULL == inj ){
-    return NULL; //Keep compiler quiet
-  }
+    if( NULL == inj )
+    {
+        inj->threads[TIMER].running = false;
+        return NULL;
+    }
   
-  timeWait.tv_sec = inj->timer;
-  nanosleep(&timeWait, NULL);
-  InjectionDestroy(*id, true);
+    timeWait.tv_sec = inj->timer;
+    nanosleep(&timeWait, NULL);
+    InjectionDestroy(*id, true);
 
-  return NULL; //Keep compiler quiet
+    return NULL; //Keep compiler quiet
 }
 
 // Throughput increment
 static void * _thpincHandler( void *p_id )
 {
-  int *id = (int *)p_id;
-  Injector *inj = ListToInjector(getInjectorListById(*id));
-  struct timespec timeWait;
+    int *id = (int *)p_id;
+    Injector *inj = ListToInjector(getInjectorListById(*id));
+    struct timespec timeWait;
 
-  if( NULL == inj ){
-    return NULL; //Keep compiler quiet
+    if( NULL == inj )
+    {
+        inj->threads[THPTIMER].running = false;
+        return NULL;
   }
   
   timeWait.tv_sec = inj->incFrequency;
@@ -164,11 +178,11 @@ int injectionCreate(int p_id)
         return ERROR_INJECTOR;
     }
 
-
+    memset( buffer, 0, 100 );
     pthread_mutex_init(&inj->lock, NULL);
-    InjectionPause(p_id);
+    InjectionPause(inj->injectorId);
 
-    if( 0 != pthread_create(&(inj->threads[INJECTOR].id), NULL, _injectorHandler, &p_id) )
+    if( 0 != pthread_create(&(inj->threads[INJECTOR].id), NULL, _injectorHandler, &inj->injectorId) )
     {
         sprintf (buffer, "Cannot create thread: ERROR_INJECTOR %d\n", p_id);
         InjectionDestroy(inj->injectorId, false);
@@ -177,7 +191,7 @@ int injectionCreate(int p_id)
 
     inj->threads[INJECTOR].running = true;
 
-    if( 0 != pthread_create(&(inj->threads[MONITOR].id), NULL, _throughputMonitorHandler, &p_id) )
+    if( 0 != pthread_create(&(inj->threads[MONITOR].id), NULL, _throughputMonitorHandler, &inj->injectorId) )
     {
         sprintf (buffer, "Cannot create thread: ERROR_INJECTOR %d\n", errno);
         InjectionDestroy(inj->injectorId, false);
@@ -188,7 +202,7 @@ int injectionCreate(int p_id)
   
     if( inj->monitor.throughputExpected > 0 )
     {
-        if( 0 != pthread_create(&(inj->threads[TRAFFIC_SHAPING].id), NULL, _trafficshapingHandler, &p_id) )
+        if( 0 != pthread_create(&(inj->threads[TRAFFIC_SHAPING].id), NULL, _trafficshapingHandler, &inj->injectorId) )
         {
             sprintf (buffer, "Cannot create thread: ERROR_INJECTOR %d\n", errno);
             InjectionDestroy(inj->injectorId, false);
@@ -197,10 +211,9 @@ int injectionCreate(int p_id)
         inj->threads[TRAFFIC_SHAPING].running = true;
     }
 
-
     if( inj->timer > 0)
     {
-        if( 0 != pthread_create(&(inj->threads[TIMER].id), NULL, _timerHandler, &p_id) )
+        if( 0 != pthread_create(&(inj->threads[TIMER].id), NULL, _timerHandler, &inj->injectorId) )
         {
             sprintf (buffer, "Cannot create thread: ERROR_INJECTOR %d\n", errno);
             InjectionDestroy(inj->injectorId, false);
@@ -211,7 +224,7 @@ int injectionCreate(int p_id)
 
     if( inj->incFrequency > 0 )
     {
-        if( 0 != pthread_create(&(inj->threads[THPTIMER].id), NULL, _thpincHandler, &p_id) )
+        if( 0 != pthread_create(&(inj->threads[THPTIMER].id), NULL, _thpincHandler, &inj->injectorId) )
         {
             sprintf (buffer, "Cannot create thread: ERROR_INJECTOR %d\n", errno);
             InjectionDestroy(inj->injectorId, false);
@@ -224,7 +237,7 @@ int injectionCreate(int p_id)
     ELOG(SUCCESS, buffer);
 }
 
-int CreateInjection( Packet *p_pkt, float p_thp, unsigned int p_time, unsigned int p_incTime, unsigned int p_incThp )
+int CreateInjection( Packet p_pkt, float p_thp, unsigned int p_time, unsigned int p_incTime, unsigned int p_incThp )
 {
 
   Injector *newInject;
@@ -233,10 +246,12 @@ int CreateInjection( Packet *p_pkt, float p_thp, unsigned int p_time, unsigned i
   memalloc( &(newInject->threads), sizeof( ThreadStat ) * MAX_INJECTOR_THREADS );
 
   newInject->injectorId = _nextid++;
+  newInject->socket = -1;
   newInject->monitor.throughputExpected = p_thp;
   newInject->monitor.throughputCurrent = 0;
   newInject->bucketSize = 0;
-  newInject->pkt = p_pkt;
+  memalloc( &newInject->pkt, sizeof(Packet) );
+  memcpy( newInject->pkt, &p_pkt, sizeof(Packet) );
   newInject->pktCounter = 0;
   newInject->timer = p_time * 60;
   newInject->incFrequency = p_incTime * 60;
@@ -282,10 +297,11 @@ int InjectionResume(int p_id)
 
     pthread_mutex_unlock(&inj->lock);
     inj->monitor.status = RUNNING;
-    printf (buffer, "Injection %d resumed.\n", p_id);
+    sprintf (buffer, "Injection %d resumed.\n", p_id);
     ELOG(SUCCESS, buffer);
 }
 
+//TODO: Reselve BUGS, does not close program when called
 int InjectionDestroy(int p_id, bool p_track)
 {
     List *cell = getInjectorListById(p_id); 

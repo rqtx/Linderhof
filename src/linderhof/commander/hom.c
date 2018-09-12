@@ -37,24 +37,21 @@ LhfPlan * getNextPlan()
 
 }
 
-int execMirror( LhfPlan p_plan )
+int execMirror( LhfPlan *p_plan )
 {
     int id = -1;
     Mirror *mirror;
      
-    if( (id = p_plan.atk_cmd(p_plan.atkData)) < 0 )
+    if( (id = p_plan->atk_cmd(p_plan->atkData)) < 0 )
     {
         memfree( &mirror );
         return ERROR_MIRROR; 
     }
     
-    mirror = createMirror();
-    mirror->id = id;
-    memalloc( &mirror->plan, sizeof(LhfPlan) );
-    mirror->plan->type = p_plan.type;
-    mirror->plan->atk_cmd = p_plan.atk_cmd;
-    mirror->plan->atkData = p_plan.atkData;
-    InsertCell( &mirrorList, (void *)mirror );
+    //mirror = createMirror();
+    //mirror->id = id;
+    //mirror->plan = p_plan;
+    //InsertCell( &mirrorList, (void *)mirror );
     return SUCCESS;
 }
 
@@ -62,7 +59,7 @@ void  HallOfMirrors( LhfPlan *p_plan )
 {
     if( NULL != p_plan )
     {
-        execMirror( *p_plan );
+        execMirror( p_plan );
     }
 }
 

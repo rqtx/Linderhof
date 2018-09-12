@@ -22,9 +22,23 @@ void Efatal( int p_errorCode, char * p_error )
     err.func(p_errorCode);
 }
 
-int Elog(int p_code, char * p_msg)
+int Elog(int p_code, char *p_msg)
 {
-    fprintf( stdout, p_msg );
+    if( NULL == p_msg)
+    {
+        return p_code;
+    }
+
+
+    if( errno > 0)
+    {
+        perror(p_msg);
+    }
+    else
+    {
+        fprintf( stdout, p_msg );
+    }
+
     return p_code;
 }
 

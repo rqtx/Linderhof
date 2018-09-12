@@ -8,6 +8,7 @@ set logging on
 
 #Breakpoints
 b main.c:main
+b oryx.c:144
 b injector.c:CreateInjection
 
 #Start

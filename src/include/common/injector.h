@@ -36,14 +36,14 @@ typedef struct {
 /**
  * @brief Create injection.
  *
- * @param p_pkt[in] Packet pointer to inject.
+ * @param p_pkt[in] Packet struct.
  * @param p_thp[in] Initial throughput
  * @param p_time[in] Injection time of operation (Minutes)
  * @param p_incTime[in] Injection increment throughput time (Minutes)
  * @param p_incThp[in] Injection throughput increment size
  * @return Injector Id
  */
-int CreateInjection( Packet *p_pkt, float p_thp, unsigned int p_time, unsigned int p_incTime, unsigned int p_incThp );
+int CreateInjection( Packet p_pkt, float p_thp, unsigned int p_time, unsigned int p_incTime, unsigned int p_incThp );
 
 /**
  * @brief Resume injection.

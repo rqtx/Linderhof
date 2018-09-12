@@ -148,14 +148,11 @@ void ReleasePacket( Packet *p_pkt )
 
 int SendPacket(int p_socket, Packet *p_pkt)
 {
-  if( -1 == sendto(p_socket, p_pkt->packet_ptr, p_pkt->pkt_size, MSG_DONTWAIT ,  (struct sockaddr *) &p_pkt->saddr, sizeof(struct sockaddr_in)) )
-  {
-      if( errno != EAGAIN && errno != EWOULDBLOCK)
-      {
-        ELOG(ERROR_NET, "Cannot send packet (Permission!?). Please check your firewall rules (iptables?).\n");
-      }
-  }
-  return SUCCESS;
+    if( -1 == sendto(p_socket, p_pkt->packet_ptr, p_pkt->pkt_size, MSG_DONTWAIT ,  (struct sockaddr *) &p_pkt->saddr, sizeof(struct sockaddr_in))  )
+    {
+        return ERROR_NET;
+    }
+    return SUCCESS;
 }
  
 /* return true if IP string is valid, else return false */
