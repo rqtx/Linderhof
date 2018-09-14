@@ -30,7 +30,7 @@ int Elog(int p_code, char *p_msg)
     }
 
 
-    if( errno > 0)
+    if( p_code != SUCCESS )
     {
         perror(p_msg);
     }

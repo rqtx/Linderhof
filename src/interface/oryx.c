@@ -148,7 +148,7 @@ static void * commandHandler( void * p_addr )
         {
             switch( (int)cmd->type )
             {
-                case Attack:
+                case AttackCmd:
                     draft = getAttackDraftFromCmd( *cmd );
                     int rtn;
                     if( ( ( rtn = AddMirrorAttack( *draft ) ) < 0) )

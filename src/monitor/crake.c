@@ -4,9 +4,6 @@
 
 #define RCVBUFSIZE 2046
 
-int sock = 0;
-struct sockaddr_in servAddr;
-
 static void startMonitor()
 {
     char buf[RCVBUFSIZE];
@@ -45,32 +42,3 @@ static void startMonitor()
  
     CloseSocket(monitorSock);
 }
-
-static void connectServer( char *p_servIP)
-{
-
-    sock = CreateSocket(TCP, true);
-
-    /* Construct the server address structure */
-    memset(&servAddr, 0, sizeof(servAddr));     /* Zero out structure */
-    servAddr.sin_family      = AF_INET;             /* Internet address family */
-    servAddr.sin_addr.s_addr = inet_addr(p_servIP);   /* Server IP address */
-    servAddr.sin_port        = htons(DEFAULT_COMPORT); /* Server port */
-
-    /* Establish the connection to the echo server */
-    if (connect(sock, (struct sockaddr *) &servAddr, sizeof(servAddr)) < 0){
-        Efatal( ERROR_NET, "connect() failed");
-    }
-}
-
-void Crake( int argc, char ** argv )
-{
-    char * serverIP = GetServerIP(); 
-    Packet *pkt = CreateCmdAttack( argc, argv );
-    connectServer( serverIP );
-    SendPacket(sock, pkt); 
-    SendPacket(sock, pkt); 
-    //startMonitor();
-}
-
-

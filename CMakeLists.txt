@@ -20,9 +20,9 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c11 -Wall -g -lpthread -lcap -D _DEFAUL
 include_directories(src/include)
 
 file(GLOB LINDERHOF src/linderhof/main.c src/linderhof/commander/*.c src/interface/*.c src/linderhof/mirrors/*/src/*.c src/common/*.c)
-file(GLOB CRAKE src/monitor/*.c src/common/*.c src/interface/configr.c src/interface/interface.c)
+file(GLOB SNOW .c src/common/*.c src/interface/configr.c src/interface/interface.c src/interface/snowman.c src/monitor/*c )
 
 add_executable(lhf ${LINDERHOF})
-add_executable(crake ${CRAKE})
+add_executable(snowman ${SNOW})
 
 #target_link_libraries(lhf ${PROJECT_LINK_LIBS} )

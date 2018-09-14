@@ -5,8 +5,7 @@
 #include "commander/linderhof.h"
 #include "interface/configr.h"
 
-#define FILENAME "linderhof.config"
-#define FILEPATH "../../%s"
+#define FILENAME "../../linderhof.config"
 #define SERVERIP "192.168.0.141"
 #define PORT 0
 #define INITIALTHROUGHPUT 1.0
@@ -15,64 +14,14 @@
 #define TIMER 120
 #define DELIM "."
 
-const char *argp_program_bug_address = "rqtx@protonmail.com";
-const char *argp_program_version = "version 0.1"; 
 ConfigOpt *conf = NULL;
-
-struct argp_option options[] =
-{
-    { "target", 't', "target_ipv4", 0, "Attack target IPV4"},
-    { "amplifier", 'a', "amp_ipv4", 0, "Memcached amplifier IPV4"},
-    { 0 }
-};
-
-
-static int parse_opt (int key, char *arg, struct argp_state *state)
-{ 
-  LhfDraft * draft = state->input;
-  
-  switch (key)
-  {
-    case ARGP_KEY_ARG:
-      if( !strcmp(arg, "test") || !strcmp(arg, "Test") || !strcmp(arg, "TEST") ){
-        draft->type = TEST;
-      }
-      else if( !strcmp(arg, "memcached") || !strcmp(arg, "Memcached") || !strcmp(arg, "MEMCACHED") ){
-        draft->type = MEMCACHED;
-      }
-      else if( !strcmp(arg, "ssdp") || !strcmp(arg, "SSDP") ){
-        draft->type = SSDP;
-      }
-      else{
-        argp_failure (state, 1, 0, "Unknown KEY_ARG"); 
-      }
-      break;
-
-    case 't':
-      if( !is_valid_ipv4(arg) )
-        argp_failure (state, 1, 0, "Invalid IPv4");
-
-      memcpy(draft->target_ip, arg, strlen(arg));   
-      break;
-
-    case 'a':
-      if( !is_valid_ipv4(arg) )
-        argp_failure (state, 1, 0, "Invalid IPv4");
-     
-      memcpy(draft->amp_ip, arg, strlen(arg));
-      break;
-  }
-  return 0;
-}
 
 static void createConfigFile( ) 
 {
   char * defaultConfig = "serverIP %s\nport %d\ninitialThroughput %.1f\nincrementThroughput %.1f\ntimeFrequency %d\ntimer %d";
-  char fpPath[500];
   FILE *fp;
 
-  sprintf(fpPath, FILEPATH, FILENAME);
-  fp = fopen( fpPath, "w");
+  fp = fopen( FILENAME, "w");
 
   fprintf( fp, defaultConfig, SERVERIP, PORT, INITIALTHROUGHPUT, INCREMENTTHROUGHPUT, TIMEFREQUENCY, TIMER);
   fclose( fp );
@@ -149,34 +98,31 @@ static ConfigOpt * getConfig()
 
 char * GetServerIP()
 {
-  if( NULL == conf)
-  {
-    conf = getConfig();
-  }
-
-  return conf->serverIP;
+    if( NULL == conf)
+    {
+        conf = getConfig();
+    }
+    return conf->serverIP;
 }
 
-LhfDraft * CreateDraft(int argc, char ** argv)
+int GetServerPort()
 {
-    struct argp argp = { options, parse_opt, "ATK" };
-    LhfDraft *draft = NULL;
-  
+    return DEFAULT_COMPORT;
+}
+
+void SetDraftConfig( LhfDraft *p_draft )
+{
     if( NULL == conf)
     {
         conf = getConfig();
     }
     
-    memalloc(&draft, sizeof(LhfDraft));
-    argp_parse(&argp, argc, argv, 0, 0, draft);
-    draft->amp_port = conf->port;
-    draft->target_port = conf->port;
-    draft->initialThroughput = conf->initialThp;
-    draft->incrementThroughput = conf->incThp;
-    draft->timeFrequency = conf->timeFreq;
-    draft->timer = conf->timer;
-
-    return draft;
+    p_draft->amp_port = conf->port;
+    p_draft->target_port = conf->port;
+    p_draft->initialThroughput = conf->initialThp;
+    p_draft->incrementThroughput = conf->incThp;
+    p_draft->timeFrequency = conf->timeFreq;
+    p_draft->timer = conf->timer;
 } 
 
 

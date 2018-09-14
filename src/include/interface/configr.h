@@ -14,6 +14,7 @@ typedef struct {
 }ConfigOpt;
 
 char * GetServerIP();
-LhfDraft * CreateDraft(int argc, char ** argv);
+int GetServerPort();
+void SetDraftConfig( LhfDraft *p_draft );
 
 #endif

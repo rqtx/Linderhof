@@ -4,7 +4,7 @@
 
 #include "venus.h"
 
-typedef enum { Attack } CmdType;
+typedef enum { UnknownCmd = 0, AttackCmd } CmdType;
 
 typedef struct {
     CmdType type;
@@ -18,6 +18,6 @@ typedef struct {
     struct sockaddr_in addr;
 }ClientAddr;
 
-Packet * CreateCmdAttack( int argc, char ** argv );
+Packet * CreateCmdPacket( CmdType p_type, int p_argc, char **p_argv );
 
 #endif

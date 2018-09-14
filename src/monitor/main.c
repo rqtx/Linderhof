@@ -1,8 +1,6 @@
-#include "venus.h"
-#include "monitor/monitor.h"
+#include "interface/snowman.h"
 
-int main(int argc, char *argv[]){
-
-  Crake( argc, argv );
-  return 0;
+int main(int argc, char *argv[])
+{
+    SnowmanShell(); 
 }
