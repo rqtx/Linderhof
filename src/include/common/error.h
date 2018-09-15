@@ -27,7 +27,6 @@ int Elog( int p_errorCode, char * p_msg );
 #define ELOG( p_errorCode, p_msg ) return Elog( p_errorCode, p_msg )
 #define LOG(p_msg) Elog( SUCCESS, p_msg )
 
-void plog( char *p_msg );
 void ESetErroAction( void p_func( int ) );
 
 #endif

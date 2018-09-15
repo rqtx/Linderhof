@@ -19,11 +19,12 @@ static CmdType getCmd( char *p_cmd )
     return UnknownCmd;
 }
 
-static int parserUserCmd( char **r_parsed, char *p_buffer )
+static char ** parserUserCmd( int *r_args, char *p_buffer )
 {
     char *str;
     int nargs = 0;
     char *argStr[MAXARGS];
+    char **parsed = NULL;
 
     for(str = PARSER_INITIALIZE(p_buffer); ((str != NULL) && (nargs < MAXARGS)); str = PARSER_CONTINUE)
     {
@@ -31,19 +32,19 @@ static int parserUserCmd( char **r_parsed, char *p_buffer )
         nargs++;
     }
 
-    memalloc( &r_parsed, sizeof(char)*nargs );
+    memalloc( &parsed, sizeof(char)*nargs );
     for(int i = 0; i < nargs; i++)
     {
-        r_parsed[i] = argStr[i];
+        parsed[i] = argStr[i];
     }
-
-    return nargs;
+    
+    *r_args = nargs;
+    return parsed;
 }
 
 static Packet * getPacketFromInput()
 {
     char buffer[MAXBUFFERSIZE];
-    int bread = 0;
     char **parsedBuffer = NULL;
     int args = 0;   
     Packet *pkt = NULL;
@@ -53,19 +54,26 @@ static Packet * getPacketFromInput()
         CmdType cmd = UnknownCmd;
         
         memset(buffer, 0, MAXBUFFERSIZE);
-        
-        bread = fread(buffer, sizeof(char), MAXBUFFERSIZE, stdin);
-        
-        args = parserUserCmd( parsedBuffer, buffer );
+        //strcpy( buffer, "atk memcached -t 192.168.0.100 -a 192.168.0.100");
+        fputs("_$: ", stdout);
+        fgets(buffer, MAXBUFFERSIZE, stdin);
+        buffer[strlen(buffer)-1] = '\0'; //Remove \n from enter
+
+        parsedBuffer = parserUserCmd( &args, buffer );
         cmd = getCmd( parsedBuffer[0]);
         
         if( cmd == UnknownCmd )
         {
-            LOG("UnknownCmd");
+            LOG("UnknownCmd\n");
             continue;    
         }
 
         pkt = CreateCmdPacket(cmd, args, parsedBuffer);
+        if( NULL == pkt )
+        {
+            LOG("Arg problem\n");
+            continue;
+        }
     }
 
     return pkt;
@@ -87,7 +95,7 @@ static int connectToServer()
 
     /* Establish the connection to the echo server */
     if (connect(sock, (struct sockaddr *) &servAddr, sizeof(servAddr)) < 0){
-        Efatal( ERROR_NET, "connect() failed");
+        Efatal( ERROR_NET, "connect() failed\n");
     }
 
     return sock;
@@ -96,12 +104,13 @@ static int connectToServer()
 void SnowmanShell()
 {
     Packet *pac;
-    //int sock = connectToServer();
+    int sock = connectToServer();
 
     for(;;)
     {
         pac = getPacketFromInput();
-        //SendPacket(sock, pac);    
+        LOG( "Packet sent\n" );
+        SendPacket(sock, pac);    
     }
 }
 

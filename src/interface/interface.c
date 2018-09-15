@@ -6,6 +6,8 @@
 #include "interface/interface.h"
 #include "interface/configr.h"
 
+#define UNKNOWCMD -1
+#define ERRORIP -2
 
 const char *argp_program_bug_address = "rqtx@protonmail.com";
 const char *argp_program_version = "version 0.1";
@@ -19,38 +21,46 @@ struct argp_option atkArgpOption[] =
 
 int ParserAttackOpt (int key, char *arg, struct argp_state *state)
 { 
-  LhfDraft * draft = state->input;
+    LhfDraft * draft = state->input;
   
-  switch (key)
-  {
-    case ARGP_KEY_ARG:
-      if( !strcmp(arg, "test") || !strcmp(arg, "Test") || !strcmp(arg, "TEST") ){
-        draft->type = TEST;
-      }
-      else if( !strcmp(arg, "memcached") || !strcmp(arg, "Memcached") || !strcmp(arg, "MEMCACHED") ){
-        draft->type = MEMCACHED;
-      }
-      else if( !strcmp(arg, "ssdp") || !strcmp(arg, "SSDP") ){
-        draft->type = SSDP;
-      }
-      else{
-        argp_failure (state, 1, 0, "Unknown KEY_ARG"); 
-      }
-      break;
+    switch (key)
+    {
+        case ARGP_KEY_ARG:
+            if( !strcmp(arg, "test") || !strcmp(arg, "Test") || !strcmp(arg, "TEST") )
+            {
+                draft->type = TEST;
+            }
+            else if( !strcmp(arg, "memcached") || !strcmp(arg, "Memcached") || !strcmp(arg, "MEMCACHED") )
+            {
+                draft->type = MEMCACHED;
+            }
+            else if( !strcmp(arg, "ssdp") || !strcmp(arg, "SSDP") )
+            {
+                draft->type = SSDP;
+            }
+            else
+            {
+                argp_state_help(state, stdout, ARGP_NO_EXIT); 
+                return UNKNOWCMD; 
+            }
+            break;
+        case 't':
+            if( !is_valid_ipv4(arg) )
+            {
+                argp_state_help(state, stdout, ARGP_NO_EXIT);
+                return ERRORIP;
+            }
+            memcpy(draft->target_ip, arg, strlen(arg));   
+            break;
 
-    case 't':
-      if( !is_valid_ipv4(arg) )
-        argp_failure (state, 1, 0, "Invalid IPv4");
-
-      memcpy(draft->target_ip, arg, strlen(arg));   
-      break;
-
-    case 'a':
-      if( !is_valid_ipv4(arg) )
-        argp_failure (state, 1, 0, "Invalid IPv4");
-     
-      memcpy(draft->amp_ip, arg, strlen(arg));
-      break;
+        case 'a':
+            if( !is_valid_ipv4(arg) )
+            {
+                argp_state_help(state, stdout, ARGP_NO_EXIT); 
+                return ERRORIP;
+            }
+            memcpy(draft->amp_ip, arg, strlen(arg));
+            break;
   }
   return 0;
 }
@@ -61,6 +71,7 @@ Packet * CreateCmdPacket( CmdType p_type, int p_argc, char **p_argv )
     CommandPkt *cmdPkt = NULL;
     Packet *pac = CreateEmptyPacket();
     char *srvip = GetServerIP();
+    int err = 0;
 
     memalloc( &cmdPkt , sizeof(CommandPkt) );
     
@@ -70,7 +81,10 @@ Packet * CreateCmdPacket( CmdType p_type, int p_argc, char **p_argv )
             cmdPkt->type = AttackCmd;
             cmdPkt->dataSize = sizeof(LhfDraft);
             SetDraftConfig(&cmdPkt->data);
-            argp_parse(&argpAtk, p_argc, p_argv, 0, 0, &cmdPkt->data);
+            if( (err = argp_parse(&argpAtk, p_argc, p_argv, 0, 0, &cmdPkt->data)) == 0 )
+            {
+                break;
+            }
         default:
             memfree( &cmdPkt );
             return NULL;

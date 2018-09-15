@@ -5,20 +5,20 @@
 #include "commander/linderhof.h"
 #include "interface/configr.h"
 
-#define FILENAME "../../linderhof.config"
+#define FILENAME "linderhof.config"
 #define SERVERIP "192.168.0.141"
 #define PORT 0
-#define INITIALTHROUGHPUT 1.0
-#define INCREMENTTHROUGHPUT 1
-#define TIMEFREQUENCY 1
-#define TIMER 120
+#define INITIALTHROUGHPUT 0
+#define INCREMENTTHROUGHPUT 0
+#define TIMEFREQUENCY 0
+#define TIMER 60
 #define DELIM "."
 
 ConfigOpt *conf = NULL;
 
 static void createConfigFile( ) 
 {
-  char * defaultConfig = "serverIP %s\nport %d\ninitialThroughput %.1f\nincrementThroughput %.1f\ntimeFrequency %d\ntimer %d";
+  char * defaultConfig = "serverIP %s\nport %d\ninitialThroughput %d\nincrementThroughput %d\ntimeFrequency %d\ntimer %d";
   FILE *fp;
 
   fp = fopen( FILENAME, "w");
@@ -29,71 +29,72 @@ static void createConfigFile( )
 
 static ConfigOpt * readConfigFile( FILE *p_file )
 {
-  char *arg, *value;
-  ConfigOpt *config; 
-  memalloc( &arg, sizeof(char *) );
-  memalloc( &value, sizeof(char *) );
-  memalloc(&config, sizeof(ConfigOpt));
+    FILE *fp = p_file;
+    char *arg, *value;
+    ConfigOpt *config; 
+    memalloc( &arg, sizeof(char *) );
+    memalloc( &value, sizeof(char *) );
+    memalloc(&config, sizeof(ConfigOpt));
 
-  while( !feof(p_file) )
-  {
-    fscanf (p_file, "%s %s", arg, value);
+    while( !feof(fp) )
+    {
+        fscanf (fp, "%s %s", arg, value);
 
-    if( !strcmp("serverIP", arg))
-    {
-      memalloc(&config->serverIP, strlen(value));
-      memcpy(config->serverIP, value, strlen(value));
+        if( !strcmp("serverIP", arg))
+        {
+            memalloc(&config->serverIP, strlen(value));
+            memcpy(config->serverIP, value, strlen(value));
+        }
+        else if( !strcmp("port", arg) )
+        { 
+            config->port = atoi( value );
+        }
+        else if( !strcmp("initialThroughput", arg) )
+        {
+            config->initialThp = atof( value );
+        }
+        else if( !strcmp("incrementThroughput", arg) )
+        { 
+            config->incThp = atof( value );; 
+        }
+        else if( !strcmp("timeFrequency", arg) )
+        {
+            config->timeFreq = atoi( value );
+        }
+        else if( !strcmp("timer", arg) )
+        {
+            config->timer = atoi( value );
+        }
+        else{
+            char error[200];
+            sprintf(error, "Error in config file, unknow argument %s", arg);
+            Efatal(ERROR_FILE, error);
+        }
     }
-    else if( !strcmp("port", arg) )
-    { 
-      config->port = atoi( value );
-    }
-    else if( !strcmp("initialThroughput", arg) )
-    {
-      config->initialThp = atof( value );
-    }
-    else if( !strcmp("incrementThroughput", arg) )
-    { 
-      config->incThp = atof( value );; 
-    }
-    else if( !strcmp("timeFrequency", arg) )
-    {
-      config->timeFreq = atoi( value );
-    }
-    else if( !strcmp("timer", arg) )
-    {
-      config->timer = atoi( value );
-    }
-    else{
-      char error[200];
-      sprintf(error, "Error in config file, unknow argument %s", arg);
-      Efatal(ERROR_FILE, error);
-    }
-  }
 
-  return config;
+    return config;
 }
 
 static ConfigOpt * getConfig()
 {
-  FILE *fp;
-  ConfigOpt *rtn = NULL;
+    FILE *fp;
+    ConfigOpt *rtn = NULL;
 
-  memalloc(&rtn, sizeof(ConfigOpt));
-  fp = fopen( FILENAME, "r");
+    memalloc(&rtn, sizeof(ConfigOpt));
+    fp = fopen( FILENAME, "r");
 
-  if( NULL == fp )
-  {
-    char msg[100];
-    createConfigFile();
-    sprintf(msg, "File %s does not exist. We created one for you, please configure it!\n", FILENAME);
-    Efatal(ERROR_FILE, msg);
-  }
+    if( NULL == fp )
+    {
+        char msg[100];
+        createConfigFile();
+        sprintf(msg, "File %s does not exist. We created one for you, please configure it!\n", FILENAME);
+        Efatal(ERROR_FILE, msg);
+    }
 
-  rtn = readConfigFile( fp );
-  fclose(fp);
+    rtn = readConfigFile( fp ); 
 
-  return rtn;
+    fclose(fp);
+    return rtn;
 }
 
 char * GetServerIP()

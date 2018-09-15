@@ -4,55 +4,28 @@
 typedef struct memoryData{
   void *memory;
   int size;
-  struct memoryData *prev;
   struct memoryData *next;
 } MemoryData;
 
-int memoryUsed = 0;
-MemoryData *memoryAllocad = NULL;
+int _memoryUsed = 0;
+MemoryData *_memoryAllocad = NULL;
 
 static void createMemoryData( void *p_memory, size_t p_size )
 {
-  MemoryData *new = malloc( sizeof(MemoryData) );
+    MemoryData *new = malloc( sizeof(MemoryData) );
   
-  new->memory = p_memory;
-  new->size = p_size;
-  
-  if( NULL == memoryAllocad )
-  {
-    new->next = NULL; 
-    new->prev = NULL;
-  }
-  else{
-    new->next = memoryAllocad;
-    new->prev = memoryAllocad->prev;
-    memoryAllocad->prev = new;
-  }
-
-  memoryAllocad = new;
-
-  memoryUsed += p_size + sizeof(MemoryData);
+    new->memory = p_memory;
+    new->size = p_size;
+    new->next = _memoryAllocad;
+    _memoryUsed += p_size + sizeof(MemoryData);
 }
 
 static void releaseMemory( MemoryData *p_data )
 {
-  MemoryData *prev, *next;
  
-  if( NULL == p_data ){
+  if( NULL == p_data )
+  {
     return;
-  }
-
-  prev = p_data->prev;
-  next = p_data->next;
-
-  if( NULL != prev )
-  {
-    prev->next = next;
-  }
-
-  if( NULL != next )
-  {
-    next->prev = prev;
   }
 
   free(p_data->memory);
@@ -84,26 +57,39 @@ void memoryalloc( void ** p_ptr, size_t p_size, const char * const p_func )
 
 void memoryfree(void ** p_ptr)
 {
+    MemoryData *auxData = NULL;
+    MemoryData *prev = NULL;
 
-  if( NULL == p_ptr  || NULL == *p_ptr ){
-    return;
-  }
-
-  for( MemoryData *aux = memoryAllocad; aux != NULL; aux = aux->next )
-  {
-    if(aux->memory == *p_ptr)
+    if( NULL == p_ptr  || NULL == *p_ptr )
     {
-      releaseMemory( aux ); 
-      *p_ptr = NULL;
-    }    
-  }
+        return;
+    }
+
+    for(auxData = _memoryAllocad; auxData != NULL; auxData = auxData->next )
+    {
+        if(auxData->memory == *p_ptr)
+        {
+            if( NULL != prev )
+            {
+                prev->next = auxData->next;
+            }
+            else
+            {
+                _memoryAllocad = auxData->next;
+            }
+            releaseMemory( auxData->memory );
+            *p_ptr = NULL;
+            return;
+        }    
+        prev = auxData;
+    }
 }
 
 void memoryclean()
 {
-  for( MemoryData *aux = memoryAllocad; aux != NULL; aux = aux->next )
-  {
-    releaseMemory(aux); 
-  }
-  memoryAllocad = NULL;
+    while( _memoryAllocad != NULL )
+    {
+        releaseMemory( _memoryAllocad );
+    }
+    _memoryAllocad = NULL;
 }
