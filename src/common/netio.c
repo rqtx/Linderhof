@@ -57,6 +57,18 @@ int createRAWsocket(  bool p_blk )
     return fd;
 }
 
+int createUDPsocket( bool p_blk )
+{
+    int fd;
+
+    if ((fd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1)
+    {
+        ELOG(ERROR_NET, "Cannot open udp socket");
+    }
+    BlockSocket( fd, p_blk ); 
+    return fd;
+}
+
 /** 
  * Create socket.
  *
@@ -69,13 +81,13 @@ int CreateSocket( NetType p_type, bool p_blk )
 {
   switch(p_type)
   {
-    case TCP:
-      return createTCPsocket(p_blk);
-      break;
     case UDP:
+        return createUDPsocket(p_blk);
+    case TCP:
+        return createTCPsocket(p_blk);
+    case RAW:
     default:
-      return createRAWsocket(p_blk);
-      break;
+        return createRAWsocket(p_blk);
       
   }
 }
@@ -136,12 +148,13 @@ Packet * CreateEmptyPacket( )
 {
     Packet *pac = NULL;
     memalloc( &pac, sizeof(Packet) );
-    pac->type = Empty;
+    pac->type = EMPTY;
     return pac;
 }
 
 void ReleasePacket( Packet *p_pkt )
 {
+  CloseSocket(p_pkt->netSock);
   memfree( &p_pkt->packet_ptr );
   memfree( &p_pkt );
 }

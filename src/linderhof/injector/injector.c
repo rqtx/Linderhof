@@ -52,7 +52,7 @@ static void *_trafficshapingHandler( void *p_id )
 
     while(1)
     {
-        inj->bucketSize = (inj->monitor.throughputExpected * MEGABYTE) / inj->pkt->pkt_size;
+        inj->bucketSize = (inj->monitor.throughputExpected * MEGABYTE) / inj->pkt->payload_size;
         nanosleep(&_onesec, NULL);
     }
     
@@ -81,7 +81,7 @@ static void *_throughputMonitorHandler( void *p_id )
         { 
             inj->pktCounter = 0;
             nanosleep(&_onesec, NULL);
-            sample += inj->pkt->pkt_size * inj->pktCounter;
+            sample += inj->pkt->payload_size * inj->pktCounter;
         }
  
         if(fp == NULL)

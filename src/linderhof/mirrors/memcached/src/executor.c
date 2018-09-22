@@ -9,11 +9,8 @@
 
 int ExecuteAttack( AttackPlan * atkData )
 {
-  int sock = CreateSocket( UDP, BLOCK );
-
   if( SendPacket(atkData->setPacket) < 0 )
   {
-    CloseSocket(sock);
     ELOG(ERROR_MEMCACHED, "error memcached\n");
   }
    

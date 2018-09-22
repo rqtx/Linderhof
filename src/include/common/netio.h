@@ -10,12 +10,13 @@
 #define NO_BLOCK false
 #define  SOCKADDR_SIZE sizeof(struct sockaddr)
 
-typedef enum { Empty = 1, LHF, UDP, TCP } NetType;
+typedef enum { EMPTY = 1, RAW, UDP, TCP, LHF } NetType;
 
 typedef struct {
   NetType type;
   void *packet_ptr;
   size_t pkt_size;
+  size_t payload_size;
   int netSock;
   char ip_dest[16];
   int dest_port;

@@ -51,7 +51,7 @@ Packet * ForgeUDP(char * ip_dest, char * ip_src, int dest_port, Packet * (*f_pay
         payload = p_arg;
     }
     
-    pac->netSock = CreateSocket( UDP, NO_BLOCK );
+    pac->netSock = CreateSocket( RAW, NO_BLOCK );
     pac->saddr.sin_family = AF_INET;
     pac->saddr.sin_port = 0;
     pac->saddr.sin_addr.s_addr = inet_addr(ip_dest);
@@ -86,9 +86,10 @@ Packet * ForgeUDP(char * ip_dest, char * ip_src, int dest_port, Packet * (*f_pay
     //Payload
     memcpy(payload_ptr, payload , payload_size);
     
-    pac->type = UDP;
+    pac->type = RAW;
     pac->packet_ptr = datagram;
     pac->pkt_size = ip_header->tot_len;
+    pac->payload_size = payload_size;
     strcpy( pac->ip_dest, ip_dest);
     pac->dest_port = dest_port;
     

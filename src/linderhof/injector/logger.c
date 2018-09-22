@@ -31,5 +31,5 @@ void LogInjection( FILE * p_fp, float p_thpExp, float p_thpCur )
 void LogAttack( FILE *p_fp, float p_thp )
 {
     char *curTime = getCurrentTimeStr();
-    fprintf( p_fp, "%s %f Mb/s", curTime, p_thp );
+    fprintf( p_fp, "%s %f Mb/s\n", curTime, p_thp );
 }
