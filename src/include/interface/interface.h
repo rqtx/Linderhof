@@ -4,7 +4,7 @@
 
 #include "venus.h"
 
-typedef enum { UnknownCmd = 0, AttackCmd } CmdType;
+typedef enum { UnknownCmd = 0, AttackCmd, ExitCmd } CmdType;
 
 typedef struct {
     CmdType type;
@@ -17,6 +17,7 @@ typedef struct {
     int socket;
     struct sockaddr_in addr;
 }ClientAddr;
+#define GetClientIP(p_addr) inet_ntoa(p_addr.sin_addr)
 
 Packet * CreateCmdPacket( CmdType p_type, int p_argc, char **p_argv );
 

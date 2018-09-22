@@ -2,12 +2,13 @@
 #include <time.h>
 #include <sys/types.h>
 #include <signal.h>
-#include "common/injector.h"
+#include "injector/injector.h"
+#include "injector/logger.h"
 
 #define MAX_INJECTOR_THREADS 5
 typedef enum { INJECTOR, MONITOR, TRAFFIC_SHAPING, TIMER, THPTIMER} THREAD_TYPE;
 
-#define SAMPLING 5
+#define SAMPLING 60
 #define MEGABYTE 1000000
 #define DEFAULT_SIZE 1
 
@@ -63,15 +64,19 @@ static void *_throughputMonitorHandler( void *p_id )
     float sample = 0;
     int *id = (int *)p_id;
     Injector *inj = ListToInjector(getInjectorListById(*id));
-  
+    FILE *fp = CreateLoggerFile();    
+
     if( NULL == inj )
     {
         inj->threads[MONITOR].running = false;
+        Elog(ERROR_INJECTOR, "INJECTOR MONITOR FAILED\n");
         return NULL;
     }
   
     while(1)
     {
+        int thpExp = inj->monitor.throughputExpected;
+
         for(int i = 0; i < SAMPLING; i++)
         { 
             inj->pktCounter = 0;
@@ -79,8 +84,15 @@ static void *_throughputMonitorHandler( void *p_id )
             sample += inj->pkt->pkt_size * inj->pktCounter;
         }
  
+        if(fp == NULL)
+        {
+            fp = stdout;
+        }
+
         inj->monitor.throughputCurrent = (sample/SAMPLING)/MEGABYTE;
+        LogInjection(fp, thpExp, inj->monitor.throughputCurrent);
         sample = 0;
+        inj->pktDroped = 0;
         nanosleep(&_onesec, NULL);
     }
 
@@ -91,6 +103,7 @@ static void *_injectorHandler( void *p_id )
 { 
     int *id = (int *)p_id; 
     Injector *inj = ListToInjector(getInjectorListById(*id));
+    
     if( NULL == inj )
     {
         inj->threads[INJECTOR].running = false;
@@ -102,19 +115,15 @@ static void *_injectorHandler( void *p_id )
         while( inj->bucketSize || ( inj->monitor.throughputExpected <= 0 ) )
         {
             pthread_mutex_lock(&inj->lock);
-            
-            if(-1 == inj->socket)
-            {
-                int on=1;
-                inj->socket = CreateSocket( UDP, NO_BLOCK );
-                setsockopt(inj->socket, SOL_SOCKET, SO_BROADCAST, &on, sizeof(on));
-            }
-
-            if( 0 == SendPacket(inj->socket, inj->pkt) )
+            if( 0 == SendPacket(inj->pkt) )
             {
                 //Packet was sent
                 inj->bucketSize--;
                 inj->pktCounter++;
+            }
+            else
+            {
+                inj->pktDroped++;
             }
             pthread_mutex_unlock(&inj->lock);
         }
@@ -246,7 +255,6 @@ int CreateInjection( Packet p_pkt, float p_thp, unsigned int p_time, unsigned in
   memalloc( &(newInject->threads), sizeof( ThreadStat ) * MAX_INJECTOR_THREADS );
 
   newInject->injectorId = _nextid++;
-  newInject->socket = -1;
   newInject->monitor.throughputExpected = p_thp;
   newInject->monitor.throughputCurrent = 0;
   newInject->bucketSize = 0;
@@ -301,7 +309,6 @@ int InjectionResume(int p_id)
     ELOG(SUCCESS, buffer);
 }
 
-//TODO: Reselve BUGS, does not close program when called
 int InjectionDestroy(int p_id, bool p_track)
 {
     List *cell = getInjectorListById(p_id); 

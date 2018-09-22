@@ -1,7 +1,7 @@
 #include "manager.h"
 #include "executor.h"
 #include "common/common.h"
-#include "common/injector.h"
+#include "injector/injector.h"
 
 
 #define ERROR_MEMCACHED -1
@@ -11,7 +11,7 @@ int ExecuteAttack( AttackPlan * atkData )
 {
   int sock = CreateSocket( UDP, BLOCK );
 
-  if( SendPacket(sock, atkData->setPacket) < 0 )
+  if( SendPacket(atkData->setPacket) < 0 )
   {
     CloseSocket(sock);
     ELOG(ERROR_MEMCACHED, "error memcached\n");

@@ -19,8 +19,8 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O0")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c11 -Wall -g -lpthread -lcap -D _DEFAULT_SOURCE")
 include_directories(src/include)
 
-file(GLOB LINDERHOF src/linderhof/main.c src/linderhof/commander/*.c src/interface/*.c src/linderhof/mirrors/*/src/*.c src/common/*.c)
-file(GLOB SNOW .c src/common/*.c src/interface/configr.c src/interface/interface.c src/interface/snowman.c src/monitor/*c )
+file(GLOB LINDERHOF src/linderhof/main.c src/linderhof/*/*.c src/interface/configr.c src/interface/interface.c src/interface/oryx.c src/linderhof/mirrors/*/src/*.c src/common/*.c )
+file(GLOB SNOW .c src/common/*.c src/interface/configr.c src/interface/interface.c src/monitor/*.c src/interface/snowman.c )
 
 add_executable(lhf ${LINDERHOF})
 add_executable(snowman ${SNOW})

@@ -3,7 +3,7 @@
 #include "planner.h"
 #include "executor.h"
 #include "common/common.h"
-#include "common/injector.h"
+#include "injector/injector.h"
 
 #define NOSIGNAL  0
 #define SIGNAL_STOP 1

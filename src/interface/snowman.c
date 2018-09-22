@@ -2,6 +2,7 @@
 #include "venus.h"
 #include "interface/interface.h"
 #include "interface/configr.h"
+#include "monitor/crake.h"
 
 #define PARSER_DELIM " "
 #define PARSER_INITIALIZE(str) strtok(str, PARSER_DELIM)
@@ -104,13 +105,23 @@ static int connectToServer()
 void SnowmanShell()
 {
     Packet *pac;
+    CommandPkt *cmd;
     int sock = connectToServer();
 
     for(;;)
     {
         pac = getPacketFromInput();
-        LOG( "Packet sent\n" );
-        SendPacket(sock, pac);    
+        pac->netSock = sock;
+        cmd = (CommandPkt *)pac->packet_ptr;
+        
+        switch( (int)cmd->type )
+        {
+            case AttackCmd:
+                SendPacket(pac);
+                LOG("Packet sent\n");
+                StartMonitor();
+        }
+
     }
 }
 

@@ -36,7 +36,7 @@ int Elog(int p_code, char *p_msg)
     }
     else
     {
-        fprintf( stdout, p_msg );
+        puts( p_msg );
     }
 
     return p_code;

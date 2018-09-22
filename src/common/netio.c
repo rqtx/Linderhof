@@ -146,9 +146,9 @@ void ReleasePacket( Packet *p_pkt )
   memfree( &p_pkt );
 }
 
-int SendPacket(int p_socket, Packet *p_pkt)
+int SendPacket(Packet *p_pkt)
 {
-    if( -1 == sendto(p_socket, p_pkt->packet_ptr, p_pkt->pkt_size, MSG_DONTWAIT ,  (struct sockaddr *) &p_pkt->saddr, sizeof(struct sockaddr_in))  )
+    if( -1 == sendto(p_pkt->netSock, p_pkt->packet_ptr, p_pkt->pkt_size, MSG_DONTWAIT ,  (struct sockaddr *) &p_pkt->saddr, sizeof(struct sockaddr_in))  )
     {
         return ERROR_NET;
     }
@@ -204,4 +204,17 @@ bool is_valid_ipv4(char * ip_str)
   return true;
 }
 
+int SetPacketPort( Packet *p_pkt )
+{
+    socklen_t lenAddr = sizeof(p_pkt->saddr);
 
+    if( bind(p_pkt->netSock, (struct sockaddr *)&p_pkt->saddr,  lenAddr) == -1 )
+    {
+        ELOG(ERROR_NET, "BIND FAILED\n");
+    }
+    if( getsockname(p_pkt->netSock, (struct sockaddr *) &p_pkt->saddr, &lenAddr) == -1)
+    {
+        ELOG(ERROR_NET, "GETSOCKNAME FAILED\n");
+    }
+    return SUCCESS;
+}

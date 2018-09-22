@@ -20,12 +20,12 @@ typedef struct {
 
 typedef struct {
     int injectorId;
-    int socket;
     InjectionMonitor monitor;
     ThreadStat *threads;
     Packet *pkt;
     unsigned int bucketSize;
-    unsigned int pktCounter; 
+    unsigned int pktCounter;
+    unsigned int pktDroped;
     float incThroughput;
     unsigned int incFrequency; //Time of throughput increment frequency in seconds
     time_t timer; //Duration of attack in seconds 0 == INF

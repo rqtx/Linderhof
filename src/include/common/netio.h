@@ -8,13 +8,15 @@
 
 #define BLOCK true
 #define NO_BLOCK false
+#define  SOCKADDR_SIZE sizeof(struct sockaddr)
 
 typedef enum { Empty = 1, LHF, UDP, TCP } NetType;
 
-typedef struct  PacketData {
+typedef struct {
   NetType type;
   void *packet_ptr;
   size_t pkt_size;
+  int netSock;
   char ip_dest[16];
   int dest_port;
   struct sockaddr_in saddr;
@@ -27,8 +29,10 @@ int BlockSocket(int p_fd, bool blocking);
 
 Packet * CreateEmptyPacket( );
 void ReleasePacket( Packet *p_pkt );
-int SendPacket( int p_socket, Packet *p_pkt );
+int SendPacket( Packet *p_pkt );
 
 
 bool is_valid_ipv4(char * ip_str);
+int SetPacketPort( Packet *p_pkt );
+
 #endif      //NETIO_H

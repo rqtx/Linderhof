@@ -5,6 +5,7 @@
 #include "venus.h"
 #include "interface/interface.h"
 #include "interface/configr.h"
+#include "monitor/crake.h"
 
 #define UNKNOWCMD -1
 #define ERRORIP -2
@@ -28,7 +29,14 @@ int ParserAttackOpt (int key, char *arg, struct argp_state *state)
         case ARGP_KEY_ARG:
             if( !strcmp(arg, "test") || !strcmp(arg, "Test") || !strcmp(arg, "TEST") )
             {
+                draft->amp_port = CRAKE_DEFAULT_PORT;
+                draft->target_port = CRAKE_DEFAULT_PORT;
                 draft->type = TEST;
+                draft->initialThroughput = 1;
+                draft->incrementThroughput = 1;
+                draft->timeFrequency = 1;
+                draft->timer = 5;
+                draft->amp_port = CRAKE_DEFAULT_PORT;
             }
             else if( !strcmp(arg, "memcached") || !strcmp(arg, "Memcached") || !strcmp(arg, "MEMCACHED") )
             {
@@ -77,6 +85,10 @@ Packet * CreateCmdPacket( CmdType p_type, int p_argc, char **p_argv )
     
     switch( p_type )
     {
+        case ExitCmd:
+              cmdPkt->type = ExitCmd;
+              cmdPkt->dataSize = 0;
+              break;
         case AttackCmd:
             cmdPkt->type = AttackCmd;
             cmdPkt->dataSize = sizeof(LhfDraft);
@@ -95,6 +107,7 @@ Packet * CreateCmdPacket( CmdType p_type, int p_argc, char **p_argv )
     pac->pkt_size = COMMANDPKT_HEADERSIZE + cmdPkt->dataSize;
     strcpy( pac->ip_dest,srvip);
     pac->dest_port = DEFAULT_COMPORT;
+    pac->netSock = -1;
     pac->saddr.sin_family = AF_INET;
     pac->saddr.sin_port = htons(DEFAULT_COMPORT);
     pac->saddr.sin_addr.s_addr = inet_addr(srvip);
