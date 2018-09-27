@@ -82,6 +82,8 @@ void StartNetunoInjector( Packet *p_pkt, unsigned int p_inithp, unsigned int p_t
     NetunoInjector netuno;
     netuno.pkt = p_pkt; 
     FILE *fp = CreateLoggerFile(ATK_LOGGER);
+    
+    LOG("Netuno\n");
 
     switch( p_type )
     {
@@ -114,7 +116,7 @@ void StartNetunoInjector( Packet *p_pkt, unsigned int p_inithp, unsigned int p_t
         masterClock++;
         incClock++;
 
-        if(masterClock > p_timer)
+        if(masterClock >= p_timer)
         {
             break;
         }
