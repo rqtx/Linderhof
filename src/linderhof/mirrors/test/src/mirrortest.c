@@ -1,15 +1,13 @@
 #include "venus.h"
-#include "injector/injector.h"
+#include "netuno/netuno.h"
 #include "common/blacksmith.h"
 
 int ExecuteTestMirror( void *p_draft )
 {
-  int injectorId;
   LhfDraft *plan = (LhfDraft *)p_draft;
   Packet *pac = ForgeUDP( plan->amp_ip, plan->target_ip, plan->amp_port, NULL, "MirrorTest" );
 
-  injectorId = CreateInjection( *pac, plan->initialThroughput, plan->timer, plan->timeFrequency, plan->incrementThroughput);
-  InjectionResume( injectorId );
+  StartNetunoInjector( pac, plan->initialThroughput, plan->timer, plan->incrementThroughput);
 
   return SUCCESS;
 }

@@ -31,8 +31,6 @@ static bool validateCmd( CommandPkt p_cmd )
 
                     if( p_cmd.data.target_port < 0 &&
                         p_cmd.data.amp_port    < 0 &&
-                        p_cmd.data.incrementThroughput < 0 &&
-                        p_cmd.data.timeFrequency < 0 &&
                         p_cmd.data.timer < 0)
                     {
                         return false;
@@ -132,7 +130,6 @@ static LhfDraft * getAttackDraftFromCmd( CommandPkt p_cmd )
     draft->amp_port = clnDrf.amp_port;
     draft->initialThroughput = clnDrf.initialThroughput;
     draft->incrementThroughput = clnDrf.incrementThroughput;
-    draft->timeFrequency = clnDrf.timeFrequency;
     draft->timer = clnDrf.timer;
 
     return draft;

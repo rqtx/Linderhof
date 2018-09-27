@@ -8,8 +8,7 @@ typedef struct {
   char * serverIP;
   unsigned int port;
   float initialThp;
-  float incThp;
-  unsigned int timeFreq;
+  bool incThp;
   unsigned int timer;
 }ConfigOpt;
 

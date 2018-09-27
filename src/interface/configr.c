@@ -9,8 +9,7 @@
 #define SERVERIP "192.168.0.141"
 #define PORT 0
 #define INITIALTHROUGHPUT 0
-#define INCREMENTTHROUGHPUT 0
-#define TIMEFREQUENCY 0
+#define INCREMENTTHROUGHPUT 1
 #define TIMER 60
 #define DELIM "."
 
@@ -18,12 +17,12 @@ ConfigOpt *conf = NULL;
 
 static void createConfigFile( ) 
 {
-  char * defaultConfig = "serverIP %s\nport %d\ninitialThroughput %d\nincrementThroughput %d\ntimeFrequency %d\ntimer %d";
+  char * defaultConfig = "serverIP %s\nport %d\ninitialThroughput %d\nincrementThroughput %d\ntimer %d";
   FILE *fp;
 
   fp = fopen( FILENAME, "w");
 
-  fprintf( fp, defaultConfig, SERVERIP, PORT, INITIALTHROUGHPUT, INCREMENTTHROUGHPUT, TIMEFREQUENCY, TIMER);
+  fprintf( fp, defaultConfig, SERVERIP, PORT, INITIALTHROUGHPUT, INCREMENTTHROUGHPUT, TIMER);
   fclose( fp );
 }
 
@@ -55,12 +54,8 @@ static ConfigOpt * readConfigFile( FILE *p_file )
         }
         else if( !strcmp("incrementThroughput", arg) )
         { 
-            config->incThp = atof( value );; 
-        }
-        else if( !strcmp("timeFrequency", arg) )
-        {
-            config->timeFreq = atoi( value );
-        }
+            config->incThp = atoi( value ); 
+        } 
         else if( !strcmp("timer", arg) )
         {
             config->timer = atoi( value );
@@ -122,8 +117,6 @@ void SetDraftConfig( LhfDraft *p_draft )
     p_draft->target_port = conf->port;
     p_draft->initialThroughput = conf->initialThp;
     p_draft->incrementThroughput = conf->incThp;
-    p_draft->timeFrequency = conf->timeFreq;
     p_draft->timer = conf->timer;
 } 
-
 

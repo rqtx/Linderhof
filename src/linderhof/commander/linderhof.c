@@ -1,6 +1,5 @@
 #include <pthread.h>
 #include "venus.h"
-#include "injector/injector.h"
 #include "common/capabilityHelper.h"
 #include "commander/planner.h"
 #include "commander/hom.h"

@@ -5,13 +5,10 @@
 #include "common/netio.h"
 
 typedef struct {
-  pthread_t executorId;
-  pthread_t injectorId;
   Packet * getPacket;
   Packet * setPacket; 
   float initialThroughput;
-  int incThroughput;
-  int incFrequency;          
+  bool incrementAttack;
   int timer;             
 }AttackPlan;
 

@@ -34,7 +34,6 @@ int ParserAttackOpt (int key, char *arg, struct argp_state *state)
                 draft->type = TEST;
                 draft->initialThroughput = 1;
                 draft->incrementThroughput = 1;
-                draft->timeFrequency = 1;
                 draft->timer = 120;
                 draft->amp_port = CRAKE_DEFAULT_PORT;
             }

@@ -6,7 +6,7 @@ set logging on
 
 #Breakpoints
 b main.c:main
-b netio.c:210
+b netuno.c:72
 
 #Start
 run

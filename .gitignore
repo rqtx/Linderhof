@@ -60,3 +60,5 @@ linderhof.config
 compile_commands.json
 *.gdbinit
 gdb.txt
+atklogger.txt
+monitorlogger.txt

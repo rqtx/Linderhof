@@ -1,7 +1,7 @@
 #include "manager.h"
 #include "executor.h"
 #include "common/common.h"
-#include "injector/injector.h"
+#include "netuno/netuno.h"
 
 
 #define ERROR_MEMCACHED -1
@@ -14,8 +14,7 @@ int ExecuteAttack( AttackPlan * atkData )
     ELOG(ERROR_MEMCACHED, "error memcached\n");
   }
    
-  atkData->injectorId = CreateInjection( *atkData->getPacket, atkData->initialThroughput, atkData->timer, atkData->incFrequency, atkData->incThroughput );
-  InjectionResume( atkData->injectorId );  
+  StartNetunoInjector( atkData->getPacket, atkData->initialThroughput, atkData->timer, atkData->incrementAttack);
   
   //CloseSocket(sock);
   return STRIKE;
