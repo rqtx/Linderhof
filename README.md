@@ -36,7 +36,7 @@ Espelhos disponíveis:
   -p, --amport=am_port       Amplifier port
   -r, --timer=timer          Attack timer
 
-Existe dois tipos de ataque. O primeiro
+Existe dois tipos de ataque. O ataque INCREMENT( Incremental ) é o ataque default. Ele começa em 1 Mb/s e vai incrementando o ataque até o tempo timer
   
 
 
@@ -47,7 +47,7 @@ Existe dois tipos de ataque. O primeiro
 
 ## Netuno
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTcwMTEwMTM2MSwtMTQ3NTU5NTY2NywtND
+eyJoaXN0b3J5IjpbMTU5MjU0MDIxNCwtMTQ3NTU5NTY2NywtND
 A5MjYzNjQ2LDE3MDQ3MTE4MTQsNzE2MjYzOTQ4LC0xNzA3MzQ1
 NTM0LDUyMjAxMzgyOCwtOTkzMjI0NTg2XX0=
 -->
