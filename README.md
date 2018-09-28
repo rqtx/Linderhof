@@ -36,7 +36,7 @@ Espelhos disponíveis:
   -p, --amport=am_port       Amplifier port
   -r, --timer=timer          Attack timer
 
-Existe dois tipos de ataque. O ataque INCREMENT( Incremental ) é o ataque **default**. Ele começa com um  1 Mb/s e vai incrementando o ataque até o tempo *timer* em 1 Mb/s a cada 5 minutos. O FULL é um ataque constante com um 
+O ataque INCREMENT( Incremental ) é o ataque **default**. Ele começa com um throughput de 1 Mb/s e vai incrementando o ataque até o tempo *timer* em 1 Mb/s a cada 5 minutos. O FULL é um ataque com um throughput constante *thp*.
   
 
 
@@ -47,7 +47,7 @@ Existe dois tipos de ataque. O ataque INCREMENT( Incremental ) é o ataque **def
 
 ## Netuno
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE0MjE4NTQyODcsLTE0NzU1OTU2NjcsLT
+eyJoaXN0b3J5IjpbLTIwMzM5NDU0OTAsLTE0NzU1OTU2NjcsLT
 QwOTI2MzY0NiwxNzA0NzExODE0LDcxNjI2Mzk0OCwtMTcwNzM0
 NTUzNCw1MjIwMTM4MjgsLTk5MzIyNDU4Nl19
 -->
