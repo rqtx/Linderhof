@@ -17,12 +17,13 @@ OryxCli deve ser utilizada caso queria acessar o linderhof na maquina local, é 
 OryxNet deve ser utilizada para acessar o Lindehof em uma máquina hospedeira. Para compilar o Linderhof com o OryxNet deve-se descomentar a linha 17 do **CMakeLists.txt**.
 
 ### Comandos API
-A sintaxe de um comando é a seguinte:
-CMD opt [args]
+A sintaxe:
+CMD cmd [args]
 
-- Ataque
-O comando de ataque é o único possível até o momento. 
-Seu CMD é 'atk'    
+#### Ataque
+- CMD
+-
+- cmd: tipo de espelho utilizado (memcached);
 
 
 
@@ -31,7 +32,7 @@ Seu CMD é 'atk'
 
 ## Netuno
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTQwOTI2MzY0NiwxNzA0NzExODE0LDcxNj
-I2Mzk0OCwtMTcwNzM0NTUzNCw1MjIwMTM4MjgsLTk5MzIyNDU4
-Nl19
+eyJoaXN0b3J5IjpbLTQ4MzcxNTYzNiwtNDA5MjYzNjQ2LDE3MD
+Q3MTE4MTQsNzE2MjYzOTQ4LC0xNzA3MzQ1NTM0LDUyMjAxMzgy
+OCwtOTkzMjI0NTg2XX0=
 -->
