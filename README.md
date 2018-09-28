@@ -22,7 +22,7 @@ CMD opt [args]
 
 - Ataque
 O comando de ataque é o único possível até o momento. 
-Seu CMD é 'atk   
+Seu CMD é 'atk'    
 
 
 
@@ -31,7 +31,7 @@ Seu CMD é 'atk
 
 ## Netuno
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTM0NDA4ODQ3NSwxNzA0NzExODE0LDcxNj
+eyJoaXN0b3J5IjpbLTQwOTI2MzY0NiwxNzA0NzExODE0LDcxNj
 I2Mzk0OCwtMTcwNzM0NTUzNCw1MjIwMTM4MjgsLTk5MzIyNDU4
 Nl19
 -->
