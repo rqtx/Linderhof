@@ -25,16 +25,17 @@ CMD cmd [args]
 atk
 - cmd
 OBS :Obrigatório. Esse parâmetro corresponde ao tipo de espelho utilizado. 
-Espelhos deisponíveis:
+Espelhos disponíveis:
 	- test 	
 	- memcached
 - args
-   -a, --amplifier=amp_ipv4   Memcached amplifier IPV4 (OBRIGATÓRIO)
-  -f, --full=thp             Full attack with arg throughput
+   -a, --amplifier=amp_ipv4   Amplificador IPV4 (OBRIGATÓRIO)
+   -t, --target=target_ipv4   Alvo IPV4 (OBRIGATÓRIO)
+  -f, --full=thp  
   -g, --targport=targ_port   Target port
   -p, --amport=am_port       Amplifier port
   -r, --timer=timer          Attack timer
-  -t, --target=target_ipv4   Attack target IPV4
+  
 
 
 
@@ -44,7 +45,7 @@ Espelhos deisponíveis:
 
 ## Netuno
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTA3MDk4OTY4MCwtMTQ3NTU5NTY2NywtND
-A5MjYzNjQ2LDE3MDQ3MTE4MTQsNzE2MjYzOTQ4LC0xNzA3MzQ1
-NTM0LDUyMjAxMzgyOCwtOTkzMjI0NTg2XX0=
+eyJoaXN0b3J5IjpbLTIxNDA2MDQ0OTIsLTE0NzU1OTU2NjcsLT
+QwOTI2MzY0NiwxNzA0NzExODE0LDcxNjI2Mzk0OCwtMTcwNzM0
+NTUzNCw1MjIwMTM4MjgsLTk5MzIyNDU4Nl19
 -->
