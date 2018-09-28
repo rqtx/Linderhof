@@ -21,12 +21,15 @@ A sintaxe:
 CMD cmd [args]
 
 #### Ataque
-- CMD
-Obrigatório. 
+- CMD 
 atk
 - cmd
-OBS Obrigatório. 
-No ataque esee parâmetro corresponde ao tipo de espelho utilizado (memcached).
+OBS :Obrigatório. No ataque esee parâmetro corresponde ao tipo de espelho utilizado. 
+Espelhos deisponíveis:
+	- test 	
+	- memcached
+- args
+OBS 
 
 
 
@@ -35,7 +38,7 @@ No ataque esee parâmetro corresponde ao tipo de espelho utilizado (memcached).
 
 ## Netuno
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTAzMDQ4MjA0NiwtNDA5MjYzNjQ2LDE3MD
-Q3MTE4MTQsNzE2MjYzOTQ4LC0xNzA3MzQ1NTM0LDUyMjAxMzgy
-OCwtOTkzMjI0NTg2XX0=
+eyJoaXN0b3J5IjpbLTE4Njc2MTQzNTEsLTQwOTI2MzY0NiwxNz
+A0NzExODE0LDcxNjI2Mzk0OCwtMTcwNzM0NTUzNCw1MjIwMTM4
+MjgsLTk5MzIyNDU4Nl19
 -->
