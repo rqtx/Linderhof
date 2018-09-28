@@ -4,7 +4,8 @@
 
 #include "venus.h"
 
-void LinderhofMaster();
-int AddMirrorAttack( LhfDraft p_draft );
+void LinderhofNet();
+void LinderhofCli( int p_argc, char **p_argv );
+int StartMirrorAttack( LhfDraft p_draft );
 
 #endif

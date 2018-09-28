@@ -9,7 +9,6 @@ static void closeLhf()
 {
     Elog(SUCCESS, "Closing lhf\n");
     CloseOryxNet();
-    //DestroyAllInjectors();
     memoryclean();
 }
 static void fatalHandler(int p_arg)
@@ -29,19 +28,28 @@ static bool validateDraft( LhfDraft p_draft )
     return true;    
 }
 
-void LinderhofMaster()
+void LinderhofBootstrap()
 {
-    
-
     SetSigHdr(SIGINT,  closeHandler);
     SetSigHdr(SIGQUIT, closeHandler);
     ESetErroAction(fatalHandler);
-    SetCapability(CAP_NET_RAW); 
-    //SetCapability(CAP_NET_ADMIN); 
+    SetCapability(CAP_NET_RAW);
+    //SetCapability(CAP_NET_ADMIN);
+}
+
+void LinderhofNet()
+{
+    LinderhofBootstrap(); 
     OryxNet();
 }
 
-int AddMirrorAttack( LhfDraft p_draft )
+void LinderhofCli( int p_argc, char **p_argv )
+{
+    LinderhofBootstrap();
+    OryxCli(p_argc, p_argv);
+}
+
+int StartMirrorAttack( LhfDraft p_draft )
 {
     LhfPlan *plan;
 

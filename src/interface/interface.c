@@ -104,7 +104,7 @@ Packet * CreateCmdPacket( CmdType p_type, int p_argc, char **p_argv )
 {
     CommandPkt *cmdPkt = NULL;
     Packet *pac = CreateEmptyPacket();
-    char *srvip = GetServerIP();
+    char *destip = GetServerIP();
     int err = 0;
 
     memalloc( &cmdPkt , sizeof(CommandPkt) );
@@ -130,14 +130,17 @@ Packet * CreateCmdPacket( CmdType p_type, int p_argc, char **p_argv )
 
     pac->type = LHF;
     pac->packet_ptr = cmdPkt;
-    pac->pkt_size = COMMANDPKT_HEADERSIZE + cmdPkt->dataSize;
-    strcpy( pac->ip_dest,srvip);
-    pac->dest_port = DEFAULT_COMPORT;
-    pac->netSock = -1;
-    pac->saddr.sin_family = AF_INET;
-    pac->saddr.sin_port = htons(DEFAULT_COMPORT);
-    pac->saddr.sin_addr.s_addr = inet_addr(srvip);
 
+    if( NULL != destip)
+    {
+        pac->pkt_size = COMMANDPKT_HEADERSIZE + cmdPkt->dataSize;
+        strcpy( pac->ip_dest,destip);
+        pac->dest_port = DEFAULT_COMPORT;
+        pac->netSock = -1;
+        pac->saddr.sin_family = AF_INET;
+        pac->saddr.sin_port = htons(DEFAULT_COMPORT);
+        pac->saddr.sin_addr.s_addr = inet_addr(destip);
+    }
     return pac;
 }
 

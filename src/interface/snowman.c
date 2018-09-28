@@ -17,6 +17,11 @@ static CmdType getCmd( char *p_cmd )
     {
         return AttackCmd;
     }
+
+    if( !strcmp(p_cmd, "exit") )
+    {
+        return ExitCmd;
+    }
     
     return UnknownCmd;
 }

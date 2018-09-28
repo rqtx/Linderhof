@@ -9,7 +9,6 @@
 #define MAX_INJECTORCELlS NETUNO_MAXTHP / MAX_INJECTORCELL_THP
 #define getNumberOfCells(thp) ( (thp / MAX_INJECTORCELL_THP) <= 0 ) ? 1 : (thp / MAX_INJECTORCELL_THP)
 
-
 typedef struct { 
     InjectorType type;
     InjectorMonitor monitor;
@@ -76,7 +75,7 @@ void StartNetunoInjector( Packet *p_pkt, unsigned int p_inithp, unsigned int p_t
     unsigned int thp = (p_inithp <= 0 || p_inithp > NETUNO_MAXTHP) ? NETUNO_MAXTHP : p_inithp;
     NetunoInjector netuno;
     netuno.pkt = p_pkt; 
-    FILE *fp = CreateLoggerFile(ATK_LOGGER);
+    FILE *fpLog = CreateLoggerFile(ATK_LOGGER);
     
     LOG("Netuno\n");
 
@@ -106,7 +105,7 @@ void StartNetunoInjector( Packet *p_pkt, unsigned int p_inithp, unsigned int p_t
             incClock = 0;
         }
 
-        LogInjection( fp, netuno.monitor.throughputExpected, netuno.monitor.throughputCurrent);
+        LogInjection( fpLog, netuno.monitor.throughputExpected, netuno.monitor.throughputCurrent);
         SleepOneMinute();
         masterClock++;
         incClock++;
@@ -117,7 +116,7 @@ void StartNetunoInjector( Packet *p_pkt, unsigned int p_inithp, unsigned int p_t
         }
     }
 
-    fclose(fp);
+    fclose(fpLog);
 
     for(int i = 0; i <= netuno.lastActCell; i++)
     {

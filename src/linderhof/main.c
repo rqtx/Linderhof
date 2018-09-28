@@ -3,7 +3,11 @@
 
 int main( int argc, char **argv)
 {
-  LinderhofMaster();
-  memoryclean();
-  return 0;
+#ifdef ORYXNET
+    LinderhofNet();
+#else
+    LinderhofCli(argc,argv);
+#endif
+    memoryclean();
+    return 0;
 }

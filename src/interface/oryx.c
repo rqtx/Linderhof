@@ -156,7 +156,7 @@ static CommandPkt * getCommand( ClientAddr p_addr )
 
         if ((cmd = packetToCmd(buffer)) == NULL)
         {
-            //send error to client
+            //TODO: send error to client
             continue;
         }
     }
@@ -179,7 +179,7 @@ static void * commandHandler( void * p_addr )
                 case AttackCmd:
                     draft = getAttackDraftFromCmd( *cmd );
                     int rtn;
-                    if( ( ( rtn = AddMirrorAttack( *draft ) ) < 0) )
+                    if( ( ( rtn = StartMirrorAttack( *draft ) ) < 0) )
                     {
                         //TODO:send error to client
                     }
@@ -214,3 +214,27 @@ void CloseOryxNet()
     CloseSocket(serverSock);
 }
 
+void OryxCli( int p_argc, char **p_argv )
+{
+    Packet *pkt;
+    CommandPkt *cmd;
+    LhfDraft *draft;
+    char **args = NULL;
+    int argCounter = p_argc-1;
+
+    if( strcmp(p_argv[1], "atk") )
+    {
+        LOG("Invalid Command\n");
+        return;
+    }
+
+    memalloc(&args, argCounter);
+    for(int i = 0; i < argCounter; i++)
+    {
+       args[i] = p_argv[i+1]; 
+    }
+    pkt = CreateCmdPacket( AttackCmd, argCounter, args);
+    cmd = (CommandPkt *) pkt->packet_ptr; 
+    draft = getAttackDraftFromCmd(*cmd);
+    StartMirrorAttack( *draft );
+}
