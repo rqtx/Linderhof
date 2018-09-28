@@ -21,7 +21,8 @@ A sintaxe de um comando é a seguinte:
 CMD opt [args]
 
 - Ataque
-O comando de ataque é o único possível atéo o momento. Seu CMD é 
+O comando de ataque é o único possível até o momento. 
+Seu CMD é 'atk   
 
 
 
@@ -30,7 +31,7 @@ O comando de ataque é o único possível atéo o momento. Seu CMD é
 
 ## Netuno
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTc2MjIzMDk3NywxNzA0NzExODE0LDcxNj
+eyJoaXN0b3J5IjpbMTM0NDA4ODQ3NSwxNzA0NzExODE0LDcxNj
 I2Mzk0OCwtMTcwNzM0NTUzNCw1MjIwMTM4MjgsLTk5MzIyNDU4
 Nl19
 -->
