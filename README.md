@@ -31,10 +31,12 @@ Espelhos disponíveis:
 - args
    -a, --amplifier=amp_ipv4   Amplificador IPV4 (OBRIGATÓRIO)
    -t, --target=target_ipv4   Alvo IPV4 (OBRIGATÓRIO)
-  -f, --full=thp  
+  -f, --full=thp Executa um ataque full
   -g, --targport=targ_port   Target port
   -p, --amport=am_port       Amplifier port
   -r, --timer=timer          Attack timer
+
+Existe dois tipos de ataque. O primeiro
   
 
 
@@ -45,7 +47,7 @@ Espelhos disponíveis:
 
 ## Netuno
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTIxNDA2MDQ0OTIsLTE0NzU1OTU2NjcsLT
-QwOTI2MzY0NiwxNzA0NzExODE0LDcxNjI2Mzk0OCwtMTcwNzM0
-NTUzNCw1MjIwMTM4MjgsLTk5MzIyNDU4Nl19
+eyJoaXN0b3J5IjpbLTcwMTEwMTM2MSwtMTQ3NTU5NTY2NywtND
+A5MjYzNjQ2LDE3MDQ3MTE4MTQsNzE2MjYzOTQ4LC0xNzA3MzQ1
+NTM0LDUyMjAxMzgyOCwtOTkzMjI0NTg2XX0=
 -->
