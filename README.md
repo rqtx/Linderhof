@@ -19,10 +19,15 @@ OryxNet deve ser utilizada para acessar o Lindehof em uma máquina hospedeira. P
 ### Comandos API
 A sintaxe de um camando é a seguinte:
 CMD opt [args]
+
+Até o momento o único comando possível é o de ataque.
+
+> atk [
+
 ## Linderhof
 
 ## Netuno
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbNzE2MjYzOTQ4LC0xNzA3MzQ1NTM0LDUyMj
-AxMzgyOCwtOTkzMjI0NTg2XX0=
+eyJoaXN0b3J5IjpbLTQ0NjQzNjAzNSw3MTYyNjM5NDgsLTE3MD
+czNDU1MzQsNTIyMDEzODI4LC05OTMyMjQ1ODZdfQ==
 -->
