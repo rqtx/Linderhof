@@ -22,8 +22,11 @@ CMD cmd [args]
 
 #### Ataque
 - CMD
--
-- cmd: tipo de espelho utilizado (memcached);
+Obrigatório. 
+atk
+- cmd
+OBS Obrigatório. 
+No ataque esee parâmetro corresponde ao tipo de espelho utilizado (memcached).
 
 
 
@@ -32,7 +35,7 @@ CMD cmd [args]
 
 ## Netuno
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTQ4MzcxNTYzNiwtNDA5MjYzNjQ2LDE3MD
+eyJoaXN0b3J5IjpbMTAzMDQ4MjA0NiwtNDA5MjYzNjQ2LDE3MD
 Q3MTE4MTQsNzE2MjYzOTQ4LC0xNzA3MzQ1NTM0LDUyMjAxMzgy
 OCwtOTkzMjI0NTg2XX0=
 -->
