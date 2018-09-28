@@ -7,13 +7,11 @@
 typedef struct {
   char * serverIP;
   unsigned int port;
-  float initialThp;
-  bool incThp;
-  unsigned int timer;
 }ConfigOpt;
 
+void SetServerIP( char * p_ip );
 char * GetServerIP();
 int GetServerPort();
-void SetDraftConfig( LhfDraft *p_draft );
+char * AskServerIP();
 
 #endif

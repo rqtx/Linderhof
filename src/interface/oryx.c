@@ -67,12 +67,13 @@ static CommandPkt * packetToCmd( char * p_pkt )
 static void serverInitializer( )
 {
     serverSock = CreateSocket(TCP, BLOCK);
+    int port = GetServerPort();
 
     /* Construct local address structure */
     memset(&serverAddr, 0, sizeof(serverAddr));   /* Zero out structure */
     serverAddr.sin_family = AF_INET;                /* Internet address family */
     serverAddr.sin_addr.s_addr = htonl(INADDR_ANY); /* Any incoming interface */
-    serverAddr.sin_port = htons(DEFAULT_COMPORT);   /* Local port */
+    serverAddr.sin_port = htons(port);              /* Local port */
 
     /* Bind to the local address */
     if (bind(serverSock, (struct sockaddr *) &serverAddr, sizeof(serverAddr)) < 0)
@@ -129,7 +130,7 @@ static LhfDraft * getAttackDraftFromCmd( CommandPkt p_cmd )
     draft->target_port = clnDrf.target_port;
     draft->amp_port = clnDrf.amp_port;
     draft->initialThroughput = clnDrf.initialThroughput;
-    draft->incrementThroughput = clnDrf.incrementThroughput;
+    draft->typeThroughput = clnDrf.typeThroughput;
     draft->timer = clnDrf.timer;
 
     return draft;

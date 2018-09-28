@@ -16,7 +16,7 @@ static AttackPlan * createAttackData( AttackDraft *draft )
   arg = MEMCACHED_GET;
   newData->getPacket = ForgeUDP( draft->amp_ip, draft->target_ip, GetPort(draft->amp_port), ForgeMemcachedPacket, &arg );
   newData->initialThroughput = draft->initialThroughput;
-  newData->incrementAttack = draft->incrementThroughput;
+  newData->incrementAttack = draft->typeThroughput;
   newData->timer = draft->timer;
 
   return newData;

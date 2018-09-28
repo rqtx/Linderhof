@@ -20,5 +20,6 @@ typedef struct {
 #define GetClientIP(p_addr) inet_ntoa(p_addr.sin_addr)
 
 Packet * CreateCmdPacket( CmdType p_type, int p_argc, char **p_argv );
+void SetDraftDefaultData( LhfDraft *p_draft );
 
 #endif

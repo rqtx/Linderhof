@@ -10,6 +10,7 @@
 
 #define MAXBUFFERSIZE 500
 #define MAXARGS  20
+
 static CmdType getCmd( char *p_cmd )
 {
     if( !strcmp(p_cmd, "atk") )
@@ -55,7 +56,6 @@ static Packet * getPacketFromInput()
         CmdType cmd = UnknownCmd;
         
         memset(buffer, 0, MAXBUFFERSIZE);
-        //strcpy( buffer, "atk memcached -t 192.168.0.100 -a 192.168.0.100");
         fputs("_$: ", stdout);
         fgets(buffer, MAXBUFFERSIZE, stdin);
         buffer[strlen(buffer)-1] = '\0'; //Remove \n from enter
@@ -83,7 +83,7 @@ static Packet * getPacketFromInput()
 static int connectToServer()
 {
     int sock = CreateSocket(TCP, true);
-    char * serverIP = GetServerIP();
+    char * serverIP = AskServerIP();
     int serverPort = GetServerPort();
     struct sockaddr_in servAddr;
 
@@ -93,12 +93,12 @@ static int connectToServer()
     servAddr.sin_addr.s_addr = inet_addr(serverIP);   /* Server IP address */
     servAddr.sin_port        = htons(serverPort); /* Server port */
 
-
     /* Establish the connection to the echo server */
     if (connect(sock, (struct sockaddr *) &servAddr, sizeof(servAddr)) < 0){
         Efatal( ERROR_NET, "connect() failed\n");
     }
 
+    SetServerIP( serverIP );
     return sock;
 }
 
@@ -119,7 +119,7 @@ void SnowmanShell()
             case AttackCmd:
                 SendPacket(pac);
                 LOG("Packet sent\n");
-                StartMonitor();
+                MonitorCrake(60);
         }
 
     }

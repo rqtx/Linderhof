@@ -1,8 +1,8 @@
 #include <stdlib.h>
-#include <time.h>
 #include <sys/types.h>
 #include <signal.h>
-#include <math.h> 
+#include <math.h>
+#include "venus.h"
 #include "netuno/injector.h"
 #include "netuno/logger.h"
 
@@ -14,11 +14,6 @@ typedef enum { INJECTOR, MONITOR, TRAFFIC_SHAPING } THREAD_TYPE;
 #define MEGABYTE 1000000
 #define DEFAULT_SIZE 1
 
-static struct timespec _onesec = {
-               .tv_sec = 1,                     /* 1 seconds */
-               .tv_nsec = 0       /* 0 nanoseconds */
-          };
-
 static void *_trafficshapingHandler( void *p_arg )
 {
     Injector *injector = (Injector *)p_arg; 
@@ -27,7 +22,7 @@ static void *_trafficshapingHandler( void *p_arg )
     while(1)
     {
         injector->net.bucketSize = ceil( (injector->monitor.throughputExpected * MEGABYTE) / injector->net.pkt->payload_size );
-        nanosleep(&_onesec, NULL);
+        SleepOneSec(); 
     }
     return NULL; //kepp compiler quiet
 }
@@ -43,14 +38,14 @@ static void *_throughputMonitorHandler( void *p_arg )
         for(int i = 0; i < SAMPLING; i++)
         { 
             injector->net.pktCounter = 0;
-            nanosleep(&_onesec, NULL);
+            SleepOneSec();
             sample += injector->net.pkt->payload_size * injector->net.pktCounter;
         }
  
         injector->monitor.throughputCurrent = (sample/SAMPLING)/MEGABYTE;
         sample = 0;
         injector->net.pktDroped = 0;
-        nanosleep(&_onesec, NULL);
+        SleepOneSec();
     }
 
     return NULL; //Keep compiler quiet

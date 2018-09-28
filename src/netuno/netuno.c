@@ -19,11 +19,6 @@ typedef struct {
     Injector **injectors;
 }NetunoInjector;
 
-static struct timespec _onemin = {
-               .tv_sec = 60,                     /* 60 seconds */
-               .tv_nsec = 0       /* 0 nanoseconds */
-          };
-
 static Injector ** fullAttack( Packet *p_pkt, int p_inithp, int p_injCells )
 {
     Injector **injectors = NULL;
@@ -112,7 +107,7 @@ void StartNetunoInjector( Packet *p_pkt, unsigned int p_inithp, unsigned int p_t
         }
 
         LogInjection( fp, netuno.monitor.throughputExpected, netuno.monitor.throughputCurrent);
-        nanosleep(&_onemin, NULL);
+        SleepOneMinute();
         masterClock++;
         incClock++;
 

@@ -18,7 +18,7 @@ typedef struct {
   int target_port;
   int amp_port;
   float initialThroughput;
-  bool incrementThroughput;
+  bool typeThroughput;
   int timer; //Duration of attack in minutes 0 == INF
 }LhfDraft;
 

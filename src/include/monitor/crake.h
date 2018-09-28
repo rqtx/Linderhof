@@ -4,6 +4,6 @@
 
 #define CRAKE_DEFAULT_PORT 3659
 
-void StartMonitor();
+void MonitorCrake();
 
 #endif

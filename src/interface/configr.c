@@ -5,24 +5,22 @@
 #include "commander/linderhof.h"
 #include "interface/configr.h"
 
+#define MAXIPBUFFER 500
 #define FILENAME "linderhof.config"
-#define SERVERIP "192.168.0.141"
-#define PORT 0
-#define INITIALTHROUGHPUT 0
-#define INCREMENTTHROUGHPUT 1
-#define TIMER 60
+#define SERVERIP "127.0.0.1"
 #define DELIM "."
 
 ConfigOpt *conf = NULL;
+char * serverIP = NULL;
 
 static void createConfigFile( ) 
 {
-  char * defaultConfig = "serverIP %s\nport %d\ninitialThroughput %d\nincrementThroughput %d\ntimer %d";
+  char * defaultConfig = "serverIP %s\nport %d";
   FILE *fp;
 
   fp = fopen( FILENAME, "w");
 
-  fprintf( fp, defaultConfig, SERVERIP, PORT, INITIALTHROUGHPUT, INCREMENTTHROUGHPUT, TIMER);
+  fprintf( fp, defaultConfig, SERVERIP, DEFAULT_COMPORT );
   fclose( fp );
 }
 
@@ -47,19 +45,7 @@ static ConfigOpt * readConfigFile( FILE *p_file )
         else if( !strcmp("port", arg) )
         { 
             config->port = atoi( value );
-        }
-        else if( !strcmp("initialThroughput", arg) )
-        {
-            config->initialThp = atof( value );
-        }
-        else if( !strcmp("incrementThroughput", arg) )
-        { 
-            config->incThp = atoi( value ); 
         } 
-        else if( !strcmp("timer", arg) )
-        {
-            config->timer = atoi( value );
-        }
         else{
             char error[200];
             sprintf(error, "Error in config file, unknow argument %s", arg);
@@ -92,13 +78,14 @@ static ConfigOpt * getConfig()
     return rtn;
 }
 
+void SetServerIP( char * p_ip )
+{
+    serverIP = p_ip;
+}
+
 char * GetServerIP()
 {
-    if( NULL == conf)
-    {
-        conf = getConfig();
-    }
-    return conf->serverIP;
+   return serverIP; 
 }
 
 int GetServerPort()
@@ -106,17 +93,11 @@ int GetServerPort()
     return DEFAULT_COMPORT;
 }
 
-void SetDraftConfig( LhfDraft *p_draft )
+char * AskServerIP( )
 {
-    if( NULL == conf)
-    {
-        conf = getConfig();
-    }
-    
-    p_draft->amp_port = conf->port;
-    p_draft->target_port = conf->port;
-    p_draft->initialThroughput = conf->initialThp;
-    p_draft->incrementThroughput = conf->incThp;
-    p_draft->timer = conf->timer;
-} 
-
+    char *buffer = NULL;
+    memalloc(&buffer, sizeof(MAXIPBUFFER));
+    fputs("\nServer IP: ", stdout);
+    fgets(buffer, MAXIPBUFFER, stdin);
+    return buffer;
+}

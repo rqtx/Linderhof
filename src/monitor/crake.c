@@ -7,11 +7,13 @@
 #include <time.h>
 #include <pthread.h>
 
-#define RCVBUFSIZE 2046
+#define RCVBUFSIZE 8192
 #define SAMPLING 60
 #define MEGABYTE 1000000
 
+pthread_t monitorID, reciverID;
 unsigned int bufferCounter = 0;
+FILE *fpLog = NULL;
 
 static struct timespec _onesec = {
                .tv_sec = 1,                     /* 1 seconds */
@@ -20,26 +22,18 @@ static struct timespec _onesec = {
 
 static void *throughputMonitorHandler( void *p_arg )
 {
-    float sample = 0;
-    FILE *fp = NULL;    
-
+    float sample = 0;    
       
     while(1)
     {
-
         for(int i = 0; i < SAMPLING; i++)
         { 
             bufferCounter = 0;
             nanosleep(&_onesec, NULL);
             sample += bufferCounter;
         }
- 
-        if(fp == NULL)
-        {
-            fp = stdout;
-        }
 
-        LogAttack(fp, (sample/SAMPLING)/MEGABYTE);
+        LogAttack(fpLog, (sample/SAMPLING)/MEGABYTE);
         sample = 0;
         nanosleep(&_onesec, NULL);
     }
@@ -77,9 +71,6 @@ static void *reciverHandler( void *p_arg )
             bufferCounter += recv_len;
         }
          
-        //print details of the client/peer and the data received
-        //printf("Received packet from %s:%d\n", inet_ntoa(addr_recv.sin_addr), ntohs(addr_recv.sin_port));
-        //printf("Data: %s\n" , buf);
     }
  
     CloseSocket(monitorSock);
@@ -87,14 +78,36 @@ static void *reciverHandler( void *p_arg )
     return NULL; //Keep compiler quiet
 }
 
-void StartMonitor()
+void exitCrake()
 {
-    pthread_t monitorID;
+    pthread_cancel(monitorID);
+    pthread_cancel(reciverID);
+    fclose(fpLog);
+}
+
+void MonitorCrake( unsigned int p_timer )
+{
+    fpLog = CreateLoggerFile(MONITOR_LOGGER);
+
+    LOG("CRAKE MONITOR\n");
 
     if( 0 != pthread_create(&monitorID, NULL, throughputMonitorHandler, NULL) )
     {
         Elog( ERROR_INJECTOR, "Monitor error");
     }
 
-    reciverHandler( NULL );
+    if( 0 != pthread_create(&reciverID, NULL, reciverHandler, NULL) )
+    {
+        Elog( ERROR_INJECTOR, "Monitor error");
+    }
+
+    while( p_timer )
+    {
+        SleepOneMinute();
+        p_timer--;
+    } 
+   
+    exitCrake();
+
+    LOG("MONITOR END\n");
 }

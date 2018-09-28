@@ -7,7 +7,7 @@ int ExecuteTestMirror( void *p_draft )
   LhfDraft *plan = (LhfDraft *)p_draft;
   Packet *pac = ForgeUDP( plan->amp_ip, plan->target_ip, plan->amp_port, NULL, "MirrorTest" );
 
-  StartNetunoInjector( pac, plan->initialThroughput, plan->timer, plan->incrementThroughput);
+  StartNetunoInjector( pac, plan->initialThroughput, plan->timer, plan->typeThroughput);
 
   return SUCCESS;
 }

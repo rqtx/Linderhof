@@ -4,16 +4,6 @@
 
 #include <time.h>
 
-char * getCurrentTimeStr()
-{
-    time_t rawtime;
-    struct tm * timeinfo;
-
-    time ( &rawtime );
-    timeinfo = localtime ( &rawtime );
-    return asctime (timeinfo);
-}
-
 FILE * CreateLoggerFile( LoggerType p_type )
 {
     FILE *fp = NULL;
@@ -33,13 +23,13 @@ FILE * CreateLoggerFile( LoggerType p_type )
 void LogInjection( FILE * p_fp, float p_thpExp, float p_thpCur )
 {
     FILE *fp = ( p_fp == NULL ) ? stdout : p_fp; 
-    char *curTime = getCurrentTimeStr();
+    char *curTime = GetCurrentTimeStr();
     fprintf( fp, "%s %f %f\n ", curTime, p_thpExp ,p_thpCur);
 }
 
 void LogAttack( FILE *p_fp, float p_thp )
 {
     FILE *fp = ( p_fp == NULL ) ? stdout : p_fp; 
-    char *curTime = getCurrentTimeStr();
+    char *curTime = GetCurrentTimeStr();
     fprintf( fp, "%s %f\n", curTime, p_thp );
 }
