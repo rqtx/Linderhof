@@ -1,6 +1,6 @@
 # LINDERHOF  
   
-O projeto Linderhof tem o objetivo de ser uma biblioteca de ataques de negação de serviço refletido/amplificado.  
+O projeto Linderhof tem o objetivo de ser uma biblioteca de ataques de negação de serviço refletidos/amplificados.  
   
   
 # Arquitetura
@@ -51,7 +51,7 @@ O ataque INCREMENT é o ataque **default**. Ele começa com um throughput de 1 M
 
 ## Netuno
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMjA3NjAxMDMyNCwtMTQ3NTU5NTY2NywtND
-A5MjYzNjQ2LDE3MDQ3MTE4MTQsNzE2MjYzOTQ4LC0xNzA3MzQ1
-NTM0LDUyMjAxMzgyOCwtOTkzMjI0NTg2XX0=
+eyJoaXN0b3J5IjpbMTAyMTMyNTM2LC0xNDc1NTk1NjY3LC00MD
+kyNjM2NDYsMTcwNDcxMTgxNCw3MTYyNjM5NDgsLTE3MDczNDU1
+MzQsNTIyMDEzODI4LC05OTMyMjQ1ODZdfQ==
 -->
