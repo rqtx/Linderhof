@@ -44,13 +44,15 @@ O ataque INCREMENT é o ataque **default**. Ele começa com um throughput de 1 M
 
 ## Linderhof
 Core engine.
-Biblioteca dos ataques. Aqui é onde montamos um plano de ataque e executamos injetor.
+Biblioteca dos ataques. Aqui é onde montamos um plano de ataque e executamos o injetor.
 
 ## Netuno
 Injector engine.
 Injetor de pacotes.
+
+# Adicionando Mirror
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbOTI2NjA0NjksMTAyMTMyNTM2LC0xNDc1NT
-k1NjY3LC00MDkyNjM2NDYsMTcwNDcxMTgxNCw3MTYyNjM5NDgs
-LTE3MDczNDU1MzQsNTIyMDEzODI4LC05OTMyMjQ1ODZdfQ==
+eyJoaXN0b3J5IjpbNjkwNDk5OTc1LDEwMjEzMjUzNiwtMTQ3NT
+U5NTY2NywtNDA5MjYzNjQ2LDE3MDQ3MTE4MTQsNzE2MjYzOTQ4
+LC0xNzA3MzQ1NTM0LDUyMjAxMzgyOCwtOTkzMjI0NTg2XX0=
 -->
