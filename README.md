@@ -43,10 +43,12 @@ O ataque INCREMENT é o ataque **default**. Ele começa com um throughput de 1 M
 	Exit
 
 ## Linderhof
-Core 
+Core engine.
+Biblioteca dos ataques. Aqui é onde montamos e ex
 ## Netuno
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbNjA4MzM4MzEzLDEwMjEzMjUzNiwtMTQ3NT
-U5NTY2NywtNDA5MjYzNjQ2LDE3MDQ3MTE4MTQsNzE2MjYzOTQ4
-LC0xNzA3MzQ1NTM0LDUyMjAxMzgyOCwtOTkzMjI0NTg2XX0=
+eyJoaXN0b3J5IjpbLTExNDQyNTY4MTIsMTAyMTMyNTM2LC0xND
+c1NTk1NjY3LC00MDkyNjM2NDYsMTcwNDcxMTgxNCw3MTYyNjM5
+NDgsLTE3MDczNDU1MzQsNTIyMDEzODI4LC05OTMyMjQ1ODZdfQ
+==
 -->
