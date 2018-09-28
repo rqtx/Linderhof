@@ -2,7 +2,8 @@
   
 O projeto Linderhof tem o objetivo de ser uma biblioteca de ataques de negação de serviço refletidos/amplificados.  
   
-  
+# Build
+Requisitos
 # Arquitetura
 
 ## Oryx
@@ -50,9 +51,10 @@ Biblioteca dos ataques. Aqui é onde montamos um plano de ataque e executamos o 
 Injector engine.
 Injetor de pacotes.
 
-# Adicionando Mirror
+# Adicionando um Mirror
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbNjkwNDk5OTc1LDEwMjEzMjUzNiwtMTQ3NT
-U5NTY2NywtNDA5MjYzNjQ2LDE3MDQ3MTE4MTQsNzE2MjYzOTQ4
-LC0xNzA3MzQ1NTM0LDUyMjAxMzgyOCwtOTkzMjI0NTg2XX0=
+eyJoaXN0b3J5IjpbMjc3NTY0OTI2LDY5MDQ5OTk3NSwxMDIxMz
+I1MzYsLTE0NzU1OTU2NjcsLTQwOTI2MzY0NiwxNzA0NzExODE0
+LDcxNjI2Mzk0OCwtMTcwNzM0NTUzNCw1MjIwMTM4MjgsLTk5Mz
+IyNDU4Nl19
 -->
