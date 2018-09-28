@@ -41,17 +41,12 @@ O ataque INCREMENT é o ataque **default**. Ele começa com um throughput de 1 M
 #### Encerrar conexão OryxNet
 - CMD
 	Exit
-  
-
-
-
-
 
 ## Linderhof
-
+Core 
 ## Netuno
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTAyMTMyNTM2LC0xNDc1NTk1NjY3LC00MD
-kyNjM2NDYsMTcwNDcxMTgxNCw3MTYyNjM5NDgsLTE3MDczNDU1
-MzQsNTIyMDEzODI4LC05OTMyMjQ1ODZdfQ==
+eyJoaXN0b3J5IjpbNjA4MzM4MzEzLDEwMjEzMjUzNiwtMTQ3NT
+U5NTY2NywtNDA5MjYzNjQ2LDE3MDQ3MTE4MTQsNzE2MjYzOTQ4
+LC0xNzA3MzQ1NTM0LDUyMjAxMzgyOCwtOTkzMjI0NTg2XX0=
 -->
