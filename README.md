@@ -20,6 +20,9 @@ OryxNet deve ser utilizada para acessar o Lindehof em uma máquina hospedeira. P
 A sintaxe de um comando é a seguinte:
 CMD opt [args]
 
+- Ataque
+O comando de ataque é o único possível atéo o momento. Seu CMD é 
+
 
 
 
@@ -27,6 +30,7 @@ CMD opt [args]
 
 ## Netuno
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTcwNDcxMTgxNCw3MTYyNjM5NDgsLTE3MD
-czNDU1MzQsNTIyMDEzODI4LC05OTMyMjQ1ODZdfQ==
+eyJoaXN0b3J5IjpbMTc2MjIzMDk3NywxNzA0NzExODE0LDcxNj
+I2Mzk0OCwtMTcwNzM0NTUzNCw1MjIwMTM4MjgsLTk5MzIyNDU4
+Nl19
 -->
