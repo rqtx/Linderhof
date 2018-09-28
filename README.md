@@ -3,7 +3,10 @@
 O projeto Linderhof tem o objetivo de ser uma biblioteca de ataques de negação de serviço refletidos/amplificados.  
   
 # Build
-Requisitos
+Requisitos:
+- CMake
+
+Para compilar basta executar o script build.sh. Os binários estarão na pasta bin do projeto.
 # Arquitetura
 
 ## Oryx
@@ -53,7 +56,7 @@ Injetor de pacotes.
 
 # Adicionando um Mirror
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMjc3NTY0OTI2LDY5MDQ5OTk3NSwxMDIxMz
+eyJoaXN0b3J5IjpbNzMyMzU1OTUzLDY5MDQ5OTk3NSwxMDIxMz
 I1MzYsLTE0NzU1OTU2NjcsLTQwOTI2MzY0NiwxNzA0NzExODE0
 LDcxNjI2Mzk0OCwtMTcwNzM0NTUzNCw1MjIwMTM4MjgsLTk5Mz
 IyNDU4Nl19
