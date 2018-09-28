@@ -12,7 +12,7 @@ Existem duas possíveis interfaces:
  - OryxCli
  - OryxNet
 
-OryxCli deve ser utilizada caso queria acessar o linderhof na maquina local, é a API acesso padrão. 
+OryxCli deve ser utilizada caso queria acessar o linderhof na maquina local (API padrão). 
 
 OryxNet deve ser utilizada para acessar o Lindehof em uma máquina hospedeira. Para compilar o Linderhof com o OryxNet deve-se descomentar a linha 17 do **CMakeLists.txt**.
 
@@ -51,7 +51,7 @@ O ataque INCREMENT é o ataque **default**. Ele começa com um throughput de 1 M
 
 ## Netuno
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbOTQzNTQwNzI0LC0xNDc1NTk1NjY3LC00MD
+eyJoaXN0b3J5IjpbMjA2MTI1MzYzLC0xNDc1NTk1NjY3LC00MD
 kyNjM2NDYsMTcwNDcxMTgxNCw3MTYyNjM5NDgsLTE3MDczNDU1
 MzQsNTIyMDEzODI4LC05OTMyMjQ1ODZdfQ==
 -->
