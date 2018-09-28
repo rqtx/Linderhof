@@ -24,12 +24,12 @@ CMD cmd [args]
 - CMD 
 atk
 - cmd
-OBS :Obrigatório. No ataque esee parâmetro corresponde ao tipo de espelho utilizado. 
+OBS :Obrigatório. Esse parâmetro corresponde ao tipo de espelho utilizado. 
 Espelhos deisponíveis:
 	- test 	
 	- memcached
 - args
-OBS 
+
 
 
 
@@ -38,7 +38,7 @@ OBS
 
 ## Netuno
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE4Njc2MTQzNTEsLTQwOTI2MzY0NiwxNz
+eyJoaXN0b3J5IjpbLTE0NzU1OTU2NjcsLTQwOTI2MzY0NiwxNz
 A0NzExODE0LDcxNjI2Mzk0OCwtMTcwNzM0NTUzNCw1MjIwMTM4
 MjgsLTk5MzIyNDU4Nl19
 -->
