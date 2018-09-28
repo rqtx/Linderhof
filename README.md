@@ -29,7 +29,15 @@ Espelhos deisponíveis:
 	- test 	
 	- memcached
 - args
-
+-a, --amplifier=amp_ipv4   Memcached amplifier IPV4
+  -f, --full=thp             Full attack with arg throughput
+  -g, --targport=targ_port   Target port
+  -p, --amport=am_port       Amplifier port
+  -r, --timer=timer          Attack timer
+  -t, --target=target_ipv4   Attack target IPV4
+  -?, --help                 Give this help list
+      --usage                Give a short usage message
+  -V, --version              Print program version
 
 
 
@@ -38,7 +46,7 @@ Espelhos deisponíveis:
 
 ## Netuno
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE0NzU1OTU2NjcsLTQwOTI2MzY0NiwxNz
-A0NzExODE0LDcxNjI2Mzk0OCwtMTcwNzM0NTUzNCw1MjIwMTM4
-MjgsLTk5MzIyNDU4Nl19
+eyJoaXN0b3J5IjpbNzA4MjI5MjU0LC0xNDc1NTk1NjY3LC00MD
+kyNjM2NDYsMTcwNDcxMTgxNCw3MTYyNjM5NDgsLTE3MDczNDU1
+MzQsNTIyMDEzODI4LC05OTMyMjQ1ODZdfQ==
 -->
