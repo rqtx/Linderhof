@@ -77,12 +77,13 @@ A função de chamada do mirror deve seguir o protótipo a seguir:
     int func( void *p_arg );
 
 Sendo p_arg os argumentos necessários para executar o mirror. 
-Após o linderhof fazer a chamada da função de mirror é dever dela preparar o terreno para o ataque e depois cham
+Após o linderhof fazer a chamada da função mirror é dever dela fazer toda a preparação do ataque, com tudo pronto deve fazer a chamada da API de injeção.
 
+## Passo 2: 
 Adicionar mirror no Linderhof planner.
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTIzMzMwODk0NywtMTg0ODU3OTM3NiwtNj
+eyJoaXN0b3J5IjpbMTQ3NDY5Mzc0NiwtMTg0ODU3OTM3NiwtNj
 k2ODQyNjkzLDI1MzM5OTgwMiwxMjg4MDI2NDcsNjU4NzgzNTI5
 LC0zNDk0MzE5MDAsLTk1OTM3Njg4LDczMjM1NTk1Myw2OTA0OT
 k5NzUsMTAyMTMyNTM2LC0xNDc1NTk1NjY3LC00MDkyNjM2NDYs
