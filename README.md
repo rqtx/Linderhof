@@ -11,6 +11,7 @@ Caso não queira utilizar o script, execute após a compilação o comando:
 
     sudo setcap cap_net_raw+ep bin/lhf
 
+Após executar esse comando não será necessário executar como superuser.
 # Arquitetura
 
 ## Oryx
@@ -59,11 +60,12 @@ Injetor de pacotes.
 O netuno é o gerenciador dos injetores de ataque. Com cada injetor podendo no máximo ter um throughput de 5 Mb/s.
 É possível requisitar um ataque de até 50Mb/s. Entretanto o netuno não foi capaz de entregar tudo isso até o momento, ele consegue até no máximo 20 Mb/s. Em um momento da injeção (por volta dos 15 Mb/s) o fator de crescimento da injeção começa a diminuir, acredito que por causa de um início de saturação na escrita do buffer do socket.
 
-# Adicionando um Mirror
-Altere o planner do linderhof para ele sabe
+# Monitoramento
+A
+
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTE0MTcyODk5MSwtOTU5Mzc2ODgsNzMyMz
+eyJoaXN0b3J5IjpbMTAzNTg1NzAyNCwtOTU5Mzc2ODgsNzMyMz
 U1OTUzLDY5MDQ5OTk3NSwxMDIxMzI1MzYsLTE0NzU1OTU2Njcs
 LTQwOTI2MzY0NiwxNzA0NzExODE0LDcxNjI2Mzk0OCwtMTcwNz
 M0NTUzNCw1MjIwMTM4MjgsLTk5MzIyNDU4Nl19
