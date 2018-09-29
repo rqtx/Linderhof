@@ -17,6 +17,7 @@ Diagrama na pasta docs.
 
 ## Oryx
 UI engine.
+
 Existem duas possíveis interfaces:
 
  - OryxCli
@@ -53,10 +54,12 @@ O ataque INCREMENT é o ataque **default**. Ele começa com um throughput de 1 M
 
 ## Linderhof
 Core engine.
+
 Biblioteca dos ataques. Aqui é onde montamos um plano de ataque e executamos o injetor.
 
 ## Netuno
 Injector engine.
+
 Injetor de pacotes.
 O netuno é o gerenciador dos injetores de ataque. Com cada injetor podendo no máximo ter um throughput de 5 Mb/s.
 É possível requisitar um ataque de até 50Mb/s. Entretanto o netuno não foi capaz de entregar tudo isso até o momento, ele consegue até no máximo 20 Mb/s. Em um momento da injeção (por volta dos 15 Mb/s) o fator de crescimento da injeção começa a diminuir, acredito que por causa de um início de saturação na escrita do buffer do socket.
@@ -67,9 +70,9 @@ Para fazer o log da vítima é necessário executar o Linderhof com a OryxNet e 
 
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbNjU4NzgzNTI5LC0zNDk0MzE5MDAsLTk1OT
-M3Njg4LDczMjM1NTk1Myw2OTA0OTk5NzUsMTAyMTMyNTM2LC0x
-NDc1NTk1NjY3LC00MDkyNjM2NDYsMTcwNDcxMTgxNCw3MTYyNj
-M5NDgsLTE3MDczNDU1MzQsNTIyMDEzODI4LC05OTMyMjQ1ODZd
-fQ==
+eyJoaXN0b3J5IjpbMTI4ODAyNjQ3LDY1ODc4MzUyOSwtMzQ5ND
+MxOTAwLC05NTkzNzY4OCw3MzIzNTU5NTMsNjkwNDk5OTc1LDEw
+MjEzMjUzNiwtMTQ3NTU5NTY2NywtNDA5MjYzNjQ2LDE3MDQ3MT
+E4MTQsNzE2MjYzOTQ4LC0xNzA3MzQ1NTM0LDUyMjAxMzgyOCwt
+OTkzMjI0NTg2XX0=
 -->
