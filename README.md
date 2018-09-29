@@ -69,12 +69,12 @@ O Netuno sempre terá o log do monitoramento da última injeção no arquivo atk
 Para fazer o log da vítima é necessário executar o Linderhof com a OryxNet e o até deve ser feito para o IP do cliente Linderhof. Esse log será salvo no arquivo monitorlogger,txt.
 
 # Adicionando mirror
-
+Adicionar mirror no Linderhof planner.
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMjUzMzk5ODAyLDEyODgwMjY0Nyw2NTg3OD
-M1MjksLTM0OTQzMTkwMCwtOTU5Mzc2ODgsNzMyMzU1OTUzLDY5
-MDQ5OTk3NSwxMDIxMzI1MzYsLTE0NzU1OTU2NjcsLTQwOTI2Mz
-Y0NiwxNzA0NzExODE0LDcxNjI2Mzk0OCwtMTcwNzM0NTUzNCw1
-MjIwMTM4MjgsLTk5MzIyNDU4Nl19
+eyJoaXN0b3J5IjpbLTY5Njg0MjY5MywyNTMzOTk4MDIsMTI4OD
+AyNjQ3LDY1ODc4MzUyOSwtMzQ5NDMxOTAwLC05NTkzNzY4OCw3
+MzIzNTU5NTMsNjkwNDk5OTc1LDEwMjEzMjUzNiwtMTQ3NTU5NT
+Y2NywtNDA5MjYzNjQ2LDE3MDQ3MTE4MTQsNzE2MjYzOTQ4LC0x
+NzA3MzQ1NTM0LDUyMjAxMzgyOCwtOTkzMjI0NTg2XX0=
 -->
