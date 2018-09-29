@@ -52,12 +52,12 @@ Biblioteca dos ataques. Aqui é onde montamos um plano de ataque e executamos o 
 ## Netuno
 Injector engine.
 Injetor de pacotes.
-É possível requisitar um ataque de até 50Mb/s, mas até o
+É possível requisitar um ataque de até 50Mb/s. Entretanto o netuno não foi capaz de entregar tudo isso até o momento, ele consegue até no máximo 20 Mb/s. 
 
 # Adicionando um Mirror
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTEwMjIyNTMzMTUsNzMyMzU1OTUzLDY5MD
-Q5OTk3NSwxMDIxMzI1MzYsLTE0NzU1OTU2NjcsLTQwOTI2MzY0
-NiwxNzA0NzExODE0LDcxNjI2Mzk0OCwtMTcwNzM0NTUzNCw1Mj
-IwMTM4MjgsLTk5MzIyNDU4Nl19
+eyJoaXN0b3J5IjpbLTk0NTU2Mzg1MSw3MzIzNTU5NTMsNjkwND
+k5OTc1LDEwMjEzMjUzNiwtMTQ3NTU5NTY2NywtNDA5MjYzNjQ2
+LDE3MDQ3MTE4MTQsNzE2MjYzOTQ4LC0xNzA3MzQ1NTM0LDUyMj
+AxMzgyOCwtOTkzMjI0NTg2XX0=
 -->
