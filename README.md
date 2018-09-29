@@ -73,14 +73,16 @@ A função de chamada do mirror deve seguir o protótipo a seguir:
 
     int func( void *p_arg );
 
-Com 
+Sendo p_arg os argumentos necessários para executar o mirror. 
+
+- Passo 1
 Adicionar mirror no Linderhof planner.
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE4NDg1NzkzNzYsLTY5Njg0MjY5MywyNT
-MzOTk4MDIsMTI4ODAyNjQ3LDY1ODc4MzUyOSwtMzQ5NDMxOTAw
-LC05NTkzNzY4OCw3MzIzNTU5NTMsNjkwNDk5OTc1LDEwMjEzMj
-UzNiwtMTQ3NTU5NTY2NywtNDA5MjYzNjQ2LDE3MDQ3MTE4MTQs
-NzE2MjYzOTQ4LC0xNzA3MzQ1NTM0LDUyMjAxMzgyOCwtOTkzMj
-I0NTg2XX0=
+eyJoaXN0b3J5IjpbLTEyNDI1NjQxMDIsLTE4NDg1NzkzNzYsLT
+Y5Njg0MjY5MywyNTMzOTk4MDIsMTI4ODAyNjQ3LDY1ODc4MzUy
+OSwtMzQ5NDMxOTAwLC05NTkzNzY4OCw3MzIzNTU5NTMsNjkwND
+k5OTc1LDEwMjEzMjUzNiwtMTQ3NTU5NTY2NywtNDA5MjYzNjQ2
+LDE3MDQ3MTE4MTQsNzE2MjYzOTQ4LC0xNzA3MzQ1NTM0LDUyMj
+AxMzgyOCwtOTkzMjI0NTg2XX0=
 -->
