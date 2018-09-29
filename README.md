@@ -7,7 +7,10 @@ Requisitos:
 - CMake
 
 Para compilar basta executar o script build.sh. Os binários estarão na pasta bin do projeto.
-Caso não queira utilizar o script execute após a compilaç
+Caso não queira utilizar o script, execute após a compilação o comando:
+
+    sudo setcap cap_net_raw+ep bin/lhf
+
 # Arquitetura
 
 ## Oryx
@@ -58,8 +61,8 @@ O netuno é o gerenciador dos injetores de ataque. Com cada injetor podendo no m
 
 # Adicionando um Mirror
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTc2NTc4NjEyMiw3MzIzNTU5NTMsNjkwND
-k5OTc1LDEwMjEzMjUzNiwtMTQ3NTU5NTY2NywtNDA5MjYzNjQ2
-LDE3MDQ3MTE4MTQsNzE2MjYzOTQ4LC0xNzA3MzQ1NTM0LDUyMj
-AxMzgyOCwtOTkzMjI0NTg2XX0=
+eyJoaXN0b3J5IjpbLTk1OTM3Njg4LDczMjM1NTk1Myw2OTA0OT
+k5NzUsMTAyMTMyNTM2LC0xNDc1NTk1NjY3LC00MDkyNjM2NDYs
+MTcwNDcxMTgxNCw3MTYyNjM5NDgsLTE3MDczNDU1MzQsNTIyMD
+EzODI4LC05OTMyMjQ1ODZdfQ==
 -->
