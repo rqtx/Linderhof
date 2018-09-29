@@ -39,6 +39,7 @@ Espelhos disponíveis:
 	- test 	
 	- memcached
 - args
+
   `-a, --amplifier=amp_ipv4   Amplificador IPV4 (OBRIGATÓRIO)`
   
    `-t, --target=target_ipv4   Alvo IPV4 (OBRIGATÓRIO)`
@@ -100,7 +101,7 @@ Adicionar mirror a engine de UI Oryx.
 
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTM5MDU0NjY0MCwtMTk4MDE4MzQ2MCwxOD
+eyJoaXN0b3J5IjpbMTU0NTA2MDg5NCwtMTk4MDE4MzQ2MCwxOD
 YyNTYwMTkyLDE0NDI5MTEyNDQsLTE4NDg1NzkzNzYsLTY5Njg0
 MjY5MywyNTMzOTk4MDIsMTI4ODAyNjQ3LDY1ODc4MzUyOSwtMz
 Q5NDMxOTAwLC05NTkzNzY4OCw3MzIzNTU5NTMsNjkwNDk5OTc1
