@@ -23,7 +23,7 @@ Existem duas possíveis interfaces:
 
 OryxCli deve ser utilizada caso queria acessar o linderhof na maquina local (API padrão). 
 
-OryxNet deve ser utilizada para acessar o Lindehof em uma máquina hospedeira. Para compilar o Linderhof com o OryxNet deve-se descomentar a linha 17 do **CMakeLists.txt**. Cliente OryxNet estárá
+OryxNet deve ser utilizada para acessar o Lindehof em uma máquina hospedeira. Para compilar o Linderhof com o OryxNet deve-se descomentar a linha 17 do **CMakeLists.txt**. Cliente OryxNet é o binário snowman.
 
 ### Comandos API
 Sintaxe: CMD cmd [args]
@@ -66,8 +66,8 @@ Para fazer o log da vítima é necessário executar o Linderhof com a OryxNet e 
 
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMzg0MTMwNzk3LC05NTkzNzY4OCw3MzIzNT
-U5NTMsNjkwNDk5OTc1LDEwMjEzMjUzNiwtMTQ3NTU5NTY2Nywt
-NDA5MjYzNjQ2LDE3MDQ3MTE4MTQsNzE2MjYzOTQ4LC0xNzA3Mz
-Q1NTM0LDUyMjAxMzgyOCwtOTkzMjI0NTg2XX0=
+eyJoaXN0b3J5IjpbLTM0OTQzMTkwMCwtOTU5Mzc2ODgsNzMyMz
+U1OTUzLDY5MDQ5OTk3NSwxMDIxMzI1MzYsLTE0NzU1OTU2Njcs
+LTQwOTI2MzY0NiwxNzA0NzExODE0LDcxNjI2Mzk0OCwtMTcwNz
+M0NTUzNCw1MjIwMTM4MjgsLTk5MzIyNDU4Nl19
 -->
