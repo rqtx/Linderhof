@@ -92,7 +92,7 @@ Os arquivos do mirror devem ficar na pasta src/linderhof/mirrors/NOME_DO_MIRROR.
 ## Passo 2: Adicionar mirror no Linderhof planner
 
 
-## Passo 3:Adicionar mirror a engine de UI Oryx
+## Passo 3: Adicionar mirror a engine de UI Oryx
 
 
 ## Observações
@@ -103,7 +103,7 @@ Os arquivos do mirror devem ficar na pasta src/linderhof/mirrors/NOME_DO_MIRROR.
 
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTExMzk2MzM4NTYsMTMyMjg1MDQzNywtMT
+eyJoaXN0b3J5IjpbLTEyOTU1NDU5MDYsMTMyMjg1MDQzNywtMT
 k4MDE4MzQ2MCwxODYyNTYwMTkyLDE0NDI5MTEyNDQsLTE4NDg1
 NzkzNzYsLTY5Njg0MjY5MywyNTMzOTk4MDIsMTI4ODAyNjQ3LD
 Y1ODc4MzUyOSwtMzQ5NDMxOTAwLC05NTkzNzY4OCw3MzIzNTU5
