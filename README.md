@@ -66,7 +66,7 @@ O netuno é o gerenciador dos injetores de ataque. Com cada injetor podendo no m
 
 # Monitoramento
 O Netuno sempre terá o log do monitoramento da última injeção no arquivo atklogger.txt. 
-Para fazer o log da vítima é necessário executar o Linderhof com a OryxNet e o até deve ser feito para o IP do cliente Linderhof. Esse log será salvo no arquivo monitorlogger,txt.
+Para fazer o log da vítima é necessário compilar o Linderhof com a OryxNet. O target do ataque deve ser o IP do cliente Linderhof. Esse log será salvo no arquivo monitorlogger.txt.
 
 # Criando mirror
 
@@ -88,10 +88,10 @@ Adicionar mirror no Linderhof planner.
 Adicionar mirror a engine de UI Oryx.
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTQ0MjkxMTI0NCwtMTg0ODU3OTM3NiwtNj
-k2ODQyNjkzLDI1MzM5OTgwMiwxMjg4MDI2NDcsNjU4NzgzNTI5
-LC0zNDk0MzE5MDAsLTk1OTM3Njg4LDczMjM1NTk1Myw2OTA0OT
-k5NzUsMTAyMTMyNTM2LC0xNDc1NTk1NjY3LC00MDkyNjM2NDYs
-MTcwNDcxMTgxNCw3MTYyNjM5NDgsLTE3MDczNDU1MzQsNTIyMD
-EzODI4LC05OTMyMjQ1ODZdfQ==
+eyJoaXN0b3J5IjpbLTQxNjU2MDQyMywxNDQyOTExMjQ0LC0xOD
+Q4NTc5Mzc2LC02OTY4NDI2OTMsMjUzMzk5ODAyLDEyODgwMjY0
+Nyw2NTg3ODM1MjksLTM0OTQzMTkwMCwtOTU5Mzc2ODgsNzMyMz
+U1OTUzLDY5MDQ5OTk3NSwxMDIxMzI1MzYsLTE0NzU1OTU2Njcs
+LTQwOTI2MzY0NiwxNzA0NzExODE0LDcxNjI2Mzk0OCwtMTcwNz
+M0NTUzNCw1MjIwMTM4MjgsLTk5MzIyNDU4Nl19
 -->
