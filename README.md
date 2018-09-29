@@ -87,16 +87,17 @@ Adicionar mirror no Linderhof planner.
 ## Passo 3:
 Adicionar mirror a engine de UI Oryx.
 
-## Passo 4:
-Caso o seu ataque necessite de um preparo do payload do pacote forjado será necessário criar uma função que retorna o payload que será inserido no pacote UDP forjado.
+## Observações
+
+- Para forjar um pacote utilize o
 
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTEyNzk2ODUyODUsMTg2MjU2MDE5MiwxND
-QyOTExMjQ0LC0xODQ4NTc5Mzc2LC02OTY4NDI2OTMsMjUzMzk5
-ODAyLDEyODgwMjY0Nyw2NTg3ODM1MjksLTM0OTQzMTkwMCwtOT
-U5Mzc2ODgsNzMyMzU1OTUzLDY5MDQ5OTk3NSwxMDIxMzI1MzYs
-LTE0NzU1OTU2NjcsLTQwOTI2MzY0NiwxNzA0NzExODE0LDcxNj
-I2Mzk0OCwtMTcwNzM0NTUzNCw1MjIwMTM4MjgsLTk5MzIyNDU4
-Nl19
+eyJoaXN0b3J5IjpbNDEwMzAxNDEyLDE4NjI1NjAxOTIsMTQ0Mj
+kxMTI0NCwtMTg0ODU3OTM3NiwtNjk2ODQyNjkzLDI1MzM5OTgw
+MiwxMjg4MDI2NDcsNjU4NzgzNTI5LC0zNDk0MzE5MDAsLTk1OT
+M3Njg4LDczMjM1NTk1Myw2OTA0OTk5NzUsMTAyMTMyNTM2LC0x
+NDc1NTk1NjY3LC00MDkyNjM2NDYsMTcwNDcxMTgxNCw3MTYyNj
+M5NDgsLTE3MDczNDU1MzQsNTIyMDEzODI4LC05OTMyMjQ1ODZd
+fQ==
 -->
