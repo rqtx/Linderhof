@@ -13,6 +13,7 @@ Caso não queira utilizar o script, execute após a compilação o comando:
 
 Após executar esse comando não será necessário executar como superuser.
 # Arquitetura
+Diagrama na pasta docs.
 
 ## Oryx
 UI engine.
@@ -66,8 +67,9 @@ Para fazer o log da vítima é necessário executar o Linderhof com a OryxNet e 
 
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTM0OTQzMTkwMCwtOTU5Mzc2ODgsNzMyMz
-U1OTUzLDY5MDQ5OTk3NSwxMDIxMzI1MzYsLTE0NzU1OTU2Njcs
-LTQwOTI2MzY0NiwxNzA0NzExODE0LDcxNjI2Mzk0OCwtMTcwNz
-M0NTUzNCw1MjIwMTM4MjgsLTk5MzIyNDU4Nl19
+eyJoaXN0b3J5IjpbNjU4NzgzNTI5LC0zNDk0MzE5MDAsLTk1OT
+M3Njg4LDczMjM1NTk1Myw2OTA0OTk5NzUsMTAyMTMyNTM2LC0x
+NDc1NTk1NjY3LC00MDkyNjM2NDYsMTcwNDcxMTgxNCw3MTYyNj
+M5NDgsLTE3MDczNDU1MzQsNTIyMDEzODI4LC05OTMyMjQ1ODZd
+fQ==
 -->
