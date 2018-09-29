@@ -23,7 +23,7 @@ Existem duas possíveis interfaces:
 
 OryxCli deve ser utilizada caso queria acessar o linderhof na maquina local (API padrão). 
 
-OryxNet deve ser utilizada para acessar o Lindehof em uma máquina hospedeira. Para compilar o Linderhof com o OryxNet deve-se descomentar a linha 17 do **CMakeLists.txt**.
+OryxNet deve ser utilizada para acessar o Lindehof em uma máquina hospedeira. Para compilar o Linderhof com o OryxNet deve-se descomentar a linha 17 do **CMakeLists.txt**. Cliente OryxNet estárá
 
 ### Comandos API
 Sintaxe: CMD cmd [args]
@@ -62,12 +62,12 @@ O netuno é o gerenciador dos injetores de ataque. Com cada injetor podendo no m
 
 # Monitoramento
 O Netuno sempre terá o log do monitoramento da última injeção no arquivo atklogger.txt. 
-Para fazer o log da vítima é necessário executar o Linderhof com a OryxNet. Esse log será salvo no arquivo monitorlogger,txt.
+Para fazer o log da vítima é necessário executar o Linderhof com a OryxNet e o até deve ser feito para o IP do cliente Linderhof. Esse log será salvo no arquivo monitorlogger,txt.
 
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMzU2Mzc4ODcsLTk1OTM3Njg4LDczMjM1NT
-k1Myw2OTA0OTk5NzUsMTAyMTMyNTM2LC0xNDc1NTk1NjY3LC00
-MDkyNjM2NDYsMTcwNDcxMTgxNCw3MTYyNjM5NDgsLTE3MDczND
-U1MzQsNTIyMDEzODI4LC05OTMyMjQ1ODZdfQ==
+eyJoaXN0b3J5IjpbMzg0MTMwNzk3LC05NTkzNzY4OCw3MzIzNT
+U5NTMsNjkwNDk5OTc1LDEwMjEzMjUzNiwtMTQ3NTU5NTY2Nywt
+NDA5MjYzNjQ2LDE3MDQ3MTE4MTQsNzE2MjYzOTQ4LC0xNzA3Mz
+Q1NTM0LDUyMjAxMzgyOCwtOTkzMjI0NTg2XX0=
 -->
