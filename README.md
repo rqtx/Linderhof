@@ -90,11 +90,11 @@ Adicionar mirror a engine de UI Oryx.
 ## Observações
 
 - Para forjar um pacote utilize o forjador de pacotes blacksmitsh. Sua API está disponível na biblioteca common do projeto.
-- Caso seja necessário dentro do mirror fazer alguma chamada para as funcionalidades de alocação de memória, netio, linux capability e signals utilize a API
+- Caso seja necessário dentro do mirror fazer alguma chamada para as funcionalidades de alocação de memória, netio, linux capability e signals utilize a API common do projeto. Ela está disponível na biblioteca common e está incluída no header venus.h que deve ser incluído em todos os .c do projeto.
 
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbNjY3ODY3NDU3LDE4NjI1NjAxOTIsMTQ0Mj
+eyJoaXN0b3J5IjpbMTYyNTkzMDc2LDE4NjI1NjAxOTIsMTQ0Mj
 kxMTI0NCwtMTg0ODU3OTM3NiwtNjk2ODQyNjkzLDI1MzM5OTgw
 MiwxMjg4MDI2NDcsNjU4NzgzNTI5LC0zNDk0MzE5MDAsLTk1OT
 M3Njg4LDczMjM1NTk1Myw2OTA0OTk5NzUsMTAyMTMyNTM2LC0x
