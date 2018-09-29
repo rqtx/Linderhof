@@ -61,12 +61,13 @@ O netuno é o gerenciador dos injetores de ataque. Com cada injetor podendo no m
 É possível requisitar um ataque de até 50Mb/s. Entretanto o netuno não foi capaz de entregar tudo isso até o momento, ele consegue até no máximo 20 Mb/s. Em um momento da injeção (por volta dos 15 Mb/s) o fator de crescimento da injeção começa a diminuir, acredito que por causa de um início de saturação na escrita do buffer do socket.
 
 # Monitoramento
-A
+O Netuno sempre terá o log do monitoramento da última injeção no arquivo atklogger.txt. 
+Para fazer o log da vítma 
 
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTAzNTg1NzAyNCwtOTU5Mzc2ODgsNzMyMz
-U1OTUzLDY5MDQ5OTk3NSwxMDIxMzI1MzYsLTE0NzU1OTU2Njcs
-LTQwOTI2MzY0NiwxNzA0NzExODE0LDcxNjI2Mzk0OCwtMTcwNz
-M0NTUzNCw1MjIwMTM4MjgsLTk5MzIyNDU4Nl19
+eyJoaXN0b3J5IjpbLTEyMTEzMjcxODUsLTk1OTM3Njg4LDczMj
+M1NTk1Myw2OTA0OTk5NzUsMTAyMTMyNTM2LC0xNDc1NTk1NjY3
+LC00MDkyNjM2NDYsMTcwNDcxMTgxNCw3MTYyNjM5NDgsLTE3MD
+czNDU1MzQsNTIyMDEzODI4LC05OTMyMjQ1ODZdfQ==
 -->
