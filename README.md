@@ -60,9 +60,11 @@ O netuno é o gerenciador dos injetores de ataque. Com cada injetor podendo no m
 É possível requisitar um ataque de até 50Mb/s. Entretanto o netuno não foi capaz de entregar tudo isso até o momento, ele consegue até no máximo 20 Mb/s. Em um momento da injeção (por volta dos 15 Mb/s) o fator de crescimento da injeção começa a diminuir, acredito que por causa de um início de saturação na escrita do buffer do socket.
 
 # Adicionando um Mirror
+Altere o planner do linderhof para ele sabe
+
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTk1OTM3Njg4LDczMjM1NTk1Myw2OTA0OT
-k5NzUsMTAyMTMyNTM2LC0xNDc1NTk1NjY3LC00MDkyNjM2NDYs
-MTcwNDcxMTgxNCw3MTYyNjM5NDgsLTE3MDczNDU1MzQsNTIyMD
-EzODI4LC05OTMyMjQ1ODZdfQ==
+eyJoaXN0b3J5IjpbMTE0MTcyODk5MSwtOTU5Mzc2ODgsNzMyMz
+U1OTUzLDY5MDQ5OTk3NSwxMDIxMzI1MzYsLTE0NzU1OTU2Njcs
+LTQwOTI2MzY0NiwxNzA0NzExODE0LDcxNjI2Mzk0OCwtMTcwNz
+M0NTUzNCw1MjIwMTM4MjgsLTk5MzIyNDU4Nl19
 -->
