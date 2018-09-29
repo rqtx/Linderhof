@@ -77,17 +77,18 @@ A função de chamada do mirror deve seguir o protótipo a seguir:
     int func( void *p_arg );
 
 Sendo p_arg os argumentos necessários para executar o mirror. 
-Após o linderhof fazer a chamada da função mirror é dever dela fazer toda a preparação do ataque, com tudo pronto deve fazer a chamada da API de injeção.
+Após o linderhof fazer a chamada da função mirror é dever dela fazer toda a preparação do ataque, com tudo pronto deve fazer a chamada da engine de injeção Netuno.
 
 Os arquivos do mirror devem ficar na pasta src/linderhof/mirrors/NOME_DO_MIRROR.
 
 ## Passo 2: 
 Adicionar mirror no Linderhof planner.
 
-## Pass
+## Passo 3:
+Adicionar mirror a engine de UI Oryx.
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTU3MjA3MDI3MCwtMTg0ODU3OTM3NiwtNj
+eyJoaXN0b3J5IjpbMTQ0MjkxMTI0NCwtMTg0ODU3OTM3NiwtNj
 k2ODQyNjkzLDI1MzM5OTgwMiwxMjg4MDI2NDcsNjU4NzgzNTI5
 LC0zNDk0MzE5MDAsLTk1OTM3Njg4LDczMjM1NTk1Myw2OTA0OT
 k5NzUsMTAyMTMyNTM2LC0xNDc1NTk1NjY3LC00MDkyNjM2NDYs
