@@ -39,14 +39,11 @@ Espelhos disponíveis:
 	- test 	
 	- memcached
 - args
-
-  `-a, --amplifier=amp_ipv4   Amplificador IPV4 (OBRIGATÓRIO)`
-  
-   `-t, --target=target_ipv4   Alvo IPV4 (OBRIGATÓRIO)`
-   
-  `-f, --full=thp Executa um ataque full (Se omitido é executado o ataque default)`
-  
-  `-g, --targport=targ_port   Target port (Se omitido porta 80)`
+<br/>
+  `-a, --amplifier=amp_ipv4   Amplificador IPV4 (OBRIGATÓRIO)` <br/>  
+   `-t, --target=target_ipv4   Alvo IPV4 (OBRIGATÓRIO)` <br/>   
+  `-f, --full=thp Executa um ataque full (Se omitido é executado o ataque default)`<br/>  
+  `-g, --targport=targ_port   Target port (Se omitido porta 80)`<br/>
   
   `-p, --amport=am_port       Amplifier port (Se omitido porta padrão ataque)`
   
@@ -101,11 +98,11 @@ Adicionar mirror a engine de UI Oryx.
 
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTU0NTA2MDg5NCwtMTk4MDE4MzQ2MCwxOD
-YyNTYwMTkyLDE0NDI5MTEyNDQsLTE4NDg1NzkzNzYsLTY5Njg0
-MjY5MywyNTMzOTk4MDIsMTI4ODAyNjQ3LDY1ODc4MzUyOSwtMz
-Q5NDMxOTAwLC05NTkzNzY4OCw3MzIzNTU5NTMsNjkwNDk5OTc1
-LDEwMjEzMjUzNiwtMTQ3NTU5NTY2NywtNDA5MjYzNjQ2LDE3MD
-Q3MTE4MTQsNzE2MjYzOTQ4LC0xNzA3MzQ1NTM0LDUyMjAxMzgy
-OF19
+eyJoaXN0b3J5IjpbNTQ3NDU3NDg3LC0xOTgwMTgzNDYwLDE4Nj
+I1NjAxOTIsMTQ0MjkxMTI0NCwtMTg0ODU3OTM3NiwtNjk2ODQy
+NjkzLDI1MzM5OTgwMiwxMjg4MDI2NDcsNjU4NzgzNTI5LC0zND
+k0MzE5MDAsLTk1OTM3Njg4LDczMjM1NTk1Myw2OTA0OTk5NzUs
+MTAyMTMyNTM2LC0xNDc1NTk1NjY3LC00MDkyNjM2NDYsMTcwND
+cxMTgxNCw3MTYyNjM5NDgsLTE3MDczNDU1MzQsNTIyMDEzODI4
+XX0=
 -->
