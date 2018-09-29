@@ -89,11 +89,11 @@ Após o linderhof fazer a chamada da função mirror é dever dela fazer toda a 
 
 Os arquivos do mirror devem ficar na pasta src/linderhof/mirrors/NOME_DO_MIRROR.
 
-## Passo 2: 
-Adicionar mirror no Linderhof planner.
+## Passo 2: Adicionar mirror no Linderhof planner
 
-## Passo 3:
-Adicionar mirror a engine de UI Oryx.
+
+## Passo 3:Adicionar mirror a engine de UI Oryx
+
 
 ## Observações
 
@@ -103,11 +103,11 @@ Adicionar mirror a engine de UI Oryx.
 
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMjE1NDU1MzQ0LDEzMjI4NTA0MzcsLTE5OD
-AxODM0NjAsMTg2MjU2MDE5MiwxNDQyOTExMjQ0LC0xODQ4NTc5
-Mzc2LC02OTY4NDI2OTMsMjUzMzk5ODAyLDEyODgwMjY0Nyw2NT
-g3ODM1MjksLTM0OTQzMTkwMCwtOTU5Mzc2ODgsNzMyMzU1OTUz
-LDY5MDQ5OTk3NSwxMDIxMzI1MzYsLTE0NzU1OTU2NjcsLTQwOT
-I2MzY0NiwxNzA0NzExODE0LDcxNjI2Mzk0OCwtMTcwNzM0NTUz
-NF19
+eyJoaXN0b3J5IjpbLTExMzk2MzM4NTYsMTMyMjg1MDQzNywtMT
+k4MDE4MzQ2MCwxODYyNTYwMTkyLDE0NDI5MTEyNDQsLTE4NDg1
+NzkzNzYsLTY5Njg0MjY5MywyNTMzOTk4MDIsMTI4ODAyNjQ3LD
+Y1ODc4MzUyOSwtMzQ5NDMxOTAwLC05NTkzNzY4OCw3MzIzNTU5
+NTMsNjkwNDk5OTc1LDEwMjEzMjUzNiwtMTQ3NTU5NTY2NywtND
+A5MjYzNjQ2LDE3MDQ3MTE4MTQsNzE2MjYzOTQ4LC0xNzA3MzQ1
+NTM0XX0=
 -->
