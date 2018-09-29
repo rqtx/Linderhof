@@ -7,6 +7,7 @@ Requisitos:
 - CMake
 
 Para compilar basta executar o script build.sh. Os binários estarão na pasta bin do projeto.
+Caso não queira utilizar o script execute após a compilaç
 # Arquitetura
 
 ## Oryx
@@ -55,11 +56,10 @@ Injetor de pacotes.
 O netuno é o gerenciador dos injetores de ataque. Com cada injetor podendo no máximo ter um throughput de 5 Mb/s.
 É possível requisitar um ataque de até 50Mb/s. Entretanto o netuno não foi capaz de entregar tudo isso até o momento, ele consegue até no máximo 20 Mb/s. Em um momento da injeção (por volta dos 15 Mb/s) o fator de crescimento da injeção começa a diminuir, acredito que por causa de um início de saturação na escrita do buffer do socket.
 
-
 # Adicionando um Mirror
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbNDIyOTk4Mzg2LDczMjM1NTk1Myw2OTA0OT
-k5NzUsMTAyMTMyNTM2LC0xNDc1NTk1NjY3LC00MDkyNjM2NDYs
-MTcwNDcxMTgxNCw3MTYyNjM5NDgsLTE3MDczNDU1MzQsNTIyMD
-EzODI4LC05OTMyMjQ1ODZdfQ==
+eyJoaXN0b3J5IjpbLTc2NTc4NjEyMiw3MzIzNTU5NTMsNjkwND
+k5OTc1LDEwMjEzMjUzNiwtMTQ3NTU5NTY2NywtNDA5MjYzNjQ2
+LDE3MDQ3MTE4MTQsNzE2MjYzOTQ4LC0xNzA3MzQ1NTM0LDUyMj
+AxMzgyOCwtOTkzMjI0NTg2XX0=
 -->
