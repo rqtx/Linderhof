@@ -62,12 +62,12 @@ O netuno é o gerenciador dos injetores de ataque. Com cada injetor podendo no m
 
 # Monitoramento
 O Netuno sempre terá o log do monitoramento da última injeção no arquivo atklogger.txt. 
-Para fazer o log da vítma 
+Para fazer o log da vítima é necessário executar o Linderhof com a OryxNet. Esse log será salvo no arquivo monitorlogger,txt.
 
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTEyMTEzMjcxODUsLTk1OTM3Njg4LDczMj
-M1NTk1Myw2OTA0OTk5NzUsMTAyMTMyNTM2LC0xNDc1NTk1NjY3
-LC00MDkyNjM2NDYsMTcwNDcxMTgxNCw3MTYyNjM5NDgsLTE3MD
-czNDU1MzQsNTIyMDEzODI4LC05OTMyMjQ1ODZdfQ==
+eyJoaXN0b3J5IjpbMzU2Mzc4ODcsLTk1OTM3Njg4LDczMjM1NT
+k1Myw2OTA0OTk5NzUsMTAyMTMyNTM2LC0xNDc1NTk1NjY3LC00
+MDkyNjM2NDYsMTcwNDcxMTgxNCw3MTYyNjM5NDgsLTE3MDczND
+U1MzQsNTIyMDEzODI4LC05OTMyMjQ1ODZdfQ==
 -->
