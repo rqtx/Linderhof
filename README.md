@@ -69,20 +69,23 @@ O Netuno sempre terá o log do monitoramento da última injeção no arquivo atk
 Para fazer o log da vítima é necessário executar o Linderhof com a OryxNet e o até deve ser feito para o IP do cliente Linderhof. Esse log será salvo no arquivo monitorlogger,txt.
 
 # Criando mirror
+
+## Passo 1: Criar a função de chamada do mirror
+
 A função de chamada do mirror deve seguir o protótipo a seguir:
 
     int func( void *p_arg );
 
 Sendo p_arg os argumentos necessários para executar o mirror. 
+Após o linderhof fazer a chamada da função de mirror é dever dela preparar o terreno para o ataque e depois cham
 
-- Passo 1
 Adicionar mirror no Linderhof planner.
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTEyNDI1NjQxMDIsLTE4NDg1NzkzNzYsLT
-Y5Njg0MjY5MywyNTMzOTk4MDIsMTI4ODAyNjQ3LDY1ODc4MzUy
-OSwtMzQ5NDMxOTAwLC05NTkzNzY4OCw3MzIzNTU5NTMsNjkwND
-k5OTc1LDEwMjEzMjUzNiwtMTQ3NTU5NTY2NywtNDA5MjYzNjQ2
-LDE3MDQ3MTE4MTQsNzE2MjYzOTQ4LC0xNzA3MzQ1NTM0LDUyMj
-AxMzgyOCwtOTkzMjI0NTg2XX0=
+eyJoaXN0b3J5IjpbLTIzMzMwODk0NywtMTg0ODU3OTM3NiwtNj
+k2ODQyNjkzLDI1MzM5OTgwMiwxMjg4MDI2NDcsNjU4NzgzNTI5
+LC0zNDk0MzE5MDAsLTk1OTM3Njg4LDczMjM1NTk1Myw2OTA0OT
+k5NzUsMTAyMTMyNTM2LC0xNDc1NTk1NjY3LC00MDkyNjM2NDYs
+MTcwNDcxMTgxNCw3MTYyNjM5NDgsLTE3MDczNDU1MzQsNTIyMD
+EzODI4LC05OTMyMjQ1ODZdfQ==
 -->
