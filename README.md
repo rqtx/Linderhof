@@ -39,12 +39,11 @@ Espelhos disponíveis:
 	- test 	
 	- memcached
 - args
-  `-a, --amplifier=amp_ipv4   Amplificador IPV4 (OBRIGATÓRIO)
-   -t, --target=target_ipv4   Alvo IPV4 (OBRIGATÓRIO)
-  -f, --full=thp Executa um ataque full (Se omitido é executado o ataque default)
-  -g, --targport=targ_port   Target port (Se omitido porta 80)
-  -p, --amport=am_port       Amplifier port (Se omitido porta padrão ataque)
-  -r, --timer=timer          Tempo de execução em minutos (Se omitido tempo padrão)` 
+  `-a, --amplifier=amp_ipv4   Amplificador IPV4 (OBRIGATÓRIO)`
+   `-t, --target=target_ipv4   Alvo IPV4 (OBRIGATÓRIO)`
+  
+
+    -f, --full=thp Executa um ataque full (Se omitido é executado o ataque default)``
 
 O ataque INCREMENT é o ataque **default**. Ele começa com um throughput de 1 Mb/s e vai incrementando o ataque até o tempo *timer* em 1 Mb/s a cada 5 minutos. O FULL é um ataque com um throughput constante *thp*, é executado até o tempo *timer*.
 
@@ -95,7 +94,7 @@ Adicionar mirror a engine de UI Oryx.
 
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTIwNjg1MjE1NzIsLTE5ODAxODM0NjAsMT
+eyJoaXN0b3J5IjpbLTE5NzIyOTY5ODcsLTE5ODAxODM0NjAsMT
 g2MjU2MDE5MiwxNDQyOTExMjQ0LC0xODQ4NTc5Mzc2LC02OTY4
 NDI2OTMsMjUzMzk5ODAyLDEyODgwMjY0Nyw2NTg3ODM1MjksLT
 M0OTQzMTkwMCwtOTU5Mzc2ODgsNzMyMzU1OTUzLDY5MDQ5OTk3
