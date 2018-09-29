@@ -90,11 +90,11 @@ Adicionar mirror a engine de UI Oryx.
 ## Observações
 
 - Para forjar um pacote utilize o forjador de pacotes blacksmitsh. Sua API está disponível na biblioteca common do projeto.
-- Caso seja necessário dentro do mirror 
+- Caso seja necessário dentro do mirror fazer alguma chamada para as funcionalidades de alocação de memória, netio,
 
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMjEwOTc5Nzg1OSwxODYyNTYwMTkyLDE0ND
+eyJoaXN0b3J5IjpbLTg0OTI4NDY2MiwxODYyNTYwMTkyLDE0ND
 I5MTEyNDQsLTE4NDg1NzkzNzYsLTY5Njg0MjY5MywyNTMzOTk4
 MDIsMTI4ODAyNjQ3LDY1ODc4MzUyOSwtMzQ5NDMxOTAwLC05NT
 kzNzY4OCw3MzIzNTU5NTMsNjkwNDk5OTc1LDEwMjEzMjUzNiwt
