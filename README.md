@@ -43,11 +43,9 @@ Espelhos disponíveis:
   `-a, --amplifier=amp_ipv4   Amplificador IPV4 (OBRIGATÓRIO)` <br/>  
    `-t, --target=target_ipv4   Alvo IPV4 (OBRIGATÓRIO)` <br/>   
   `-f, --full=thp Executa um ataque full (Se omitido é executado o ataque default)`<br/>  
-  `-g, --targport=targ_port   Target port (Se omitido porta 80)`<br/>
-  
-  `-p, --amport=am_port       Amplifier port (Se omitido porta padrão ataque)`
-  
-  `-r, --timer=timer          Tempo de execução em minutos (Se omitido tempo padrão)`
+  `-g, --targport=targ_port   Target port (Se omitido porta 80)`<br/>  
+  `-p, --amport=am_port       Amplifier port (Se omitido porta padrão ataque)`<br/>  
+  `-r, --timer=timer          Tempo de execução em minutos (Se omitido tempo padrão)`<br/>
 
 O ataque INCREMENT é o ataque **default**. Ele começa com um throughput de 1 Mb/s e vai incrementando o ataque até o tempo *timer* em 1 Mb/s a cada 5 minutos. O FULL é um ataque com um throughput constante *thp*, é executado até o tempo *timer*.
 
@@ -98,11 +96,11 @@ Adicionar mirror a engine de UI Oryx.
 
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbNTQ3NDU3NDg3LC0xOTgwMTgzNDYwLDE4Nj
-I1NjAxOTIsMTQ0MjkxMTI0NCwtMTg0ODU3OTM3NiwtNjk2ODQy
-NjkzLDI1MzM5OTgwMiwxMjg4MDI2NDcsNjU4NzgzNTI5LC0zND
-k0MzE5MDAsLTk1OTM3Njg4LDczMjM1NTk1Myw2OTA0OTk5NzUs
-MTAyMTMyNTM2LC0xNDc1NTk1NjY3LC00MDkyNjM2NDYsMTcwND
-cxMTgxNCw3MTYyNjM5NDgsLTE3MDczNDU1MzQsNTIyMDEzODI4
-XX0=
+eyJoaXN0b3J5IjpbMTMyMjg1MDQzNywtMTk4MDE4MzQ2MCwxOD
+YyNTYwMTkyLDE0NDI5MTEyNDQsLTE4NDg1NzkzNzYsLTY5Njg0
+MjY5MywyNTMzOTk4MDIsMTI4ODAyNjQ3LDY1ODc4MzUyOSwtMz
+Q5NDMxOTAwLC05NTkzNzY4OCw3MzIzNTU5NTMsNjkwNDk5OTc1
+LDEwMjEzMjUzNiwtMTQ3NTU5NTY2NywtNDA5MjYzNjQ2LDE3MD
+Q3MTE4MTQsNzE2MjYzOTQ4LC0xNzA3MzQ1NTM0LDUyMjAxMzgy
+OF19
 -->
