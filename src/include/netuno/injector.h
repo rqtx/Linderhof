@@ -34,16 +34,19 @@ typedef struct {
 
 
 /**
- * @brief Create injection.
+ * @brief Start injector.
  *
- * @param p_pkt[in] Packet struct.
+ * @param p_pkt[in] Packet data.
  * @param p_thp[in] Initial throughput
- * @param p_time[in] Injection time of operation (Minutes)
- * @param p_incTime[in] Injection increment throughput time (Minutes)
- * @param p_incThp[in] Injection throughput increment size
- * @return Injector Id
+ * @return Injector handler struct 
  */
 Injector * StartInjector( Packet *p_pkt, int p_inithp );
-void InjectorDestroy( Injector *injector );
+
+/**
+ * @brief Destroy injector.
+ *
+ * @param p_injector[in] Packet data to destroy.
+ */
+void InjectorDestroy( Injector *p_injector );
 
 #endif          /*INJECTOR_H*/

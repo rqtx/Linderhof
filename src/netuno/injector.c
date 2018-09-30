@@ -110,15 +110,15 @@ Injector * StartInjector( Packet *p_pkt, int p_inithp)
     return injector;
 }
 
-void InjectorDestroy( Injector *injector )
+void InjectorDestroy( Injector *p_injector )
 {
     for(int j = 0; j < INJECTOR_AUXTHREADS; j++)
     {
-        if(injector->auxThreads[j].running)
+        if(p_injector->auxThreads[j].running)
         {
-            pthread_cancel(injector->auxThreads[j].id);
+            pthread_cancel(p_injector->auxThreads[j].id);
         }
     }
-    memfree(&injector);
+    memfree(&p_injector);
     LOG("Injector destroyed.\n");
 }

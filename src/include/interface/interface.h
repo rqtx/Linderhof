@@ -19,7 +19,19 @@ typedef struct {
 }ClientAddr;
 #define GetClientIP(p_addr) inet_ntoa(p_addr.sin_addr)
 
+/**
+ *  @brief Create a Command packet
+ *  @param p_type[in] Command type
+ *  @param p_argc[in] Number of arguments passed to command
+ *  @param p_argv[in] Command arguments
+ * */
 Packet * CreateCmdPacket( CmdType p_type, int p_argc, char **p_argv );
+
+/**
+ * @brief Set a LhfDraft with default data
+ *
+ * @param p_draft[in] LhfDraft pointer
+ * */
 void SetDraftDefaultData( LhfDraft *p_draft );
 
 #endif

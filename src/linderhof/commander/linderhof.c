@@ -25,10 +25,23 @@ static void closeHandler(int p_arg)
 
 static bool validateDraft( LhfDraft p_draft )
 {
+    if( !is_valid_ipv4( p_draft.amp_ip) &&
+        !is_valid_ipv4( p_draft.target_ip))
+    {
+        return false; 
+    }
+
+    if( p_draft.target_port < 0 &&
+        p_draft.amp_port    < 0 &&
+        p_draft.timer < 0)
+    {
+        return false;
+    }
+
     return true;    
 }
 
-void LinderhofBootstrap()
+void linderhofBootstrap()
 {
     SetSigHdr(SIGINT,  closeHandler);
     SetSigHdr(SIGQUIT, closeHandler);
@@ -39,13 +52,13 @@ void LinderhofBootstrap()
 
 void LinderhofNet()
 {
-    LinderhofBootstrap(); 
+    linderhofBootstrap(); 
     OryxNet();
 }
 
 void LinderhofCli( int p_argc, char **p_argv )
 {
-    LinderhofBootstrap();
+    linderhofBootstrap();
     OryxCli(p_argc, p_argv);
 }
 

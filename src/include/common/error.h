@@ -1,6 +1,6 @@
 /*
  *  error.h
- *
+ *  Error handler
  */
 
 #ifndef ERROR_H
@@ -21,12 +21,29 @@
 #define ERROR_MIRROR    -200
 #define ERROR_INJECTOR  -300
 
-void Efatal( int p_errorCode, char * p_error );
-
+/**
+ *  @brief Display error message
+ *
+ *  @param p_errorCode[in] Error code
+ *  @param p_msg[in] Message to display
+ * */
 int Elog( int p_errorCode, char * p_msg );
 #define ELOG( p_errorCode, p_msg ) return Elog( p_errorCode, p_msg )
 #define LOG(p_msg) Elog( SUCCESS, p_msg )
 
+/**
+ * @brief Set error funcion handler on error fatal
+ *
+ * @param p_func[in] Function that will be used on fatal error
+ * */
 void ESetErroAction( void p_func( int ) );
+
+/**
+ *  @brief Fire fatal error
+ *
+ *  @param p_errorCode[in] Error code
+ *  @param p_error[in] Error message
+ * */
+void Efatal( int p_errorCode, char * p_error );
 
 #endif
