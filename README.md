@@ -11,11 +11,13 @@ Caso não queira utilizar o script, execute após a compilação o comando:
 
     sudo setcap cap_net_raw+ep bin/lhf
 
-Após executar esse comando não será necessário executar como superuser.
+Após executar esse comando não será necessário executar o lhf como superuser.
 # Arquitetura
+Diagrama na pasta docs.
 
 ## Oryx
 UI engine.
+
 Existem duas possíveis interfaces:
 
  - OryxCli
@@ -37,13 +39,21 @@ Espelhos disponíveis:
 	- test 	
 	- memcached
 - args
-   -a, --amplifier=amp_ipv4   Amplificador IPV4 (OBRIGATÓRIO)
-   -t, --target=target_ipv4   Alvo IPV4 (OBRIGATÓRIO)
-  -f, --full=thp Executa um ataque full (Se omitido é executado o ataque default)
-  -g, --targport=targ_port   Target port (Se omitido porta 80)
-  -p, --amport=am_port       Amplifier port (Se omitido porta padrão ataque)
-  -r, --timer=timer          Tempo de execução em minutos (Se omitido tempo padrão)
+<br/>
 
+  `-a, --amplifier=amp_ipv4   Amplificador IPV4 (OBRIGATÓRIO)` 
+  
+   `-t, --target=target_ipv4   Alvo IPV4 (OBRIGATÓRIO)` 
+   
+  `-f, --full=thp Executa um ataque full (Se omitido é executado o ataque default)`
+  
+  `-g, --targport=targ_port   Target port (Se omitido porta 80)`
+  
+  `-p, --amport=am_port       Amplifier port (Se omitido porta padrão ataque)`
+  
+  `-r, --timer=timer          Tempo de execução em minutos (Se omitido tempo padrão)`
+  
+<br/>
 O ataque INCREMENT é o ataque **default**. Ele começa com um throughput de 1 Mb/s e vai incrementando o ataque até o tempo *timer* em 1 Mb/s a cada 5 minutos. O FULL é um ataque com um throughput constante *thp*, é executado até o tempo *timer*.
 
 #### Encerrar conexão OryxNet
@@ -52,22 +62,52 @@ O ataque INCREMENT é o ataque **default**. Ele começa com um throughput de 1 M
 
 ## Linderhof
 Core engine.
+
 Biblioteca dos ataques. Aqui é onde montamos um plano de ataque e executamos o injetor.
 
 ## Netuno
 Injector engine.
+
 Injetor de pacotes.
 O netuno é o gerenciador dos injetores de ataque. Com cada injetor podendo no máximo ter um throughput de 5 Mb/s.
-É possível requisitar um ataque de até 50Mb/s. Entretanto o netuno não foi capaz de entregar tudo isso até o momento, ele consegue até no máximo 20 Mb/s. Em um momento da injeção (por volta dos 15 Mb/s) o fator de crescimento da injeção começa a diminuir, acredito que por causa de um início de saturação na escrita do buffer do socket.
+É possível requisitar um ataque de até 50Mb/s. Entretanto o Netuno não foi capaz de entregar tudo isso até o momento, ele consegue até no máximo 20 Mb/s. Em um momento da injeção (por volta dos 15 Mb/s) o fator de crescimento da injeção começa a diminuir, acredito que por causa de um início de saturação na escrita do buffer do socket.
 
 # Monitoramento
 O Netuno sempre terá o log do monitoramento da última injeção no arquivo atklogger.txt. 
-Para fazer o log da vítima é necessário executar o Linderhof com a OryxNet e o até deve ser feito para o IP do cliente Linderhof. Esse log será salvo no arquivo monitorlogger,txt.
+Para fazer o log da vítima é necessário compilar o Linderhof com a OryxNet. O target do ataque deve ser o IP do cliente Linderhof. Esse log será salvo no arquivo monitorlogger.txt.
+
+# Criando mirror
+
+## Passo 1: Criar a função de chamada do mirror
+
+A função de chamada do mirror deve seguir o protótipo a seguir:
+
+    int func( void *p_arg );
+
+Sendo p_arg os argumentos necessários para executar o mirror. 
+Após o linderhof fazer a chamada da função mirror é dever dela fazer toda a preparação do ataque, com tudo pronto deve fazer a chamada da engine de injeção Netuno.
+
+Os arquivos do mirror devem ficar na pasta src/linderhof/mirrors/NOME_DO_MIRROR.
+
+## Passo 2: Adicionar mirror no Linderhof planner
+
+
+## Passo 3: Adicionar mirror a engine de UI Oryx
+
+
+## Observações
+
+- Para forjar um pacote utilize o forjador de pacotes blacksmitsh. Sua API está disponível na biblioteca common do projeto, visando o objetivo de padronizar o forjador de pacotes do projeto.
+- Caso seja necessário dentro do mirror fazer alguma chamada para as funcionalidades de alocação de memória, netio, linux capability e signals utilize a API common do projeto. Ela está disponível na biblioteca common e está incluída no header venus.h que deve ser incluído em todos os .c do projeto.
+
 
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTM0OTQzMTkwMCwtOTU5Mzc2ODgsNzMyMz
-U1OTUzLDY5MDQ5OTk3NSwxMDIxMzI1MzYsLTE0NzU1OTU2Njcs
-LTQwOTI2MzY0NiwxNzA0NzExODE0LDcxNjI2Mzk0OCwtMTcwNz
-M0NTUzNCw1MjIwMTM4MjgsLTk5MzIyNDU4Nl19
+eyJoaXN0b3J5IjpbLTEyOTU1NDU5MDYsMTMyMjg1MDQzNywtMT
+k4MDE4MzQ2MCwxODYyNTYwMTkyLDE0NDI5MTEyNDQsLTE4NDg1
+NzkzNzYsLTY5Njg0MjY5MywyNTMzOTk4MDIsMTI4ODAyNjQ3LD
+Y1ODc4MzUyOSwtMzQ5NDMxOTAwLC05NTkzNzY4OCw3MzIzNTU5
+NTMsNjkwNDk5OTc1LDEwMjEzMjUzNiwtMTQ3NTU5NTY2NywtND
+A5MjYzNjQ2LDE3MDQ3MTE4MTQsNzE2MjYzOTQ4LC0xNzA3MzQ1
+NTM0XX0=
 -->
