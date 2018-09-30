@@ -219,13 +219,18 @@ bool is_valid_ipv4(char * ip_str)
 
 int SetPacketPort( Packet *p_pkt )
 {
-    socklen_t lenAddr = sizeof(p_pkt->saddr);
+    struct sockaddr_in addrANY = {
+        .sin_family      = AF_INET,
+        .sin_addr.s_addr = INADDR_ANY,
+        .sin_port        = p_pkt->saddr.sin_port 
+    };
+    socklen_t lenAddr = sizeof(addrANY);
 
-    if( bind(p_pkt->netSock, (struct sockaddr *)&p_pkt->saddr,  lenAddr) == -1 )
+    if( bind(p_pkt->netSock, (struct sockaddr *)&addrANY,  lenAddr) == -1 )
     {
         ELOG(ERROR_NET, "BIND FAILED\n");
     }
-    if( getsockname(p_pkt->netSock, (struct sockaddr *) &p_pkt->saddr, &lenAddr) == -1)
+    if( getsockname(p_pkt->netSock, (struct sockaddr *) &addrANY, &lenAddr) == -1)
     {
         ELOG(ERROR_NET, "GETSOCKNAME FAILED\n");
     }

@@ -83,7 +83,8 @@ void StartNetunoInjector( Packet *p_pkt, unsigned int p_inithp, unsigned int p_t
     {
         case FULL:
             netuno.type = FULL;
-            netuno.injCells = netuno.lastActCell = getNumberOfCells(thp); 
+            netuno.injCells = getNumberOfCells(thp);
+            netuno.lastActCell = netuno.injCells-1;
             netuno.injectors = fullAttack( netuno.pkt, thp, netuno.injCells);
             break;
         case INCREMENT:
