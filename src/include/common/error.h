@@ -20,6 +20,7 @@
 #define ERROR_DRAFT     -100
 #define ERROR_MIRROR    -200
 #define ERROR_INJECTOR  -300
+#define ERROR_MEMCACHED -400
 
 /**
  *  @brief Display error message

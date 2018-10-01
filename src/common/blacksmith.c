@@ -54,7 +54,7 @@ Packet * ForgeUDP(char * ip_dest, char * ip_src, int dest_port, Packet * (*f_pay
     pac->netSock = CreateSocket( RAW, NO_BLOCK );
     pac->saddr.sin_family = AF_INET;
     pac->saddr.sin_port = 0;
-    pac->saddr.sin_addr.s_addr = inet_addr(ip_dest);
+    pac->saddr.sin_addr.s_addr = INADDR_ANY;
     SetPacketPort(pac);
 
     memalloc( &datagram, sizeof(struct iphdr) + sizeof(struct udphdr) + payload_size );
