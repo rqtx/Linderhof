@@ -8,14 +8,21 @@
 #include "strix.h"
 #include "memcachedforge.h"
 
+#define SET_CMD "set %s 0 0 %d\r\n%s\r\n"
+#define GET_CMD "get %s\r\n"
 
-Packet * ForgeMemcachedPacket( void *p_arg )
+typedef enum {
+    PROTOCOL_BINARY_REQ = 0x80,
+    PROTOCOL_BINARY_RES = 0x81
+} protocol_binary_magic;
+
+Packet * ForgeMemcachedBinary( void *p_arg )
 {
   int *opcode = (int *)p_arg;
   Packet *pac = NULL;
   char * mem_packet;
-  MemcachedRequestHeader * mem_header = NULL; 
-  MemcachedSetExtra * extra = NULL;
+  BinaryRequestHeader * mem_header = NULL; 
+  BinarySetExtra * extra = NULL;
   uint32_t * key = NULL;
   int packetSize = 0;
 
@@ -23,14 +30,14 @@ Packet * ForgeMemcachedPacket( void *p_arg )
 
   switch( *opcode ){
     case MEMCACHED_GET :
-      packetSize = sizeof( MemcachedRequestHeader ) + MAXSIZE_MEMCACHED_KEY;
+      packetSize = sizeof( BinaryRequestHeader ) + MAXSIZE_MEMCACHED_KEY;
       memalloc( (void *)&mem_packet, packetSize );
   
-      mem_header = ( MemcachedRequestHeader *) mem_packet;
+      mem_header = ( BinaryRequestHeader *) mem_packet;
 
-      key = ( uint32_t * ) (mem_packet + sizeof( MemcachedRequestHeader ));
+      key = ( uint32_t * ) (mem_packet + sizeof( BinaryRequestHeader ));
 
-      mem_header->magic = 0x80;
+      mem_header->magic = PROTOCOL_BINARY_REQ;
       mem_header->opcode = 0x00;
       mem_header->key_length = ntohs(MAXSIZE_MEMCACHED_KEY);
       mem_header->extras_length = 0x00;
@@ -41,25 +48,25 @@ Packet * ForgeMemcachedPacket( void *p_arg )
       mem_header->cas = 0x0000000000000000;
 
       *key =  ntohl(MEMCACHED_KEY);
-
       break;
+
     case MEMCACHED_SET :
-      packetSize = sizeof( MemcachedRequestHeader ) + sizeof( MemcachedSetExtra ) + MAXSIZE_MEMCACHED_KEY + MAXSIZE_MEMCACHED_VALUE;
+      packetSize = sizeof( BinaryRequestHeader ) + sizeof( BinarySetExtra ) + MAXSIZE_MEMCACHED_KEY + MAXSIZE_MEMCACHED_VALUE;
       memalloc( (void *)&mem_packet, packetSize );
   
-      mem_header = ( MemcachedRequestHeader *) mem_packet;
-      extra = ( MemcachedSetExtra * ) (mem_packet + sizeof( MemcachedRequestHeader ));
+      mem_header = ( BinaryRequestHeader *) mem_packet;
+      extra = ( BinarySetExtra * ) (mem_packet + sizeof( BinaryRequestHeader ));
 
-      key = ( uint32_t * ) (mem_packet + sizeof( MemcachedRequestHeader ) + sizeof( MemcachedSetExtra ));
-      char * value = (mem_packet + sizeof( MemcachedRequestHeader ) + sizeof( MemcachedSetExtra ) + MAXSIZE_MEMCACHED_KEY);
+      key = ( uint32_t * ) (mem_packet + sizeof( BinaryRequestHeader ) + sizeof( BinarySetExtra ));
+      char * value = (mem_packet + sizeof( BinaryRequestHeader ) + sizeof( BinarySetExtra ) + MAXSIZE_MEMCACHED_KEY);
 
-      mem_header->magic = 0x80;
+      mem_header->magic = PROTOCOL_BINARY_REQ ;
       mem_header->opcode = 0x01;
       mem_header->key_length = ntohs(MAXSIZE_MEMCACHED_KEY);
-      mem_header->extras_length = sizeof( MemcachedSetExtra );
+      mem_header->extras_length = sizeof( BinarySetExtra );
       mem_header->data_type = 0x00;
       mem_header->vbucket_id = 0x0000;
-      mem_header->tot_length = ntohl(sizeof( MemcachedSetExtra ) + MAXSIZE_MEMCACHED_KEY + MAXSIZE_MEMCACHED_VALUE);
+      mem_header->tot_length = ntohl(sizeof( BinarySetExtra ) + MAXSIZE_MEMCACHED_KEY + MAXSIZE_MEMCACHED_VALUE);
       mem_header->opaque = 0x00000000;
       mem_header->cas = 0x0000000000000000;
 
@@ -68,8 +75,26 @@ Packet * ForgeMemcachedPacket( void *p_arg )
       
       *key =  ntohl(MEMCACHED_KEY);
       memset(value, '-', MAXSIZE_MEMCACHED_VALUE);
-
       break;
+
+    case MEMCACHED_STAT :
+    default :
+        packetSize = sizeof( BinaryRequestHeader );
+        memalloc( (void *)&mem_packet, packetSize );
+  
+        mem_header = ( BinaryRequestHeader *) mem_packet;
+
+        mem_header->magic = PROTOCOL_BINARY_REQ;
+        mem_header->opcode = 0x10;
+        mem_header->key_length = 0x0000;
+        mem_header->extras_length = 0x00;
+        mem_header->data_type = 0x00;
+        mem_header->vbucket_id = 0x0000;
+        mem_header->tot_length = 0x00000000;
+        mem_header->opaque = 0x00000000;
+        mem_header->cas = 0x0000000000000000;
+
+        break;
   }
   
   pac->packet_ptr = mem_packet;
@@ -78,50 +103,68 @@ Packet * ForgeMemcachedPacket( void *p_arg )
   return pac;
 }
 
-Packet * ForgeMemcachedCommand(void *p_arg)
+Packet * ForgeMemcachedText(void *p_arg)
 {
-  int *opcode = (int*) p_arg;
-  char *cmd = NULL;
-  Packet *pac = NULL;
-  MemcachedSetCmd *cmdSet = NULL;
+    int *opcode = (int*) p_arg;
+    char *dataBuffer = NULL;
+    char *cmd = NULL;
+    Packet *pac = NULL;
+    TextProtocolHeader *header = NULL;
+    char *payload = NULL;
 
-  memalloc( (void *)&pac, sizeof(Packet) );
+    memalloc( (void *)&pac, sizeof(Packet) );
 
-  switch( *opcode ){
-    case MEMCACHED_GET :
-      
-      memalloc( (void *)&cmd, MAXSIZE_MEMCACHED_KEY + 50 );
-      pac->pkt_size = sprintf(cmd, "get %s\r\nEND\r\n", MEMCACHED_KEYSTR);
-      pac->packet_ptr = cmd;
+    switch( *opcode ){
+        case MEMCACHED_GET :
+            pac->pkt_size = sizeof(TextProtocolHeader) + MAXSIZE_MEMCACHED_KEY + strlen(GET_CMD);
+            memalloc( (void *)&dataBuffer, pac->pkt_size );
+            header = (TextProtocolHeader *)dataBuffer;
+            cmd = dataBuffer + sizeof(TextProtocolHeader);
 
-      break;
+            header->requestID = 0;
+            header->seqNumber = 0;
+            header->nDatagrams = htons(0x01);
+            header->reserved = 0;
 
-    case MEMCACHED_SET :
-      
-      memalloc( (void *)&cmdSet, sizeof(MemcachedSetCmd) );
-      memalloc( (void *)&cmdSet->data, MAXSIZE_MEMCACHED_VALUE );
+            sprintf(cmd, GET_CMD, MEMCACHED_KEYSTR);
+            pac->packet_ptr = dataBuffer;
+            break;
 
-      strcpy(cmdSet->cmd, "set");
-      strcpy(cmdSet->key, MEMCACHED_KEYSTR);
-      cmdSet->flags = 0;
-      cmdSet->exptime = 60*60*24;
-      cmdSet->dataLen = MAXSIZE_MEMCACHED_VALUE;
-      memset(cmdSet->data, '-', MAXSIZE_MEMCACHED_VALUE);
-      cmdSet->cas = 0;
+        case MEMCACHED_SET :
+            pac->pkt_size = sizeof(TextProtocolHeader) + MAXSIZE_MEMCACHED_KEY + DATALEN_SIZE + MAXSIZE_MEMCACHED_VALUE + strlen(SET_CMD);
+            memalloc(&dataBuffer, pac->pkt_size);
+            header = (TextProtocolHeader *)dataBuffer;
+            char *cmd = dataBuffer + sizeof(TextProtocolHeader);
+            char *data_block = NULL;
 
-      memalloc( (void *)&cmd, sizeof(MemcachedSetCmd) + MAXSIZE_MEMCACHED_VALUE + 50 );
-      pac->pkt_size = sprintf(cmd, "%s %s %hu %u %u\r\n%s\r\n", cmdSet->cmd, cmdSet->key, cmdSet->flags, cmdSet->exptime, cmdSet->dataLen, cmdSet->data);
-      pac->packet_ptr = cmd;
-      
-      free(cmdSet->data);
-      free(cmdSet);
+            header->requestID = 0;
+            header->seqNumber = 0;
+            header->nDatagrams = htons(0x01);
+            header->reserved = 0;
+            
+            memalloc(&data_block, MAXSIZE_MEMCACHED_VALUE);
+            memset(data_block, '-', MAXSIZE_MEMCACHED_VALUE);
+            sprintf(cmd, SET_CMD, MEMCACHED_KEYSTR, MAXSIZE_MEMCACHED_VALUE, data_block);
+            pac->packet_ptr = dataBuffer;
+            memfree(&data_block);
+            break;
 
-      break;
+        case MEMCACHED_STAT :
+        default :
+            pac->pkt_size = sizeof(TextProtocolHeader) + strlen("stats\r\n");
+            memalloc(&cmd, pac->pkt_size);
+            header = (TextProtocolHeader *)cmd;
+            payload = cmd + sizeof(TextProtocolHeader);
 
-    case MEMCACHED_STAT :
-    default :
-      pac->pkt_size = sprintf(pac->packet_ptr, " stats\r\n");
-      break;
+            header->requestID = 0;
+            header->seqNumber = 0;
+            header->nDatagrams = htons(0x01);
+            header->reserved = 0;
+
+            memcpy(payload, "stats\r\n", strlen("stats\r\n"));
+
+            pac->packet_ptr = cmd;
+            break;
   }
 
   return pac;

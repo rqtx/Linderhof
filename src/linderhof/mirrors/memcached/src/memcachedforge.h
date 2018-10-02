@@ -43,17 +43,14 @@ IPPROTO_MAX		    256
 #define MAXSIZE_MEMCACHED_KEYSTR 5
 #define MAXSIZE_MEMCACHED_VALUE 0x500 //0x100000
 
-typedef struct MemcachedSetCmdData{
-  char cmd[4];
-  char key[MAXSIZE_MEMCACHED_KEYSTR];
-  uint16_t flags;
-  uint32_t exptime; //This number of seconds may not exceed 60*60*24*30 (numberof seconds in 30 days)
-  uint32_t dataLen;
-  char* data;
-  uint64_t cas;
-}MemcachedSetCmd;
+#define ENDOFPACKET "\r\n"
+#define ENDOFPACKET_SIZE strlen(ENDOFPACKET)
 
-typedef struct MemcachedRequestHeaderData {
+#define DATALEN_SIZE sizeof(uint32_t)
+
+#define CMDGET_MAXSIZE 3 + SPACE_SIZE + MAXSIZE_MEMCACHED_KEYSTR + ENDOFPACKET_SIZE
+//Binary protocol
+typedef struct {
   uint8_t magic;            //Magic number identifying the package
   uint8_t opcode;           //Command code
   uint16_t key_length;      //Key length
@@ -63,15 +60,22 @@ typedef struct MemcachedRequestHeaderData {
   uint32_t tot_length;      //Total body length
   uint32_t opaque;          //Opaque
   uint64_t cas;             //CAS
-}MemcachedRequestHeader;
+}BinaryRequestHeader;
 
-typedef struct MemcachedSetExtraData {
+typedef struct {
   uint32_t flags;
   uint32_t expiration;
-}MemcachedSetExtra;
+}BinarySetExtra;
 
-Packet * ForgeMemcachedUDP( char *ip_dest, char *ip_src, int dest_port, int src_port, int opcode );
-Packet * ForgeMemcachedPacket( void *p_arg );
-Packet * ForgeMemcachedCommand(void *p_arg);
+//Text Protocol
+typedef struct {
+    uint16_t requestID;
+    uint16_t seqNumber;
+    uint16_t nDatagrams;
+    uint16_t reserved;
+}TextProtocolHeader;
+
+Packet * ForgeMemcachedBinary( void *p_arg );
+Packet * ForgeMemcachedText(void *p_arg);
 
 #endif
