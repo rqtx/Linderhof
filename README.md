@@ -54,7 +54,7 @@ Espelhos disponíveis:
   `-r, --timer=timer          Tempo de execução em minutos (Se omitido tempo padrão)`
   
 <br/>
-O ataque INCREMENT é o ataque **default**. Ele começa com um throughput de 1 Mb/s e vai incrementando o ataque até o tempo *timer* em 1 Mb/s a cada 5 minutos. O FULL é um ataque com um throughput constante *thp*, é executado até o tempo *timer*.
+O ataque INCREMENT é o ataque **default**. Ele começa com um throughput de 0 Mb/s e vai incrementando o ataque até o tempo *timer* em 1 Mb/s a cada 5 minutos. O FULL é um ataque com um throughput constante *thp*, é executado até o tempo *timer*.
 
 #### Encerrar conexão OryxNet
 - CMD
