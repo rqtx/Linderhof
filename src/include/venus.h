@@ -8,7 +8,7 @@
 
 #define DEFAULT_COMPORT 2056
 
-typedef enum { NOTSET, TEST, MEMCACHED, SSDP } MirrorType;
+typedef enum { NOTSET, TEST, MEMCACHED_GETSET, MEMCACHED_STATS, SSDP } MirrorType;
 
 typedef struct {
   MirrorType type;          //Type of mirror to use

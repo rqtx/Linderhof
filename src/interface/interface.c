@@ -20,7 +20,6 @@
 #define ARG_TARGPORT 'g'
 #define ARG_FULL 600
 #define ARG_TIMER 601
-#define ARG_FLAG 666
 
 const char *argp_program_bug_address = "rqtx@protonmail.com";
 const char *argp_program_version = "version 0.1";
@@ -33,7 +32,6 @@ struct argp_option atkArgpOption[] =
     { "targport", ARG_TARGPORT, "targ_port", 0, "Target port"},
     { "full", ARG_FULL, "thp", 0, "Full attack with arg throughput"},
     { "timer", ARG_TIMER, "timer", 0, "Attack timer"},
-    { "flag", ARG_FLAG, 0, 0, "Set extra flag"},
     { 0 }
 };
 
@@ -54,9 +52,13 @@ int ParserAttackOpt (int key, char *arg, struct argp_state *state)
                 draft->timer = 60;
                 draft->amp_port = CRAKE_DEFAULT_PORT;
             }
-            else if( !strcmp(arg, "memcached") || !strcmp(arg, "Memcached") || !strcmp(arg, "MEMCACHED") )
+            else if( !strcmp(arg, "memcached_getset") || !strcmp(arg, "MEMCACHED_GETSET") )
             {
-                draft->type = MEMCACHED;
+                draft->type = MEMCACHED_GETSET;
+            }
+            else if( !strcmp(arg, "memcached_stat") || !strcmp(arg, "MEMCACHED_STATS") )
+            {
+                draft->type = MEMCACHED_STATS;
             }
             else if( !strcmp(arg, "ssdp") || !strcmp(arg, "SSDP") )
             {
@@ -102,12 +104,7 @@ int ParserAttackOpt (int key, char *arg, struct argp_state *state)
     
         case ARG_TIMER:
             draft->timer = (atoi(arg) > 0) ? atoi(arg) : DEFAULT_TIMER;
-            break;
-
-        case ARG_FLAG:
-            draft->flag = true;
-            break;
-
+            break; 
   }
   return 0;
 }
@@ -164,5 +161,4 @@ void SetDraftDefaultData( LhfDraft *p_draft )
     p_draft->initialThroughput = 0;
     p_draft->typeThroughput = INCREMENT;
     p_draft->timer = DEFAULT_TIMER;
-    p_draft->flag = false;
 }

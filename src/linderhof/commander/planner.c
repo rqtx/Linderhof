@@ -12,8 +12,13 @@ LhfPlan * Planner( LhfDraft *p_draft )
 
     switch (p_draft->type)
     {
-      case MEMCACHED:
-        plan->type = MEMCACHED;
+      case MEMCACHED_GETSET:
+        plan->type = MEMCACHED_GETSET;
+        memcpy( plan->atkData, p_draft, sizeof(LhfDraft));
+        plan->atk_cmd = ExecuteMemcachedMirror;
+        break;
+      case MEMCACHED_STATS:
+        plan->type = MEMCACHED_STATS;
         memcpy( plan->atkData, p_draft, sizeof(LhfDraft));
         plan->atk_cmd = ExecuteMemcachedMirror;
         break;

