@@ -14,17 +14,26 @@
 #define DEFAULT_TIMER 120
 #define DEFAULT_TARGETPORT 80
 
+#define ARG_TARGETIP 't'
+#define ARG_AMPLIFIERIP 'a'
+#define ARG_AMPPORT 'p'
+#define ARG_TARGPORT 'g'
+#define ARG_FULL 600
+#define ARG_TIMER 601
+#define ARG_FLAG 666
+
 const char *argp_program_bug_address = "rqtx@protonmail.com";
 const char *argp_program_version = "version 0.1";
 
 struct argp_option atkArgpOption[] =
 {
-    { "target", 't', "target_ipv4", 0, "Attack target IPV4"},
-    { "amplifier", 'a', "amp_ipv4", 0, "Memcached amplifier IPV4"},
-    { "amport", 'p', "am_port", 0, "Amplifier port"},
-    { "targport", 'g', "targ_port", 0, "Target port"},
-    { "full", 'f', "thp", 0, "Full attack with arg throughput"},
-    { "timer", 'r', "timer", 0, "Attack timer"},
+    { "target", ARG_TARGETIP, "target_ipv4", 0, "Attack target IPV4"},
+    { "amplifier", ARG_AMPLIFIERIP, "amp_ipv4", 0, "Memcached amplifier IPV4"},
+    { "amport", ARG_AMPPORT , "am_port", 0, "Amplifier port"},
+    { "targport", ARG_TARGPORT, "targ_port", 0, "Target port"},
+    { "full", ARG_FULL, "thp", 0, "Full attack with arg throughput"},
+    { "timer", ARG_TIMER, "timer", 0, "Attack timer"},
+    { "flag", ARG_FLAG, 0, 0, "Set extra flag"},
     { 0 }
 };
 
@@ -60,7 +69,7 @@ int ParserAttackOpt (int key, char *arg, struct argp_state *state)
             }
             break;
         
-        case 't':
+        case ARG_TARGETIP:
             if( !is_valid_ipv4(arg) )
             {
                 argp_state_help(state, stdout, ARGP_NO_EXIT);
@@ -69,7 +78,7 @@ int ParserAttackOpt (int key, char *arg, struct argp_state *state)
             memcpy(draft->target_ip, arg, strlen(arg));   
             break;
 
-        case 'a':
+        case ARG_AMPLIFIERIP:
             if( !is_valid_ipv4(arg) )
             {
                 argp_state_help(state, stdout, ARGP_NO_EXIT); 
@@ -78,21 +87,25 @@ int ParserAttackOpt (int key, char *arg, struct argp_state *state)
             memcpy(draft->amp_ip, arg, strlen(arg));
             break;
         
-        case 'p':
+        case ARG_AMPPORT:
             draft->amp_port = (atoi(arg) > 0) ? atoi(arg) : 0;
             break;
         
-        case 'g':
+        case ARG_TARGPORT:
             draft->target_port = (atoi(arg) > 0) ? atoi(arg) : DEFAULT_TARGETPORT;
             break;
 
-        case 'f':
+        case ARG_FULL:
             draft->initialThroughput = (atoi(arg) > 0) ? atoi(arg) : 0;
             draft->typeThroughput = FULL;
             break;
     
-        case 'r':
+        case ARG_TIMER:
             draft->timer = (atoi(arg) > 0) ? atoi(arg) : DEFAULT_TIMER;
+            break;
+
+        case ARG_FLAG:
+            draft->flag = true;
             break;
 
   }
@@ -151,4 +164,5 @@ void SetDraftDefaultData( LhfDraft *p_draft )
     p_draft->initialThroughput = 0;
     p_draft->typeThroughput = INCREMENT;
     p_draft->timer = DEFAULT_TIMER;
+    p_draft->flag = false;
 }
