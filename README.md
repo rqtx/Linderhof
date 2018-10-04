@@ -12,6 +12,7 @@ Caso não queira utilizar o script, execute após a compilação o comando:
     sudo setcap cap_net_raw+ep bin/lhf
 
 Após executar esse comando não será necessário executar o lhf como superuser.
+
 # Arquitetura
 Diagrama na pasta docs.
 
@@ -89,10 +90,10 @@ Após o linderhof fazer a chamada da função mirror é dever dela fazer toda a 
 
 Os arquivos do mirror devem ficar na pasta src/linderhof/mirrors/NOME_DO_MIRROR.
 
-## Passo 2: Adicionar mirror no Linderhof planner
+## Passo 2: Adicionar mirror ao Linderhof planner
 
 
-## Passo 3: Adicionar mirror a engine de UI Oryx
+## Passo 3: Adicionar mirror a engine UI Oryx
 
 
 ## Observações
@@ -100,14 +101,6 @@ Os arquivos do mirror devem ficar na pasta src/linderhof/mirrors/NOME_DO_MIRROR.
 - Para forjar um pacote utilize o forjador de pacotes blacksmitsh. Sua API está disponível na biblioteca common do projeto, visando o objetivo de padronizar o forjador de pacotes do projeto.
 - Caso seja necessário dentro do mirror fazer alguma chamada para as funcionalidades de alocação de memória, netio, linux capability e signals utilize a API common do projeto. Ela está disponível na biblioteca common e está incluída no header venus.h que deve ser incluído em todos os .c do projeto.
 
+# Bugs
 
-
-<!--stackedit_data:
-eyJoaXN0b3J5IjpbLTEyOTU1NDU5MDYsMTMyMjg1MDQzNywtMT
-k4MDE4MzQ2MCwxODYyNTYwMTkyLDE0NDI5MTEyNDQsLTE4NDg1
-NzkzNzYsLTY5Njg0MjY5MywyNTMzOTk4MDIsMTI4ODAyNjQ3LD
-Y1ODc4MzUyOSwtMzQ5NDMxOTAwLC05NTkzNzY4OCw3MzIzNTU5
-NTMsNjkwNDk5OTc1LDEwMjEzMjUzNiwtMTQ3NTU5NTY2NywtND
-A5MjYzNjQ2LDE3MDQ3MTE4MTQsNzE2MjYzOTQ4LC0xNzA3MzQ1
-NTM0XX0=
--->
+O argp está crashando quando mais que 3 opção são chamadas.
