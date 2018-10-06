@@ -11,7 +11,7 @@
 #define UNKNOWCMD -1
 #define ERRORIP -2
 
-#define DEFAULT_TIMER 120
+#define DEFAULT_TIMER 0
 #define DEFAULT_TARGETPORT 80
 
 #define ARG_TARGETIP 't'

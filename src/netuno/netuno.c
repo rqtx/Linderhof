@@ -74,9 +74,14 @@ void StartNetunoInjector( Packet *p_pkt, unsigned int p_inithp, unsigned int p_t
     unsigned int incClock = 0;
     unsigned int thp = (p_inithp <= 0 || p_inithp > NETUNO_MAXTHP) ? NETUNO_MAXTHP : p_inithp;
     NetunoInjector netuno;
-    netuno.pkt = p_pkt; 
+    netuno.pkt = p_pkt;
+
+#ifdef ORYXNET
     FILE *fpLog = CreateLoggerFile(ATK_LOGGER);
-    
+#else
+    FILE *fpLog = stdout;
+#endif
+
     LOG("Netuno\n");
 
     switch( p_type )
@@ -111,7 +116,7 @@ void StartNetunoInjector( Packet *p_pkt, unsigned int p_inithp, unsigned int p_t
         masterClock++;
         incClock++;
 
-        if(masterClock >= p_timer)
+        if(p_timer > 0 && masterClock >= p_timer)
         {
             break;
         }
