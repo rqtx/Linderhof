@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.10.3)
 project(LINDERHOF)
+enable_language(C)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
@@ -15,7 +16,7 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O0")
 
 
 #add_compile_definitions("ORYXNET")
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c11 -Wall -g -lpthread -lcap -lm -D _DEFAULT_SOURCE")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c11 -Wall -g -Wl,--no-as-needed -lpthread -lcap -lm -D _DEFAULT_SOURCE")
 include_directories(src/include)
 
 file(GLOB LINDERHOF src/linderhof/main.c src/linderhof/*/*.c src/interface/configr.c src/interface/interface.c src/interface/oryx.c src/linderhof/mirrors/*/src/*.c src/common/*.c src/netuno/*.c)
