@@ -75,12 +75,7 @@ void StartNetunoInjector( Packet *p_pkt, unsigned int p_inithp, unsigned int p_t
     unsigned int thp = (p_inithp <= 0 || p_inithp > NETUNO_MAXTHP) ? NETUNO_MAXTHP : p_inithp;
     NetunoInjector netuno;
     netuno.pkt = p_pkt;
-
-#ifdef ORYXNET
     FILE *fpLog = CreateLoggerFile(ATK_LOGGER);
-#else
-    FILE *fpLog = stdout;
-#endif
 
     LOG("Netuno\n");
 
@@ -112,6 +107,7 @@ void StartNetunoInjector( Packet *p_pkt, unsigned int p_inithp, unsigned int p_t
         }
 
         LogInjection( fpLog, netuno.monitor.throughputExpected, netuno.monitor.throughputCurrent);
+        LogInjection( NULL, netuno.monitor.throughputExpected, netuno.monitor.throughputCurrent);
         SleepOneMinute();
         masterClock++;
         incClock++;
