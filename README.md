@@ -52,7 +52,7 @@ Espelhos disponíveis:
   
   `-p, --amport=am_port       Amplifier port (Se omitido porta padrão ataque)`
   
-  `-r, --timer=timer          Tempo de execução em minutos (Se omitido tempo padrão)`
+  `-r, --timer=timer          Tempo de execução em minutos (Se omitido tempo padrão infinito)`
   
 <br/>
 O ataque INCREMENT é o ataque **default**. Ele começa com um throughput de 0 Mb/s e vai incrementando o ataque até o tempo *timer* em 1 Mb/s a cada 5 minutos. O FULL é um ataque com um throughput constante *thp*, é executado até o tempo *timer*.
