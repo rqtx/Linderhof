@@ -17,6 +17,7 @@
 #define ARG_TARGPORT 'g'
 #define ARG_THP 'h'
 #define ARG_TIMER 'i'
+#define ARG_LOGFILE 'f'
 
 static ArgsOpt atkArgpOption[] =
 {
@@ -27,6 +28,7 @@ static ArgsOpt atkArgpOption[] =
     { ARG_TARGPORT, "targport", true, false, "Target port"},
     { ARG_THP, "thp", true, false, "Attack throughput"},
     { ARG_TIMER, "timer", true, false, "Attack timer"},
+    { ARG_LOGFILE, "log", true, false, "Log file name"},
     { 0 }
 };
 
@@ -94,7 +96,11 @@ int parserAttackOpt (char key, char *arg, ArgState *state)
     
         case ARG_TIMER:
             draft->timer = (atoi(arg) > 0) ? atoi(arg) : DEFAULT_TIMER;
-            break; 
+            break;
+
+        case ARG_LOGFILE:
+            memcpy(draft->logfile, arg, strlen(arg));
+            break;
   }
   return 0;
 }
@@ -149,4 +155,5 @@ void SetDraftDefaultData( LhfDraft *p_draft )
     p_draft->amp_port = 0;
     p_draft->throughput = 1;
     p_draft->timer = DEFAULT_TIMER;
+    p_draft->logfile[0] = '\0';
 }

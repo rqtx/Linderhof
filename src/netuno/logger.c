@@ -4,18 +4,12 @@
 
 #include <time.h>
 
-FILE * CreateLoggerFile( LoggerType p_type )
+FILE * CreateLoggerFile( char *p_file )
 {
     FILE *fp = NULL;
-
-    switch( (int)p_type )
+    if( p_file != NULL )
     {
-        case ATK_LOGGER:
-            fp = fopen("atklogger.txt", "w");
-            break;
-        case MONITOR_LOGGER:
-            fp = fopen("monitorlogger.txt", "w");
-            break;
+        fp = fopen(p_file, "w");
     }
     return fp;
 }

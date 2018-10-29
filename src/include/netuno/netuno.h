@@ -12,6 +12,6 @@
  * @param p_timer[in] Attack execution time.
  * @return Injector handler strcut 
  */
-void StartNetunoInjector( Packet *p_pkt, unsigned int p_inithp, unsigned int p_timer );
+void StartNetunoInjector( Packet *p_pkt, unsigned int p_inithp, unsigned int p_timer, char *p_file );
 
 #endif

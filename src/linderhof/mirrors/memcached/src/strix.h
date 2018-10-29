@@ -16,12 +16,9 @@
 typedef enum { STAT, GETSET } MemcachedAtk;
 
 typedef struct {
-  Packet * getPacket;
-  Packet * setPacket; 
-  float initialThroughput;
-  int timer;             
+    Packet * getPacket;
+    Packet * setPacket; 
+    LhfDraft *draft;
 }AttackPlan;
-
-typedef LhfDraft AttackDraft;
 
 #endif

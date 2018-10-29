@@ -46,12 +46,12 @@ static void freeAttack( NetunoInjector *p_netuno )
     }
 }
 
-void StartNetunoInjector( Packet *p_pkt, unsigned int p_inithp, unsigned int p_timer )
+void StartNetunoInjector( Packet *p_pkt, unsigned int p_inithp, unsigned int p_timer, char *p_file )
 {
     unsigned int masterClock = 0;
     NetunoInjector netuno;
     netuno.pkt = p_pkt;
-    FILE *fpLog = CreateLoggerFile(ATK_LOGGER);
+    FILE *fpLog = CreateLoggerFile(p_file);
 
     netuno.injectors = StartInjector( netuno.pkt );
     netuno.injCells = MAXINJECTORS;
@@ -77,8 +77,7 @@ void StartNetunoInjector( Packet *p_pkt, unsigned int p_inithp, unsigned int p_t
         {
             resetBucket( &netuno );
         }
-        //LogInjection( fpLog, netuno.throughputExpected, netuno.throughputCurrent);
-        LogInjection( NULL, netuno.throughputExpected, netuno.throughputCurrent);
+        LogInjection( fpLog, netuno.throughputExpected, netuno.throughputCurrent);
         
         if(p_timer > 0 && masterClock >= p_timer)
         {

@@ -10,7 +10,7 @@ typedef enum {ATK_LOGGER, MONITOR_LOGGER} LoggerType;
  * @param p_type[in] Logger type.
  * @return Pointer to file 
  */
-FILE * CreateLoggerFile( LoggerType p_type );
+FILE * CreateLoggerFile( char *p_file );
 
 void LogInjection( FILE * p_fp, float p_thpExp, float p_thpCur );
 void LogAttack( FILE *p_fp, float p_thp );

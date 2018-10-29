@@ -131,7 +131,7 @@ static LhfDraft * getAttackDraftFromCmd( CommandPkt p_cmd )
     draft->amp_port = clnDrf.amp_port;
     draft->throughput = clnDrf.throughput;
     draft->timer = clnDrf.timer;
-
+    
     return draft;
 }
 
@@ -235,6 +235,6 @@ void OryxCli( int p_argc, char **p_argv )
     }
 
     cmd = (CommandPkt *) pkt->packet_ptr; 
-    draft = getAttackDraftFromCmd(*cmd);
+    draft = &cmd->data;
     StartMirrorAttack( *draft );
 }
