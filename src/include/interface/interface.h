@@ -24,8 +24,9 @@ typedef struct {
  *  @param p_type[in] Command type
  *  @param p_argc[in] Number of arguments passed to command
  *  @param p_argv[in] Command arguments
+ *  @param p_argv[in] Packet destination, NULL if not necessary
  * */
-Packet * CreateCmdPacket( CmdType p_type, int p_argc, char **p_argv );
+Packet * CreateCmdPacket( CmdType p_type, int p_argc, char **p_argv, char *p_destip );
 
 /**
  * @brief Set a LhfDraft with default data

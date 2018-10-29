@@ -8,7 +8,7 @@
 #include "common/common.h"
 
 #define DELIM "."
-
+#define MAX_SOCKEBUFFER 10485760
 
 /* return true if string contain only digits, else return false */
 static bool _valid_digit(char * ip_str)
@@ -24,40 +24,29 @@ static bool _valid_digit(char * ip_str)
   return true;
 }
 
-int createTCPsocket( bool p_blk )
+int createTCPsocket()
 {
     int fd;
+
     if ( (fd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0)
     {
         ELOG(ERROR_NET, "Cannot open TCP socket\n"); 
     }
-    BlockSocket( fd, p_blk); 
     return fd;
 }
 
-int createRAWsocket(  bool p_blk )
+int createRAWsocket()
 {
     int fd;
-    uint32_t n = 1;
 
     if ((fd = socket(AF_INET, SOCK_RAW, IPPROTO_RAW)) == -1)
     {
         ELOG(ERROR_NET, "Cannot open raw socket\n");
     }
-    BlockSocket( fd, p_blk ); 
-
-    /* Setting IP_HDRINCL. */
-    /* NOTE: We will provide the IP header, but enabling this option, on linux,
-                still makes the kernel calculates the checksum and total_length. */
-    if ( setsockopt(fd, IPPROTO_IP, IP_HDRINCL, &n, sizeof(n)) == -1 )
-    {
-        ELOG(ERROR_NET, "Cannot set socket options\n");
-    }
-
     return fd;
 }
 
-int createUDPsocket( bool p_blk )
+int createUDPsocket()
 {
     int fd;
 
@@ -65,7 +54,6 @@ int createUDPsocket( bool p_blk )
     {
         ELOG(ERROR_NET, "Cannot open udp socket");
     }
-    BlockSocket( fd, p_blk ); 
     return fd;
 }
 
@@ -79,19 +67,33 @@ int createUDPsocket( bool p_blk )
  **/
 int CreateSocket( NetType p_type, bool p_blk )
 {
-  switch(p_type)
-  {
-    case UDP:
-        return createUDPsocket(p_blk);
-    case TCP:
-        return createTCPsocket(p_blk);
-    case RAW:
-    default:
-        return createRAWsocket(p_blk);
-      
-  }
-}
+    int fd = -1;
+    uint32_t n = 1;
 
+    switch(p_type)
+    {
+        case UDP:
+            fd = createUDPsocket();
+            break;
+        case TCP:
+            fd = createTCPsocket();
+            break;
+        case RAW:
+        default:
+            fd = createRAWsocket();
+    }
+    
+    BlockSocket( fd, p_blk);
+    /* Setting IP_HDRINCL. */
+    /* NOTE: We will provide the IP header, but enabling this option, on linux,
+                still makes the kernel calculates the checksum and total_length. */
+    if ( setsockopt(fd, IPPROTO_IP, IP_HDRINCL, &n, sizeof(n)) == -1 )
+    {
+        ELOG(ERROR_NET, "Cannot set socket options\n");
+    }
+
+    return fd;
+}
 
 void CloseSocket( int fd )
 {
@@ -154,14 +156,13 @@ Packet * CreateEmptyPacket( )
 
 void ReleasePacket( Packet *p_pkt )
 {
-  CloseSocket(p_pkt->netSock);
-  memfree( &p_pkt->packet_ptr );
-  memfree( &p_pkt );
+    memfree( &p_pkt->packet_ptr );
+    memfree( &p_pkt );
 }
 
-int SendPacket(Packet *p_pkt)
+int SendPacket(int p_socket, Packet *p_pkt)
 {
-    if( -1 == sendto(p_pkt->netSock, p_pkt->packet_ptr, p_pkt->pkt_size, MSG_DONTWAIT ,  (struct sockaddr *) &p_pkt->saddr, sizeof(struct sockaddr_in))  )
+    if( -1 == sendto(p_socket, p_pkt->packet_ptr, p_pkt->pkt_size, 0,  (struct sockaddr *) &p_pkt->saddr, sizeof(struct sockaddr_in))  )
     {
         return ERROR_NET;
     }
@@ -217,22 +218,58 @@ bool is_valid_ipv4(char * ip_str)
   return true;
 }
 
-int SetPacketPort( Packet *p_pkt )
+int BindPort( int p_socket, struct sockaddr_in saddr )
 {
     struct sockaddr_in addrANY = {
         .sin_family      = AF_INET,
         .sin_addr.s_addr = INADDR_ANY,
-        .sin_port        = p_pkt->saddr.sin_port 
+        .sin_port        = saddr.sin_port 
     };
     socklen_t lenAddr = sizeof(struct sockaddr_in);
 
-    if( bind(p_pkt->netSock, (struct sockaddr *)&addrANY,  lenAddr) == -1 )
+    if( bind( p_socket, (struct sockaddr *)&addrANY,  lenAddr) == -1 )
     {
         ELOG(ERROR_NET, "BIND FAILED\n");
     }
-    if( getsockname(p_pkt->netSock, (struct sockaddr *)&p_pkt->saddr, &lenAddr) == -1)
+    if( getsockname( p_socket, (struct sockaddr *)&saddr, &lenAddr) == -1)
     {
         ELOG(ERROR_NET, "GETSOCKNAME FAILED\n");
     }
     return SUCCESS;
+}
+
+/* Adapted from T50. */
+int Setup_sendbuffer ( int fd, uint32_t n )
+{
+    uint32_t i;
+    socklen_t len;
+
+    SetSocketFlag(fd, SO_SNDBUFFORCE);
+    
+    /* Getting SO_SNDBUF. */
+    len = sizeof ( n );
+        
+    errno = 0;
+    if ( getsockopt ( fd, SOL_SOCKET, SO_SNDBUF, &n, &len ) == -1 )
+    {
+        Efatal ( ERROR_NET, "Cannot get socket buffer" );
+    }
+
+  /* Setting the maximum SO_SNDBUF in bytes.
+   * 128      =  1 Kib
+   * 10485760 = 80 Mib */
+    for ( i = n + 128; i < MAX_SOCKEBUFFER; i += 128 )
+    {
+    /* Setting SO_SNDBUF. */
+        errno = 0;
+        if ( setsockopt ( fd, SOL_SOCKET, SO_SNDBUFFORCE, &i, sizeof ( i ) ) == -1 )
+        {
+            if ( errno == ENOBUFS || errno == ENOMEM )
+            {
+                break;
+            }
+            Efatal( ERROR_NET, "Cannot set socket buffer" );
+        }
+    }
+    return n;
 }

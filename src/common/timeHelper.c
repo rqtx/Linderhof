@@ -6,7 +6,7 @@ static struct timespec _onesec = {
           };
 
 static struct timespec _onemin = {
-               .tv_sec = 60,                     /* 1 seconds */
+               .tv_sec = 60,                     /* 60 seconds */
                .tv_nsec = 0       /* 0 nanoseconds */
           };
 
@@ -28,4 +28,11 @@ void SleepOneSec()
 void SleepOneMinute()
 {
     nanosleep(&_onemin, NULL);
+}
+
+void SleepSec( unsigned int p_sec )
+{
+    struct timespec timesec;
+    timesec.tv_sec = p_sec;
+    nanosleep(&timesec, NULL);
 }

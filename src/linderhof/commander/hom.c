@@ -3,11 +3,13 @@
  * Responsible for controlling attacks
  */
 
-#include <pthread.h>
 
 #include "venus.h"
 #include "commander/hom.h" 
 
+#ifdef ORYXNET
+
+#include <pthread.h>
 #define GetPlanFromList( p_list ) (LhfPlan *)p_list->data;
 List *plansQueue = NULL;
 List *mirrorList = NULL;
@@ -37,6 +39,17 @@ LhfPlan * getNextPlan()
 
 }
 
+void MirrorQueueAdd( LhfPlan *p_plan )
+{
+    LhfPlan *newPlan = NULL;
+    memalloc( &newPlan, sizeof(LhfPlan) );
+    memcpy( newPlan, p_plan, sizeof(LhfPlan) );
+
+    InsertCellLast( &plansQueue, newPlan);
+}
+
+#endif
+
 int execMirror( LhfPlan *p_plan )
 {
     int id = -1;
@@ -63,11 +76,3 @@ void  HallOfMirrors( LhfPlan *p_plan )
     }
 }
 
-void MirrorQueueAdd( LhfPlan *p_plan )
-{
-    LhfPlan *newPlan = NULL;
-    memalloc( &newPlan, sizeof(LhfPlan) );
-    memcpy( newPlan, p_plan, sizeof(LhfPlan) );
-
-    InsertCellLast( &plansQueue, newPlan);
-}

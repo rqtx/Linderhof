@@ -19,7 +19,6 @@ typedef struct {
   Packet * getPacket;
   Packet * setPacket; 
   float initialThroughput;
-  bool incrementAttack;
   int timer;             
 }AttackPlan;
 

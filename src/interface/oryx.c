@@ -4,7 +4,6 @@
 #include "venus.h"
 #include "commander/linderhof.h"
 #include "interface/interface.h"
-#include "interface/configr.h"
 
 #define MAXPENDING 10
 #define RCVBUFSIZE 2046
@@ -68,7 +67,7 @@ static CommandPkt * packetToCmd( char * p_pkt )
 static void serverInitializer( )
 {
     serverSock = CreateSocket(TCP, BLOCK);
-    int port = GetServerPort();
+    int port = DEFAULT_COMPORT;
 
     /* Construct local address structure */
     memset(&serverAddr, 0, sizeof(serverAddr));   /* Zero out structure */
@@ -130,8 +129,7 @@ static LhfDraft * getAttackDraftFromCmd( CommandPkt p_cmd )
     strcpy( draft->amp_ip, clnDrf.amp_ip );
     draft->target_port = clnDrf.target_port;
     draft->amp_port = clnDrf.amp_port;
-    draft->initialThroughput = clnDrf.initialThroughput;
-    draft->typeThroughput = clnDrf.typeThroughput;
+    draft->throughput = clnDrf.throughput;
     draft->timer = clnDrf.timer;
 
     return draft;
@@ -220,22 +218,16 @@ void OryxCli( int p_argc, char **p_argv )
     Packet *pkt;
     CommandPkt *cmd;
     LhfDraft *draft;
-    char **args = NULL;
     int argCounter = p_argc-1;
+    char **args;
 
-    if( strcmp(p_argv[1], "atk") )
+    if(argCounter <= 0)
     {
-        LOG("Invalid Command\n");
-        return;
+        Efatal(ERROR_ORYX, "No args");
     }
-
-    memalloc(&args, argCounter);
-    for(int i = 0; i < argCounter; i++)
-    {
-       args[i] = p_argv[i+1]; 
-    }
-
-    pkt = CreateCmdPacket( AttackCmd, argCounter, args);
+       
+    args = &p_argv[1]; 
+    pkt = CreateCmdPacket( AttackCmd, argCounter, args, NULL);
     
     if( NULL == pkt )
     {

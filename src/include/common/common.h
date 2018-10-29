@@ -19,6 +19,9 @@
 #include "common/signalsHandler.h"
 #include "common/timeHelper.h"
 
+#define likely(x)       __builtin_expect((x),1)
+#define unlikely(x)     __builtin_expect((x),0)
+
 #define true 1
 #define false 0
 
@@ -26,6 +29,6 @@
  * lengthof
  *      Number of elements in an array.
  */
-#define lengthof(array) (sizeof (array) / sizeof ((array)[0]))
+#define lengthof(array) (sizeof(array) / sizeof((array)[0]))
 
 #endif

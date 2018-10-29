@@ -1,124 +1,81 @@
 #include <stdlib.h>
 #include <sys/types.h>
 #include <signal.h>
-#include <math.h>
 #include "venus.h"
 #include "netuno/injector.h"
 #include "netuno/logger.h"
+#include "common/pthreadHelper.h"
 
 #define THPINCREMENT 1
 
-typedef enum { INJECTOR, MONITOR, TRAFFIC_SHAPING } THREAD_TYPE;
-
-#define SAMPLING 60
+#define SAMPLING 10
 #define MEGABYTE 1000000
 #define DEFAULT_SIZE 1
-
-static void *_trafficshapingHandler( void *p_arg )
-{
-    Injector *injector = (Injector *)p_arg; 
-   
-    LOG("Starting traffic shaping\n");
-    while(1)
-    {
-        injector->net.bucketSize = ceil( (injector->monitor.throughputExpected * MEGABYTE) / injector->net.pkt->payload_size );
-        SleepOneSec(); 
-    }
-    return NULL; //kepp compiler quiet
-}
-
-static void *_throughputMonitorHandler( void *p_arg )
-{
-    float sample = 0;
-    Injector *injector = (Injector *)p_arg; 
-
-    LOG("Starting throughput monitor\n");
-    while(1)
-    {
-        for(int i = 0; i < SAMPLING; i++)
-        { 
-            injector->net.pktCounter = 0;
-            SleepOneSec();
-            sample += injector->net.pkt->payload_size * injector->net.pktCounter;
-        }
- 
-        injector->monitor.throughputCurrent = (sample/SAMPLING)/MEGABYTE;
-        sample = 0;
-        injector->net.pktDroped = 0;
-        SleepOneSec();
-    }
-
-    return NULL; //Keep compiler quiet
-}
 
 static void *_injectorHandler( void *p_arg )
 {
     Injector *injector = (Injector *)p_arg;
 
-    LOG("Starting injector\n");
     while(1)
     {
-        while( injector->net.bucketSize )
+        while( injector->net.bucketSize || injector->net.freeBucket )
         {
-            if( 0 == SendPacket(injector->net.pkt) )
+            if( ERROR_NET != SendPacket(injector->net.socket, injector->net.pkt) )
             {
                 //Packet was sent
-                injector->net.bucketSize--;
                 injector->net.pktCounter++;
+                injector->net.bucketSize--;
             }
             else
             {
                 injector->net.pktDroped++;
             }
         }
-  };
-
-  return NULL; //Keep compiler quiet
+    };
+    return NULL; //Keep compiler quiet
 }
 
 void injectorBootstrap( Injector *injector )
 {
-
-    if( 0 != pthread_create(&(injector->auxThreads[INJECTOR].id), NULL, _injectorHandler, injector) )
+    if( ERROR_THREAD == (injector->id = CreateThread(LVL_HIGH, _injectorHandler, injector)) )
     {
         Efatal( ERROR_INJECTOR, "Cannot create thread: ERROR_INJECTOR\n");
     }
-    injector->auxThreads[INJECTOR].running = true;
 
-    if( 0 != pthread_create(&(injector->auxThreads[MONITOR].id), NULL, _throughputMonitorHandler, injector) )
-    {
-        Efatal(ERROR_INJECTOR, "Cannot create thread: ERROR_INJECTOR\n");
-    }
-    injector->auxThreads[MONITOR].running = true;
-  
-    if( 0 != pthread_create(&(injector->auxThreads[TRAFFIC_SHAPING].id), NULL, _trafficshapingHandler, injector) )
-    {
-        Efatal(ERROR_INJECTOR, "Cannot create thread: ERROR_INJECTOR\n");
-    }
-    injector->auxThreads[TRAFFIC_SHAPING].running = true;
 }
 
-Injector * StartInjector( Packet *p_pkt, int p_inithp)
+Injector ** StartInjector( Packet *p_pkt )
 {
-    Injector *injector = NULL;
-    memalloc(&injector, sizeof(Injector));
+    Injector **injector = NULL;
+    int n = 1;
 
-    injector->monitor.throughputExpected = p_inithp;
-    injector->monitor.throughputCurrent = 0;
-    injector->net.pkt = p_pkt;
-    injectorBootstrap(injector); 
+    memalloc(&injector, sizeof(Injector)*MAXINJECTORS);
+
+    for(int i = 0; i < MAXINJECTORS; i++)
+    {
+        Injector *inj = NULL;
+
+        memalloc(&inj, sizeof(Injector));
+
+        inj->net.pkt = p_pkt;
+        inj->net.socket = CreateSocket( RAW, BLOCK );
+        SetSocketFlag(inj->net.socket, SO_BROADCAST);
+        SetSocketFlag(inj->net.socket, SO_PRIORITY); 
+        Setup_sendbuffer( inj->net.socket, n );
+        
+        inj->net.freeBucket = false;
+        inj->net.bucketSize = 0;
+        inj->net.pktCounter = 0;
+        inj->net.pktDroped = 0;
+
+        injectorBootstrap(inj);
+        injector[i] = inj;
+    }
     return injector;
 }
 
 void InjectorDestroy( Injector *p_injector )
 {
-    for(int j = 0; j < INJECTOR_AUXTHREADS; j++)
-    {
-        if(p_injector->auxThreads[j].running)
-        {
-            pthread_cancel(p_injector->auxThreads[j].id);
-        }
-    }
+    pthread_cancel(p_injector->id);
     memfree(&p_injector);
-    LOG("Injector destroyed.\n");
 }

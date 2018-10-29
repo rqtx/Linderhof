@@ -6,16 +6,12 @@
 #include "common/common.h"
 #include "netuno/netuno.h"
 
-#define INJECTOR_AUXTHREADS 3
-#define MAX_INJECTORCELL_THP 5
-
-typedef struct { 
-    float throughputExpected;
-    float throughputCurrent;
-}InjectorMonitor;
+#define MAXINJECTORS 10
 
 typedef struct {
     Packet *pkt;
+    int socket;
+    bool freeBucket;
     unsigned int bucketSize;
     unsigned int pktCounter;
     unsigned int pktDroped;
@@ -23,24 +19,16 @@ typedef struct {
 
 typedef struct {
     pthread_t id;
-    bool running; 
-}ThreadStat;
-
-typedef struct {
-    InjectorMonitor monitor;
     InjectorNet net;
-    ThreadStat auxThreads[INJECTOR_AUXTHREADS];
 }Injector;
-
 
 /**
  * @brief Start injector.
  *
  * @param p_pkt[in] Packet data.
- * @param p_thp[in] Initial throughput
- * @return Injector handler struct 
+ * @return Injectors handler struct 
  */
-Injector * StartInjector( Packet *p_pkt, int p_inithp );
+Injector ** StartInjector( Packet *p_pkt );
 
 /**
  * @brief Destroy injector.

@@ -16,8 +16,10 @@ char * GetCurrentTimeStr();
 void SleepOneSec();
 
 /**
- *  @param Sleep one minute
+ *  @brief Sleep one minute
  * */
 void SleepOneMinute();
+
+void SleepSec( unsigned int p_sec );
 
 #endif

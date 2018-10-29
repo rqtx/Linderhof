@@ -47,7 +47,7 @@ void linderhofBootstrap()
     SetSigHdr(SIGQUIT, closeHandler);
     ESetErroAction(fatalHandler);
     SetCapability(CAP_NET_RAW);
-    //SetCapability(CAP_NET_ADMIN);
+    SetCapability(CAP_NET_ADMIN);
 }
 
 void LinderhofNet()

@@ -22,6 +22,7 @@
 #define ERROR_INJECTOR  -300
 #define ERROR_MEMCACHED -400
 #define ERROR_ORYX      -500
+#define ERROR_CLI       -600
 
 /**
  *  @brief Display error message

@@ -21,7 +21,6 @@ typedef struct {
   void *packet_ptr;
   size_t pkt_size;
   size_t payload_size;
-  int netSock;
   char ip_dest[16];
   int dest_port;
   struct sockaddr_in saddr;
@@ -73,9 +72,9 @@ void ReleasePacket( Packet *p_pkt );
  *
  *  @param p_pkt[in] Packet to be sent
  * */
-int SendPacket( Packet *p_pkt );
+int SendPacket( int p_socket, Packet *p_pkt );
 
-int SetPacketPort( Packet *p_pkt );
+int BindPort( int p_socket, struct sockaddr_in saddr );
 
 /**
  *  @brief Verify if string is a valid IPv4
@@ -83,5 +82,7 @@ int SetPacketPort( Packet *p_pkt );
  *  @param p_str[in] String to be checked
  * */
 bool is_valid_ipv4(char * ip_str);
+
+int Setup_sendbuffer ( int fd, uint32_t n );
 
 #endif      //NETIO_H

@@ -1,117 +1,85 @@
 
 #include <time.h>
+#include <math.h>
 #include "venus.h"
 #include "netuno/injector.h"
 #include "netuno/netuno.h"
 #include "netuno/logger.h"
 
-#define FREQUENCY 5
-#define MAX_INJECTORCELlS NETUNO_MAXTHP / MAX_INJECTORCELL_THP
-#define getNumberOfCells(thp) ( (thp / MAX_INJECTORCELL_THP) <= 0 ) ? 1 : (thp / MAX_INJECTORCELL_THP)
+#define MEGABYTE 1048576
 
 typedef struct { 
-    InjectorType type;
-    InjectorMonitor monitor;
     Packet *pkt;
     unsigned int injCells;
-    unsigned int lastActCell;
+    unsigned int bucket;
+    unsigned int throughputExpected;
+    float throughputCurrent;
     Injector **injectors;
 }NetunoInjector;
 
-static Injector ** fullAttack( Packet *p_pkt, int p_inithp, int p_injCells )
-{
-    Injector **injectors = NULL;
 
-    memalloc( &injectors, sizeof(Injector)*p_injCells );
-    
-    for(int i = 0; i < p_injCells; i++)
+static void getInjetorThp( NetunoInjector * p_netuno )
+{
+    float pkt = 0;
+
+    for(int i = 0; i < p_netuno->injCells; i++)
     {
-        injectors[i] = StartInjector( p_pkt, MAX_INJECTORCELL_THP);
+        pkt += p_netuno->injectors[i]->net.pktCounter;
+        p_netuno->injectors[i]->net.pktCounter = 0;
     }
-    return injectors;
+    p_netuno->throughputCurrent = pkt * p_netuno->pkt->pkt_size; 
 }
 
-static Injector ** incAttack( Packet *p_pkt, int p_injCells )
+static void resetBucket( NetunoInjector *p_netuno )
 {
-    Injector **injectors = NULL;
-
-    memalloc( &injectors, sizeof(Injector)*p_injCells ); 
-    injectors[0] = StartInjector( p_pkt, 0);
-    return injectors;
-}
-
-static void getInjetorThp( NetunoInjector * p_inj )
-{
-    p_inj->monitor.throughputCurrent = 0;
-    p_inj->monitor.throughputExpected = 0;
-
-    for(int i = 0; i <= p_inj->lastActCell; i++)
+    for(int i = 0; i < p_netuno->injCells; i++)
     {
-        p_inj->monitor.throughputCurrent += p_inj->injectors[i]->monitor.throughputCurrent;
-        p_inj->monitor.throughputExpected += p_inj->injectors[i]->monitor.throughputExpected;
+        p_netuno->injectors[i]->net.bucketSize = p_netuno->bucket; 
     }
 }
 
-static void incrementInjector( NetunoInjector *p_inj )
+static void freeAttack( NetunoInjector *p_netuno )
 {
-    if( p_inj->injectors[p_inj->lastActCell]->monitor.throughputExpected < MAX_INJECTORCELL_THP )
+    for(int i = 0; i < p_netuno->injCells; i++)
     {
-        p_inj->injectors[p_inj->lastActCell]->monitor.throughputExpected++;
-    }
-    else
-    {
-        if( (p_inj->lastActCell+1) < p_inj->injCells )
-        {
-            p_inj->lastActCell++;
-            p_inj->injectors[p_inj->lastActCell] = StartInjector( p_inj->pkt, 1);
-        }
+        p_netuno->injectors[i]->net.freeBucket = true; 
     }
 }
 
-void StartNetunoInjector( Packet *p_pkt, unsigned int p_inithp, unsigned int p_timer, InjectorType p_type )
+void StartNetunoInjector( Packet *p_pkt, unsigned int p_inithp, unsigned int p_timer )
 {
     unsigned int masterClock = 0;
-    unsigned int incClock = 0;
-    unsigned int thp = (p_inithp <= 0 || p_inithp > NETUNO_MAXTHP) ? NETUNO_MAXTHP : p_inithp;
     NetunoInjector netuno;
     netuno.pkt = p_pkt;
     FILE *fpLog = CreateLoggerFile(ATK_LOGGER);
 
-    LOG("Netuno\n");
-
-    switch( p_type )
+    netuno.injectors = StartInjector( netuno.pkt );
+    netuno.injCells = MAXINJECTORS;
+    
+    if(p_inithp <= 0 || p_inithp > NETUNO_MAXTHP)
     {
-        case FULL:
-            netuno.type = FULL;
-            netuno.injCells = getNumberOfCells(thp);
-            netuno.lastActCell = netuno.injCells-1;
-            netuno.injectors = fullAttack( netuno.pkt, thp, netuno.injCells);
-            break;
-        case INCREMENT:
-        default:
-            netuno.type = INCREMENT;
-            netuno.injCells = getNumberOfCells(NETUNO_MAXTHP);
-            netuno.injectors = incAttack( netuno.pkt, netuno.injCells);
-            netuno.lastActCell = 0;
-            break;
-        
+        freeAttack(&netuno);
+        netuno.throughputExpected = 0;
+    }
+    else
+    {
+        netuno.throughputExpected = p_inithp;
+        netuno.bucket = ((netuno.throughputExpected * MEGABYTE) / netuno.pkt->pkt_size)/netuno.injCells;
     }
 
     while(1)
     {
-        getInjetorThp(&netuno);
-        if( netuno.type == INCREMENT && netuno.monitor.throughputExpected < NETUNO_MAXTHP && incClock >= FREQUENCY )
-        {
-            incrementInjector(&netuno);      
-            incClock = 0;
-        }
-
-        LogInjection( fpLog, netuno.monitor.throughputExpected, netuno.monitor.throughputCurrent);
-        LogInjection( NULL, netuno.monitor.throughputExpected, netuno.monitor.throughputCurrent);
-        SleepOneMinute();
+        SleepOneSec();
         masterClock++;
-        incClock++;
+        getInjetorThp(&netuno);
 
+        if( netuno.throughputExpected )
+        {
+            resetBucket( &netuno );
+        }
+        //LogInjection( fpLog, netuno.throughputExpected, netuno.throughputCurrent);
+        LogInjection( NULL, netuno.throughputExpected, netuno.throughputCurrent);
+        
         if(p_timer > 0 && masterClock >= p_timer)
         {
             break;
@@ -119,8 +87,7 @@ void StartNetunoInjector( Packet *p_pkt, unsigned int p_inithp, unsigned int p_t
     }
 
     fclose(fpLog);
-
-    for(int i = 0; i <= netuno.lastActCell; i++)
+    for(int i = 0; i <= netuno.injCells; i++)
     {
         InjectorDestroy( netuno.injectors[i] );
     }

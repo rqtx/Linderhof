@@ -7,7 +7,7 @@
 
 #include "common/common.h"
 
-#define DEFAULT_PORT 16567
+#define DEFAULT_PORT 16566
 
 static uint16_t ip_checksum(const void *buf, size_t hdr_len)
 {
@@ -31,7 +31,6 @@ static uint16_t ip_checksum(const void *buf, size_t hdr_len)
 
 Packet * ForgeUDP(char * ip_dest, char * ip_src, int dest_port, Packet * (*f_payload)(void * arg), void *p_arg)
 {
-  
     int payload_size = 0;
     char * datagram;
     Packet *pac = CreateEmptyPacket();
@@ -51,9 +50,8 @@ Packet * ForgeUDP(char * ip_dest, char * ip_src, int dest_port, Packet * (*f_pay
     {
         payload_size = strlen(p_arg);
         payload = p_arg;
-    }
-    
-    pac->netSock = CreateSocket( RAW, NO_BLOCK );
+    } 
+
     pac->saddr.sin_family = AF_INET;
     pac->saddr.sin_port = htons(DEFAULT_PORT);
     pac->saddr.sin_addr.s_addr = inet_addr(ip_dest);

@@ -1,7 +1,6 @@
 
 #include "venus.h"
 #include "interface/interface.h"
-#include "interface/configr.h"
 #include "monitor/crake.h"
 
 #define PARSER_DELIM " "
@@ -10,6 +9,15 @@
 
 #define MAXBUFFERSIZE 500
 #define MAXARGS  20
+
+static char * askServerIP( )
+{
+    char *serverIP = NULL;
+    memalloc(&serverIP, sizeof(MAXBUFFERSIZE));
+    fputs("\nServer IP: ", stdout);
+    fgets(serverIP, MAXBUFFERSIZE, stdin);
+    return serverIP;
+}
 
 static CmdType getCmd( char *p_cmd )
 {
@@ -74,7 +82,7 @@ static Packet * getPacketFromInput()
             continue;    
         }
 
-        pkt = CreateCmdPacket(cmd, args, parsedBuffer);
+        pkt = CreateCmdPacket(cmd, args, parsedBuffer, NULL);
         if( NULL == pkt )
         {
             LOG("Arg problem\n");
@@ -88,8 +96,8 @@ static Packet * getPacketFromInput()
 static int connectToServer()
 {
     int sock = CreateSocket(TCP, true);
-    char * serverIP = AskServerIP();
-    int serverPort = GetServerPort();
+    char * serverIP = askServerIP();
+    int serverPort = DEFAULT_COMPORT;
     struct sockaddr_in servAddr;
 
     /* Construct the server address structure */
@@ -103,7 +111,6 @@ static int connectToServer()
         Efatal( ERROR_NET, "connect() failed\n");
     }
 
-    SetServerIP( serverIP );
     return sock;
 }
 
@@ -116,13 +123,12 @@ void SnowmanShell()
     for(;;)
     {
         pac = getPacketFromInput();
-        pac->netSock = sock;
         cmd = (CommandPkt *)pac->packet_ptr;
         
         switch( (int)cmd->type )
         {
             case AttackCmd:
-                SendPacket(pac);
+                SendPacket(sock, pac);
                 LOG("Packet sent\n");
                 MonitorCrake(60);
         }

@@ -1,0 +1,9 @@
+# Netuno
+
+Estamos com o problema de não conseguir os 1000Mb/s. Para resolver isso pensei:
+
+- Podemos alterar a prioridade das threads para a máxima;
+- Podemos forçar a escolha do core que a thread vai rodar;
+
+- O injector usa a abordagem produtor consumidor. Será que uma abortagem com semáforos seria melhor?
+- O *_throughputMonitorHandler do injector não precisa ser uma thread, podemos chama-lo do controller do netuno.
