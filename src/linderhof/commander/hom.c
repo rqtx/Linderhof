@@ -61,10 +61,6 @@ int execMirror( LhfPlan *p_plan )
         return ERROR_MIRROR; 
     }
     
-    //mirror = createMirror();
-    //mirror->id = id;
-    //mirror->plan = p_plan;
-    //InsertCell( &mirrorList, (void *)mirror );
     return SUCCESS;
 }
 

@@ -84,9 +84,18 @@ void StartNetunoInjector( Packet *p_pkt, unsigned int p_inithp, unsigned int p_t
             break;
         }
     }
+    
+    for(int i = 0; i < netuno.injCells; i++)
+    {
+        netuno.injectors[i]->net.bucketSize = 0;
+    }
 
-    fclose(fpLog);
-    for(int i = 0; i <= netuno.injCells; i++)
+    if(fpLog != NULL)
+    {
+        fclose(fpLog);
+    }
+
+    for(int i = 0; i < netuno.injCells; i++)
     {
         InjectorDestroy( netuno.injectors[i] );
     }
