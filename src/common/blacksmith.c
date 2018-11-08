@@ -36,7 +36,7 @@ Packet * ForgeUDP(char * ip_dest, char * ip_src, int dest_port, Packet * (*f_pay
     Packet *pac = CreateEmptyPacket();
     Packet *payloadPkg = NULL;
     void *payload = NULL;
-    struct iphdr *ip_header = NULL;          // Pointer to the beginning of ip header
+    struct ip *ip_header = NULL;          // Pointer to the beginning of ip header
     struct udphdr *udp_header = NULL;        // Pointer to the beginning of udp header
     char *payload_ptr = NULL;               // Pointer to the beginning of payload
     
@@ -58,23 +58,23 @@ Packet * ForgeUDP(char * ip_dest, char * ip_src, int dest_port, Packet * (*f_pay
 
     memalloc( &datagram, sizeof(struct iphdr) + sizeof(struct udphdr) + payload_size );
 
-    ip_header = (struct iphdr *)datagram;                                  // Pointer to the beginning of ip header
+    ip_header = (struct ip *)datagram;                                  // Pointer to the beginning of ip header
     udp_header = (struct udphdr *)(datagram + sizeof(struct iphdr));   // Pointer to the beginning of udp header
     payload_ptr = (datagram + sizeof(struct iphdr) + sizeof(struct udphdr));               // Pointer to the beginning of payload
 
     
 
     //IP Header
-    ip_header->version = 4;
-    ip_header->ihl = 5;
-    ip_header->tot_len = sizeof (struct iphdr) + sizeof (struct udphdr) + payload_size;
-    ip_header->tos = 0;
-    ip_header->frag_off = 0;		    // no fragment = 0
-    ip_header->ttl = 64;			    // default value = 64
-    ip_header->protocol = IPPROTO_UDP;
-    ip_header->check = ip_checksum(datagram, ip_header->tot_len);
-    inet_pton(AF_INET, ip_dest, (struct in_addr *)&ip_header->daddr);
-    inet_pton(AF_INET, ip_src, (struct in_addr *)&ip_header->saddr);
+    ip_header->ip_v = 4;
+    ip_header->ip_hl = 5;
+    ip_header->ip_len = sizeof (struct iphdr) + sizeof (struct udphdr) + payload_size;
+    ip_header->ip_tos = 0;
+    ip_header->ip_off = 0;		    // no fragment = 0
+    ip_header->ip_ttl = 64;			    // default value = 64
+    ip_header->ip_p = IPPROTO_UDP;
+    ip_header->ip_sum = ip_checksum(datagram, ip_header->ip_len);
+    inet_pton(AF_INET, ip_src, (struct in_addr *)&ip_header->ip_src);
+    inet_pton(AF_INET, ip_dest, (struct in_addr *)&ip_header->ip_dst);
 
     //UDP header
     udp_header->source = htons(pac->saddr.sin_port);
@@ -87,7 +87,7 @@ Packet * ForgeUDP(char * ip_dest, char * ip_src, int dest_port, Packet * (*f_pay
     
     pac->type = RAW;
     pac->packet_ptr = datagram;
-    pac->pkt_size = ip_header->tot_len;
+    pac->pkt_size = ip_header->ip_len;
     pac->payload_size = payload_size;
     strcpy( pac->ip_dest, ip_dest);
     pac->dest_port = dest_port;

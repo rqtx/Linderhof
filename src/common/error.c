@@ -10,6 +10,18 @@ Error err = {
     .func = defaultHandler
 };
 
+static void printerror( char *p_msg )
+{
+    if( errno != 0 )
+    {
+        perror(p_msg);
+    }
+    else
+    {
+        puts( p_msg );
+    }
+}
+
 void defaultHandler( int p_errorCode )
 {
     memoryclean();
@@ -18,7 +30,7 @@ void defaultHandler( int p_errorCode )
 
 void Efatal( int p_errorCode, char * p_error )
 {
-    perror(p_error);
+    printerror(p_error);
     err.func(p_errorCode);
 }
 
@@ -29,15 +41,7 @@ int Elog(int p_code, char *p_msg)
         return p_code;
     }
 
-
-    if( p_code != SUCCESS )
-    {
-        perror(p_msg);
-    }
-    else
-    {
-        puts( p_msg );
-    }
+    printerror( p_msg );
 
     return p_code;
 }
