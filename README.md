@@ -37,12 +37,7 @@ Biblioteca dos ataques. Aqui é onde montamos um plano de ataque e executamos o 
 Injector engine.
 
 Injetor de pacotes.
-O netuno é o gerenciador dos injetores de ataque. Com cada injetor podendo no máximo ter um throughput de 5 Mb/s.
-É possível requisitar um ataque de até 50Mb/s. Entretanto o Netuno não foi capaz de entregar tudo isso até o momento, ele consegue até no máximo 20 Mb/s. Em um momento da injeção (por volta dos 15 Mb/s) o fator de crescimento da injeção começa a diminuir, acredito que por causa de um início de saturação na escrita do buffer do socket.
-
-# Monitoramento
-O Netuno sempre terá o log do monitoramento da última injeção no arquivo atklogger.txt. 
-Para fazer o log da vítima é necessário compilar o Linderhof com a OryxNet. O target do ataque deve ser o IP do cliente Linderhof. Esse log será salvo no arquivo monitorlogger.txt.
+O netuno é o gerenciador dos injetores de ataque. Com cada injetor podendo no máximo ter um throughput de 100 Mb/s.
 
 # Criando mirror
 
