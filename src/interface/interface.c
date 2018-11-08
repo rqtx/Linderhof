@@ -43,24 +43,23 @@ int parserAttackOpt (char key, char *arg, ArgState *state)
         case ARG_MIRROR:
             if( !strcmp(arg, "test") || !strcmp(arg, "Test") || !strcmp(arg, "TEST") )
             {
-                draft->amp_port = CRAKE_DEFAULT_PORT;
-                draft->target_port = CRAKE_DEFAULT_PORT;
                 draft->type = TEST;
-                draft->throughput = 0;
-                draft->timer = 60;
-                draft->amp_port = CRAKE_DEFAULT_PORT;
+                strcpy(draft->mirrorName, "TEST"); 
             }
             else if( !strcmp(arg, "memcached_getset") || !strcmp(arg, "MEMCACHED_GETSET") )
             {
                 draft->type = MEMCACHED_GETSET;
+                strcpy(draft->mirrorName, "MEMCACHED GETSET"); 
             }
             else if( !strcmp(arg, "memcached_stat") || !strcmp(arg, "MEMCACHED_STATS") )
             {
                 draft->type = MEMCACHED_STATS;
+                strcpy(draft->mirrorName, "MEMCACHED STAT");
             }
             else if( !strcmp(arg, "ssdp") || !strcmp(arg, "SSDP") )
             {
                 draft->type = SSDP;
+                strcpy(draft->mirrorName, "SSDP");
             }
             else
             {
@@ -187,5 +186,6 @@ void SetDraftDefaultData( LhfDraft *p_draft )
     p_draft->throughput = 0;
     p_draft->timer = DEFAULT_TIMER;
     p_draft->logfile[0] = '\0';
+    p_draft->mirrorName[0] = '\0';
     p_draft->incAttack = false;
 }

@@ -14,6 +14,7 @@ typedef enum { NOTSET, TEST, MEMCACHED_GETSET, MEMCACHED_STATS, SSDP } MirrorTyp
 
 typedef struct {
   MirrorType type;                  //Type of mirror to use
+  char mirrorName[20];
   char target_ip[IPSIZE];           //Target IP
   char amp_ip[IPSIZE];              //Amplifier IP
   uint32_t target_port;             //Target port

@@ -11,6 +11,18 @@
 int serverSock = 0;
 struct sockaddr_in serverAddr;
 
+static void printHeader(LhfDraft p_draft)
+{
+   printf("Welcome to Linderhof!\n");
+   printf("Attack configuration\n");
+   printf("Mirror:         %s\n", p_draft.mirrorName);
+   printf("Target ip:      %s\n", p_draft.target_ip);
+   printf("Target port:    %d\n", p_draft.target_port);
+   printf("Amplifier ip:   %s\n", p_draft.amp_ip);
+   printf("Amplifier port: %d\n", p_draft.amp_port);
+   printf("#############################################################\n\n");
+}
+
 static bool validateCmd( CommandPkt p_cmd )
 {
     switch( (int)p_cmd.type )
@@ -220,7 +232,7 @@ void OryxCli( int p_argc, char **p_argv )
     LhfDraft *draft;
     int argCounter = p_argc-1;
     char **args;
-
+ 
     if(argCounter <= 0)
     {
         Efatal(ERROR_ORYX, "No args");
@@ -236,5 +248,10 @@ void OryxCli( int p_argc, char **p_argv )
 
     cmd = (CommandPkt *) pkt->packet_ptr; 
     draft = &cmd->data;
+    memfree(&cmd);
+
+    printHeader( *draft );
+    
     StartMirrorAttack( *draft );
+    memfree(&draft);
 }
