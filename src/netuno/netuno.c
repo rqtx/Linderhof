@@ -44,11 +44,12 @@ static void freeAttack( NetunoInjector *p_netuno )
     {
         p_netuno->injectors[i]->net.freeBucket = true; 
     }
+    p_netuno->throughputExpected = 0;
 }
 
-void StartNetunoInjector( Packet *p_pkt, unsigned int p_inithp, unsigned int p_timer, char *p_file )
+void StartNetunoInjector( Packet *p_pkt, unsigned int p_inithp, unsigned int p_timer, unsigned int p_inc, char *p_file )
 {
-    unsigned int masterClock = 0;
+    unsigned int masterClock = 0, incPoint = p_inc;
     NetunoInjector netuno;
     netuno.pkt = p_pkt;
     FILE *fpLog = CreateLoggerFile(p_file);
@@ -82,6 +83,22 @@ void StartNetunoInjector( Packet *p_pkt, unsigned int p_inithp, unsigned int p_t
         if(p_timer > 0 && masterClock >= p_timer)
         {
             break;
+        }
+
+        if( incPoint != 0 && masterClock == incPoint )
+        {
+            incPoint += p_inc;
+            netuno.throughputExpected += 10;
+
+            if( netuno.throughputExpected <= NETUNO_MAXTHP )
+            {
+                netuno.bucket = ((netuno.throughputExpected * MEGABYTE) / netuno.pkt->pkt_size)/netuno.injCells;
+            }
+            else
+            {
+                freeAttack(&netuno);
+                incPoint = 0;
+            }
         }
     }
     

@@ -49,7 +49,7 @@ void executeAttack( AttackPlan * atkData )
         Efatal(ERROR_MEMCACHED, "error memcached\n");
     }
     CloseSocket(sock);
-    StartNetunoInjector( atkData->getPacket, atkData->draft->throughput, atkData->draft->timer, fileName);
+    StartNetunoInjector( atkData->getPacket, atkData->draft->throughput, atkData->draft->timer, atkData->draft->incAttack, fileName);
 }
 
 int  ExecuteMemcachedMirror( void *p_draft )

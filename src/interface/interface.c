@@ -16,8 +16,9 @@
 #define ARG_AMPPORT 'p'
 #define ARG_TARGPORT 'g'
 #define ARG_THP 'h'
-#define ARG_TIMER 'i'
+#define ARG_TIMER 'c'
 #define ARG_LOGFILE 'f'
+#define ARG_INCREMENT 'i'
 
 static ArgsOpt atkArgpOption[] =
 {
@@ -29,13 +30,14 @@ static ArgsOpt atkArgpOption[] =
     { ARG_THP, "thp", true, false, "Attack throughput"},
     { ARG_TIMER, "timer", true, false, "Attack timer"},
     { ARG_LOGFILE, "log", true, false, "Log file name"},
+    { ARG_INCREMENT, "inc", true, false, "Increment attack"},
     { 0 }
 };
 
 int parserAttackOpt (char key, char *arg, ArgState *state)
 { 
     LhfDraft *draft = state->input;
-  
+
     switch (key)
     {
         case ARG_MIRROR:
@@ -83,23 +85,51 @@ int parserAttackOpt (char key, char *arg, ArgState *state)
             break;
         
         case ARG_AMPPORT:
+            if( NULL == arg)
+            {
+                Efatal(ERROR_CLI, "Internal error: Oryx fatal");
+            }
             draft->amp_port = (atoi(arg) > 0) ? atoi(arg) : 0;
             break;
         
         case ARG_TARGPORT:
+            if( NULL == arg)
+            {
+                Efatal(ERROR_CLI, "Internal error: Oryx fatal");
+            }
             draft->target_port = (atoi(arg) > 0) ? atoi(arg) : DEFAULT_TARGETPORT;
             break;
 
         case ARG_THP:
+            if( NULL == arg)
+            {
+                Efatal(ERROR_CLI, "Internal error: Oryx fatal");
+            }
             draft->throughput = atoi(arg);
             break;
     
         case ARG_TIMER:
+            if( NULL == arg)
+            {
+                Efatal(ERROR_CLI, "Internal error: Oryx fatal");
+            }
             draft->timer = (atoi(arg) > 0) ? atoi(arg) : DEFAULT_TIMER;
             break;
 
         case ARG_LOGFILE:
+            if( NULL == arg)
+            {
+                Efatal(ERROR_CLI, "Internal error: Oryx fatal");
+            }
             memcpy(draft->logfile, arg, strlen(arg));
+            break;
+        
+        case ARG_INCREMENT:
+            if( NULL == arg)
+            {
+                Efatal(ERROR_CLI, "Internal error: Oryx fatal");
+            }
+            draft->incAttack = (atoi(arg) > 0) ? atoi(arg): 0;
             break;
   }
   return 0;
@@ -153,7 +183,9 @@ void SetDraftDefaultData( LhfDraft *p_draft )
     p_draft->type = TEST;
     p_draft->target_port = DEFAULT_TARGETPORT;
     p_draft->amp_port = 0;
-    p_draft->throughput = 1;
+    p_draft->target_port = 80;
+    p_draft->throughput = 0;
     p_draft->timer = DEFAULT_TIMER;
     p_draft->logfile[0] = '\0';
+    p_draft->incAttack = false;
 }
