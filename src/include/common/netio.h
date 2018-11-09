@@ -83,6 +83,12 @@ int BindPort( int p_socket, struct sockaddr_in saddr );
  * */
 bool is_valid_ipv4(char * ip_str);
 
-int Setup_sendbuffer ( int fd, uint32_t n );
+/**
+ * @brief Set maximum socket send buffer in bytes
+ *
+ * @param p_str[in] File descriptor 
+ * @param p_str[in] Minimal buffer size 
+ */
+int Setup_sendbuffer ( int p_fd, uint32_t p_n );
 
 #endif      //NETIO_H

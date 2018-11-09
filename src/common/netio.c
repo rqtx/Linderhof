@@ -239,18 +239,18 @@ int BindPort( int p_socket, struct sockaddr_in saddr )
 }
 
 /* Adapted from T50. */
-int Setup_sendbuffer ( int fd, uint32_t n )
+int Setup_sendbuffer ( int p_fd, uint32_t p_n )
 {
     uint32_t i;
     socklen_t len;
 
-    SetSocketFlag(fd, SO_SNDBUFFORCE);
+    SetSocketFlag(p_fd, SO_SNDBUFFORCE);
     
     /* Getting SO_SNDBUF. */
-    len = sizeof ( n );
+    len = sizeof ( p_n );
         
     errno = 0;
-    if ( getsockopt ( fd, SOL_SOCKET, SO_SNDBUF, &n, &len ) == -1 )
+    if ( getsockopt ( p_fd, SOL_SOCKET, SO_SNDBUF, &p_n, &len ) == -1 )
     {
         Efatal ( ERROR_NET, "Cannot get socket buffer" );
     }
@@ -258,11 +258,11 @@ int Setup_sendbuffer ( int fd, uint32_t n )
   /* Setting the maximum SO_SNDBUF in bytes.
    * 128      =  1 Kib
    * 10485760 = 80 Mib */
-    for ( i = n + 128; i < MAX_SOCKEBUFFER; i += 128 )
+    for ( i = p_n + 128; i < MAX_SOCKEBUFFER; i += 128 )
     {
     /* Setting SO_SNDBUF. */
         errno = 0;
-        if ( setsockopt ( fd, SOL_SOCKET, SO_SNDBUFFORCE, &i, sizeof ( i ) ) == -1 )
+        if ( setsockopt ( p_fd, SOL_SOCKET, SO_SNDBUFFORCE, &i, sizeof ( i ) ) == -1 )
         {
             if ( errno == ENOBUFS || errno == ENOMEM )
             {
@@ -271,5 +271,5 @@ int Setup_sendbuffer ( int fd, uint32_t n )
             Efatal( ERROR_NET, "Cannot set socket buffer" );
         }
     }
-    return n;
+    return p_n;
 }

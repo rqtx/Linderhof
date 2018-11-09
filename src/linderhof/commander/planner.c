@@ -1,7 +1,7 @@
 #include "venus.h"
-#include "commander/hom.h"
-#include "mirrors/memcached.h"
-#include "mirrors/mirrortest.h"
+#include "commander/planner.h"
+#include "hom/memcached.h"
+#include "hom/mirrortest.h"
 
 LhfPlan * Planner( LhfDraft *p_draft )
 {
