@@ -1,12 +1,12 @@
-#include <arpa/inet.h>
-#include <netinet/in.h>
-#include <netinet/ip.h>
-#include <netinet/udp.h>
-#include <sys/socket.h>
-#include <sys/types.h>
-
-#include "strix.h"
-#include "NTPforge.h"
+//#include <arpa/inet.h>
+//#include <netinet/in.h>
+//#include <netinet/ip.h>
+//#include <netinet/udp.h>
+//#include <sys/socket.h>
+//#include <sys/types.h>
+//
+//#include "strix.h"
+//#include "NTPforge.h"
 
 //#define SET_CMD "set %s 0 0 %d\r\n%s\r\n"
 //#define GET_CMD "get %s\r\n"
