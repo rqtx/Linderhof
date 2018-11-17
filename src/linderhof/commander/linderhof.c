@@ -8,9 +8,20 @@
 static void closeLhf()
 {
     Elog(SUCCESS, "Closing lhf\n");
+#ifdef ORYXNET
     CloseOryxNet();
+#endif
     memoryclean();
 }
+
+#ifdef ORYXNET
+void LinderhofNet()
+{
+    linderhofBootstrap(); 
+    OryxNet();
+}
+#endif
+
 static void fatalHandler(int p_arg)
 {
     closeLhf();
@@ -48,12 +59,6 @@ void linderhofBootstrap()
     ESetErroAction(fatalHandler);
     SetCapability(CAP_NET_RAW);
     SetCapability(CAP_NET_ADMIN);
-}
-
-void LinderhofNet()
-{
-    linderhofBootstrap(); 
-    OryxNet();
 }
 
 void LinderhofCli( int p_argc, char **p_argv )

@@ -12,22 +12,23 @@ LhfPlan * Planner( LhfDraft *p_draft )
 
     switch (p_draft->type)
     {
-      case MEMCACHED_GETSET:
-        plan->type = MEMCACHED_GETSET;
-        memcpy( plan->atkData, p_draft, sizeof(LhfDraft));
-        plan->atk_cmd = ExecuteMemcachedMirror;
-        break;
-      case MEMCACHED_STATS:
-        plan->type = MEMCACHED_STATS;
-        memcpy( plan->atkData, p_draft, sizeof(LhfDraft));
-        plan->atk_cmd = ExecuteMemcachedMirror;
-        break;
-      case TEST:
-      default:
-        plan->type = TEST;
-        memcpy( plan->atkData, p_draft, sizeof(LhfDraft));
-        plan->atk_cmd = ExecuteTestMirror;
-        break;
+        case MEMCACHED_GETSET:
+            plan->type = MEMCACHED_GETSET;
+            memcpy( plan->atkData, p_draft, sizeof(LhfDraft));
+            plan->atk_cmd = ExecuteMemcachedMirror;
+            break;
+        case MEMCACHED_STATS:
+            plan->type = MEMCACHED_STATS;
+            memcpy( plan->atkData, p_draft, sizeof(LhfDraft));
+            plan->atk_cmd = ExecuteMemcachedMirror;
+            break;
+      
+        //Remover daqui para ordem alfabética
+        case DNS:
+        case NTP:
+        case SSDP:
+        default:
+            Efatal(ERROR_PLANNER, "Mirror not implemented\n");
     }
 
     return plan;

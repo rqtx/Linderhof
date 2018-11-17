@@ -41,22 +41,32 @@ int parserAttackOpt (char key, char *arg, ArgState *state)
     switch (key)
     {
         case ARG_MIRROR:
-            if( !strcmp(arg, "test") || !strcmp(arg, "Test") || !strcmp(arg, "TEST") )
+            if( !strcmp(arg, "test") )
             {
                 draft->type = TEST;
                 strcpy(draft->mirrorName, "TEST"); 
             }
-            else if( !strcmp(arg, "memcached_getset") || !strcmp(arg, "MEMCACHED_GETSET") )
+            else if( !strcmp(arg, "dns") )
+            {
+                draft->type = DNS;
+                strcpy(draft->mirrorName, "DNS");
+            }
+            else if( !strcmp(arg, "memcached_getset") )
             {
                 draft->type = MEMCACHED_GETSET;
                 strcpy(draft->mirrorName, "MEMCACHED GETSET"); 
             }
-            else if( !strcmp(arg, "memcached_stat") || !strcmp(arg, "MEMCACHED_STATS") )
+            else if( !strcmp(arg, "memcached_stat") )
             {
                 draft->type = MEMCACHED_STATS;
                 strcpy(draft->mirrorName, "MEMCACHED STAT");
             }
-            else if( !strcmp(arg, "ssdp") || !strcmp(arg, "SSDP") )
+            else if( !strcmp(arg, "ntp") )
+            {
+                draft->type = NTP;
+                strcpy(draft->mirrorName, "NTP");
+            }
+            else if( !strcmp(arg, "ssdp") )
             {
                 draft->type = SSDP;
                 strcpy(draft->mirrorName, "SSDP");

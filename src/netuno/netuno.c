@@ -6,17 +6,15 @@
 #include "netuno/netuno.h"
 #include "netuno/logger.h"
 
-#define MEGABYTE 1048576
-
 typedef struct { 
     Packet *pkt;
     unsigned int injCells;
     unsigned int bucket;
     unsigned int throughputExpected;
+    unsigned int probes;
     float throughputCurrent;
     Injector **injectors;
 }NetunoInjector;
-
 
 static void getInjetorThp( NetunoInjector * p_netuno )
 {
@@ -27,7 +25,8 @@ static void getInjetorThp( NetunoInjector * p_netuno )
         pkt += p_netuno->injectors[i]->net.pktCounter;
         p_netuno->injectors[i]->net.pktCounter = 0;
     }
-    p_netuno->throughputCurrent = pkt * p_netuno->pkt->pkt_size; 
+    p_netuno->probes = pkt;
+    p_netuno->throughputCurrent = p_netuno->probes * p_netuno->pkt->pkt_size; 
 }
 
 static void resetBucket( NetunoInjector *p_netuno )
@@ -78,7 +77,7 @@ void StartNetunoInjector( Packet *p_pkt, unsigned int p_inithp, unsigned int p_t
         {
             resetBucket( &netuno );
         }
-        LogInjection( fpLog, netuno.throughputExpected, netuno.throughputCurrent);
+        LogInjection( fpLog, netuno.throughputExpected, netuno.throughputCurrent, netuno.probes );
         
         if(p_timer > 0 && masterClock >= p_timer)
         {

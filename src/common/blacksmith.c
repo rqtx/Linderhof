@@ -9,6 +9,10 @@
 
 #define DEFAULT_PORT 16566
 
+#define GetIpHeader(pointer)    ( (struct ip *) (pointer) )
+#define GetUdpHeader(pointer)   ( (struct udphdr *) (pointer + sizeof(struct ip)) )
+#define GetPayload(pointer)     ( pointer + sizeof(struct ip) + sizeof(struct udphdr) )
+
 static uint16_t ip_checksum(const void *buf, size_t hdr_len)
 {
   unsigned long sum = 0;
@@ -56,11 +60,11 @@ Packet * ForgeUDP(char * ip_dest, char * ip_src, int dest_port, Packet * (*f_pay
     pac->saddr.sin_port = htons(DEFAULT_PORT);
     pac->saddr.sin_addr.s_addr = inet_addr(ip_dest);
 
-    memalloc( &datagram, sizeof(struct iphdr) + sizeof(struct udphdr) + payload_size );
+    memalloc( &datagram, sizeof(struct ip) + sizeof(struct udphdr) + payload_size );
 
-    ip_header = (struct ip *)datagram;                                  // Pointer to the beginning of ip header
-    udp_header = (struct udphdr *)(datagram + sizeof(struct iphdr));   // Pointer to the beginning of udp header
-    payload_ptr = (datagram + sizeof(struct iphdr) + sizeof(struct udphdr));               // Pointer to the beginning of payload
+    ip_header = GetIpHeader(datagram);                                  // Pointer to the beginning of ip header
+    udp_header = GetUdpHeader(datagram);   // Pointer to the beginning of udp header
+    payload_ptr = GetPayload(datagram);               // Pointer to the beginning of payload
 
     
 

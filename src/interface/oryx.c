@@ -23,6 +23,7 @@ static void printHeader(LhfDraft p_draft)
    printf("#############################################################\n\n");
 }
 
+#ifdef ORYXNET 
 static bool validateCmd( CommandPkt p_cmd )
 {
     switch( (int)p_cmd.type )
@@ -30,10 +31,12 @@ static bool validateCmd( CommandPkt p_cmd )
         case AttackCmd:
             switch( (int) p_cmd.data.type )
             {
-                case TEST:
+                case DNS:
                 case MEMCACHED_GETSET:
                 case MEMCACHED_STATS:
+                case NTP:
                 case SSDP:
+                case TEST:
 
                     if( !is_valid_ipv4( p_cmd.data.amp_ip) &&
                         !is_valid_ipv4( p_cmd.data.target_ip))
@@ -75,6 +78,7 @@ static CommandPkt * packetToCmd( char * p_pkt )
 
     return cmd;
 }
+
 
 static void serverInitializer( )
 {
@@ -224,6 +228,7 @@ void CloseOryxNet()
 {
     CloseSocket(serverSock);
 }
+#endif
 
 void OryxCli( int p_argc, char **p_argv )
 {

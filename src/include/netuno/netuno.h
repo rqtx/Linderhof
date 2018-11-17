@@ -2,6 +2,7 @@
 #ifndef NETUNO_H
   #define NETUNO_H
 
+#define MEGABYTE 1048576
 #define NETUNO_MAXTHP 100
 
 /**

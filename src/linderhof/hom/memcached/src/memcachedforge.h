@@ -9,9 +9,6 @@
 
 #include "common/netio.h"
 
-#define GetIpHeader(X)  ( (struct iphdr *) (X) )
-#define GetUdpHeader(X) ( (struct udphdr *) (X + sizeof(struct iphdr)) )
-
 /* Standard well-defined IP protocols.  
  *        netinet/in.h
  

@@ -9,7 +9,6 @@
 #define THPINCREMENT 1
 
 #define SAMPLING 10
-#define MEGABYTE 1000000
 #define DEFAULT_SIZE 1
 
 static void *_injectorHandler( void *p_arg )

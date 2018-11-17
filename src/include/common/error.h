@@ -23,6 +23,7 @@
 #define ERROR_MEMCACHED -400
 #define ERROR_ORYX      -500
 #define ERROR_CLI       -600
+#define ERROR_PLANNER   -700 
 
 /**
  *  @brief Display error message

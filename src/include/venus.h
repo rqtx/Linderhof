@@ -10,7 +10,7 @@
 #define IPSIZE 16
 #define LOGFILESIZE 20
 
-typedef enum { NOTSET, TEST, MEMCACHED_GETSET, MEMCACHED_STATS, SSDP } MirrorType;
+typedef enum { NOTSET, TEST, DNS, MEMCACHED_GETSET, MEMCACHED_STATS, NTP, SSDP } MirrorType;
 
 typedef struct {
   MirrorType type;                  //Type of mirror to use
