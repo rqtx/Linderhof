@@ -10,6 +10,7 @@
 #define DEFAULT_TIMER 0
 #define DEFAULT_TARGETPORT 80
 
+#define ARG_HELP 'h'
 #define ARG_MIRROR 'm'
 #define ARG_TARGETIP 't'
 #define ARG_AMPLIFIERIP 'a'
@@ -22,17 +23,58 @@
 
 static ArgsOpt atkArgpOption[] =
 {
+    { ARG_HELP, "help", false, false, "Show usage"},
     { ARG_MIRROR, "mirror", true, true, "Mirror type"},
     { ARG_TARGETIP, "target", true, true, "Target IPV4"},
     { ARG_AMPLIFIERIP, "amplifier", true, true, "Amplifier IPV4"},
     { ARG_AMPPORT , "amport", true, false, "Amplifier port"},
     { ARG_TARGPORT, "targport", true, false, "Target port"},
-    { ARG_LEVEL, "thp", true, false, "Attack level"},
+    { ARG_LEVEL, "level", true, false, "Attack level"},
     { ARG_TIMER, "timer", true, false, "Attack timer"},
     { ARG_LOGFILE, "log", true, false, "Log file name"},
     { ARG_INCREMENT, "inc", true, false, "Increment attack"},
     { 0 }
 };
+
+void usage()
+{
+    printf("Usage: lhf [ARGS]\n\n \
+                Linderhof (lhf) CLI\n\n");
+            
+    printf("Mandatory arguments:\n");
+    for( int i = 0; i < lengthof(atkArgpOption) - 1; i++ )
+    {
+        if(atkArgpOption[i].bounden)
+        {
+            if(atkArgpOption[i].input)
+            {
+                printf("    -%c    --%s=INPUT   %s\n", atkArgpOption[i].args, atkArgpOption[i].argl, atkArgpOption[i].help); 
+            }
+            else
+            {
+                printf("    -%c    --%s         %s\n", atkArgpOption[i].args, atkArgpOption[i].argl, atkArgpOption[i].help);
+            }
+        }
+    }
+
+    printf("\nOptional arguments:\n");
+    for( int i = 0; i < lengthof(atkArgpOption) -1; i++ )
+    {
+        if(!atkArgpOption[i].bounden)
+        {
+            if(atkArgpOption[i].input)
+            {
+                printf("    -%c    --%s=INPUT   %s\n", atkArgpOption[i].args, atkArgpOption[i].argl, atkArgpOption[i].help); 
+            }
+            else
+            {
+                printf("    -%c    --%s         %s\n", atkArgpOption[i].args, atkArgpOption[i].argl, atkArgpOption[i].help);
+            }
+        }
+    }
+
+    raise(SIGTERM);
+}
 
 int parserAttackOpt (char key, char *arg, ArgState *state)
 { 
@@ -40,6 +82,10 @@ int parserAttackOpt (char key, char *arg, ArgState *state)
 
     switch (key)
     {
+        case ARG_HELP:
+            usage();
+            break;
+
         case ARG_MIRROR:
             if( !strcmp(arg, "test") )
             {
@@ -193,7 +239,7 @@ void SetDraftDefaultData( LhfDraft *p_draft )
     p_draft->target_port = DEFAULT_TARGETPORT;
     p_draft->amp_port = 0;
     p_draft->target_port = 80;
-    p_draft->level = 0;
+    p_draft->level = 1;
     p_draft->timer = DEFAULT_TIMER;
     p_draft->logfile[0] = '\0';
     p_draft->mirrorName[0] = '\0';
