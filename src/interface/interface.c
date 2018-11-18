@@ -15,7 +15,7 @@
 #define ARG_AMPLIFIERIP 'a'
 #define ARG_AMPPORT 'p'
 #define ARG_TARGPORT 'g'
-#define ARG_THP 'h'
+#define ARG_LEVEL 'l'
 #define ARG_TIMER 'c'
 #define ARG_LOGFILE 'f'
 #define ARG_INCREMENT 'i'
@@ -27,7 +27,7 @@ static ArgsOpt atkArgpOption[] =
     { ARG_AMPLIFIERIP, "amplifier", true, true, "Amplifier IPV4"},
     { ARG_AMPPORT , "amport", true, false, "Amplifier port"},
     { ARG_TARGPORT, "targport", true, false, "Target port"},
-    { ARG_THP, "thp", true, false, "Attack throughput"},
+    { ARG_LEVEL, "thp", true, false, "Attack level"},
     { ARG_TIMER, "timer", true, false, "Attack timer"},
     { ARG_LOGFILE, "log", true, false, "Log file name"},
     { ARG_INCREMENT, "inc", true, false, "Increment attack"},
@@ -109,12 +109,12 @@ int parserAttackOpt (char key, char *arg, ArgState *state)
             draft->target_port = (atoi(arg) > 0) ? atoi(arg) : DEFAULT_TARGETPORT;
             break;
 
-        case ARG_THP:
+        case ARG_LEVEL:
             if( NULL == arg)
             {
                 Efatal(ERROR_CLI, "Internal error: Oryx fatal");
             }
-            draft->throughput = atoi(arg);
+            draft->level = atoi(arg);
             break;
     
         case ARG_TIMER:
@@ -193,7 +193,7 @@ void SetDraftDefaultData( LhfDraft *p_draft )
     p_draft->target_port = DEFAULT_TARGETPORT;
     p_draft->amp_port = 0;
     p_draft->target_port = 80;
-    p_draft->throughput = 0;
+    p_draft->level = 0;
     p_draft->timer = DEFAULT_TIMER;
     p_draft->logfile[0] = '\0';
     p_draft->mirrorName[0] = '\0';

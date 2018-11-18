@@ -19,7 +19,7 @@ typedef struct {
   char amp_ip[IPSIZE];              //Amplifier IP
   uint32_t target_port;             //Target port
   uint32_t amp_port;                //Amplifier port
-  float throughput;                 //Attack throughput
+  uint16_t level;                   //Attack level
   int timer;                        //Duration of attack in minutes
   char logfile[LOGFILESIZE];        //Log file name
   uint32_t incAttack;               //Enable increment atttack if > 0

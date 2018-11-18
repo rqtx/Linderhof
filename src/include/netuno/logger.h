@@ -12,7 +12,7 @@ typedef enum {ATK_LOGGER, MONITOR_LOGGER} LoggerType;
  */
 FILE * CreateLoggerFile( char *p_file );
 
-void LogInjection( FILE * p_fp, float p_thpExp, float p_thpCur, unsigned int p_probes );
+void LogInjection( FILE * p_fp, unsigned int p_level, float p_thpCur, unsigned int p_probes );
 void LogAttack( FILE *p_fp, float p_thp );
 
 #endif

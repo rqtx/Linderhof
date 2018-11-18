@@ -6,11 +6,13 @@
 #include "netuno/netuno.h"
 #include "netuno/logger.h"
 
+#define GetBucketByLevel(level) pow(10,level)/MAXINJECTORS
+
 typedef struct { 
     Packet *pkt;
     unsigned int injCells;
     unsigned int bucket;
-    unsigned int throughputExpected;
+    unsigned int level;
     unsigned int probes;
     float throughputCurrent;
     Injector **injectors;
@@ -43,10 +45,10 @@ static void freeAttack( NetunoInjector *p_netuno )
     {
         p_netuno->injectors[i]->net.freeBucket = true; 
     }
-    p_netuno->throughputExpected = 0;
+    p_netuno->level = 0;
 }
 
-void StartNetunoInjector( Packet *p_pkt, unsigned int p_inithp, unsigned int p_timer, unsigned int p_inc, char *p_file )
+void StartNetunoInjector( Packet *p_pkt, unsigned int p_level, unsigned int p_timer, unsigned int p_inc, char *p_file )
 {
     unsigned int masterClock = 0, incPoint = p_inc;
     NetunoInjector netuno;
@@ -56,15 +58,14 @@ void StartNetunoInjector( Packet *p_pkt, unsigned int p_inithp, unsigned int p_t
     netuno.injectors = StartInjector( netuno.pkt );
     netuno.injCells = MAXINJECTORS;
     
-    if(p_inithp <= 0 || p_inithp > NETUNO_MAXTHP)
+    if(p_level == 0 || p_level > NETUNO_MAXLEVEL)
     {
         freeAttack(&netuno);
-        netuno.throughputExpected = 0;
     }
     else
     {
-        netuno.throughputExpected = p_inithp;
-        netuno.bucket = ((netuno.throughputExpected * MEGABYTE) / netuno.pkt->pkt_size)/netuno.injCells;
+        netuno.level = p_level;
+        netuno.bucket = GetBucketByLevel(netuno.level);
     }
 
     while(1)
@@ -73,11 +74,11 @@ void StartNetunoInjector( Packet *p_pkt, unsigned int p_inithp, unsigned int p_t
         masterClock++;
         getInjetorThp(&netuno);
 
-        if( netuno.throughputExpected )
+        if( netuno.level )
         {
             resetBucket( &netuno );
         }
-        LogInjection( fpLog, netuno.throughputExpected, netuno.throughputCurrent, netuno.probes );
+        LogInjection( fpLog, netuno.level, netuno.throughputCurrent, netuno.probes );
         
         if(p_timer > 0 && masterClock >= p_timer)
         {
@@ -87,11 +88,11 @@ void StartNetunoInjector( Packet *p_pkt, unsigned int p_inithp, unsigned int p_t
         if( incPoint != 0 && masterClock == incPoint )
         {
             incPoint += p_inc;
-            netuno.throughputExpected += 10;
+            netuno.level++;
 
-            if( netuno.throughputExpected <= NETUNO_MAXTHP )
+            if( netuno.level <= NETUNO_MAXLEVEL )
             {
-                netuno.bucket = ((netuno.throughputExpected * MEGABYTE) / netuno.pkt->pkt_size)/netuno.injCells;
+                netuno.bucket = GetBucketByLevel(netuno.level);
             }
             else
             {

@@ -3,7 +3,7 @@
   #define NETUNO_H
 
 #define MEGABYTE 1048576
-#define NETUNO_MAXTHP 100
+#define NETUNO_MAXLEVEL 10
 
 /**
  * @brief Start Netuno injector.
