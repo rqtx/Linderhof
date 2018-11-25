@@ -24,6 +24,7 @@ void LinderhofNet()
 
 static void fatalHandler(int p_arg)
 {
+    printf("Fatal error\n");
     closeLhf();
     exit(p_arg);
 }
@@ -56,6 +57,7 @@ void linderhofBootstrap()
 {
     SetSigHdr(SIGINT,  closeHandler);
     SetSigHdr(SIGQUIT, closeHandler);
+    SetSigHdr(SIGPIPE, fatalHandler);
     ESetErroAction(fatalHandler);
     SetCapability(CAP_NET_RAW);
     SetCapability(CAP_NET_ADMIN);

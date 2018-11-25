@@ -7,11 +7,9 @@
 
 #include "common/common.h"
 
-#define DEFAULT_PORT 16566
-
 #define GetIpHeader(pointer)    ( (struct ip *) (pointer) )
-#define GetUdpHeader(pointer)   ( (struct udphdr *) (pointer + sizeof(struct ip)) )
-#define GetPayload(pointer)     ( pointer + sizeof(struct ip) + sizeof(struct udphdr) )
+#define GetUdpHeader(pointer)   ( (struct udphdr *) (pointer + IP_HEADER_SIZE) )
+#define GetPayload(pointer)     ( pointer + IP_HEADER_SIZE + UDP_HEADER_SIZE )
 
 static uint16_t ip_checksum(const void *buf, size_t hdr_len)
 {
@@ -35,67 +33,118 @@ static uint16_t ip_checksum(const void *buf, size_t hdr_len)
 
 Packet * ForgeUDP(char * ip_dest, char * ip_src, int dest_port, Packet * (*f_payload)(void * arg), void *p_arg)
 {
-    int payload_size = 0;
     char * datagram;
-    Packet *pac = CreateEmptyPacket();
-    Packet *payloadPkg = NULL;
-    void *payload = NULL;
+    Packet *firstPkt = NULL;
+    Packet *lastPkt = NULL;
     struct ip *ip_header = NULL;          // Pointer to the beginning of ip header
     struct udphdr *udp_header = NULL;        // Pointer to the beginning of udp header
     char *payload_ptr = NULL;               // Pointer to the beginning of payload
     
-    if(NULL != f_payload)
+    if(NULL == f_payload) 
     {
-        payloadPkg = f_payload(p_arg);
-        payload_size = payloadPkg->pkt_size;
-        payload = payloadPkg->packet_ptr;
-    }
-    else
-    {
-        payload_size = strlen(p_arg);
-        payload = p_arg;
+        Efatal(ERROR_BLACKSMITH, "Internal error");
     } 
+    
+    for(Packet *payload = f_payload(p_arg); payload != NULL; payload = payload->next)
+    {
+        Packet *tmp = CreateEmptyPacket();
+        tmp->next = NULL;
+        tmp->saddr.sin_family = AF_INET;
+        tmp->saddr.sin_port = htons(dest_port);
+        tmp->saddr.sin_addr.s_addr = inet_addr(ip_dest);
+        
+        datagram = NULL;
+        memalloc( &datagram, IP_HEADER_SIZE + UDP_HEADER_SIZE + payload->pkt_size );
 
-    pac->saddr.sin_family = AF_INET;
-    pac->saddr.sin_port = htons(DEFAULT_PORT);
-    pac->saddr.sin_addr.s_addr = inet_addr(ip_dest);
-
-    memalloc( &datagram, sizeof(struct ip) + sizeof(struct udphdr) + payload_size );
-
-    ip_header = GetIpHeader(datagram);                                  // Pointer to the beginning of ip header
-    udp_header = GetUdpHeader(datagram);   // Pointer to the beginning of udp header
-    payload_ptr = GetPayload(datagram);               // Pointer to the beginning of payload
+        ip_header = GetIpHeader(datagram);                                  // Pointer to the beginning of ip header
+        udp_header = GetUdpHeader(datagram);   // Pointer to the beginning of udp header
+        payload_ptr = GetPayload(datagram);               // Pointer to the beginning of payload
 
     
 
-    //IP Header
-    ip_header->ip_v = 4;
-    ip_header->ip_hl = 5;
-    ip_header->ip_len = sizeof (struct iphdr) + sizeof (struct udphdr) + payload_size;
-    ip_header->ip_tos = 0;
-    ip_header->ip_off = 0;		    // no fragment = 0
-    ip_header->ip_ttl = 64;			    // default value = 64
-    ip_header->ip_p = IPPROTO_UDP;
-    ip_header->ip_sum = ip_checksum(datagram, ip_header->ip_len);
-    inet_pton(AF_INET, ip_src, (struct in_addr *)&ip_header->ip_src);
-    inet_pton(AF_INET, ip_dest, (struct in_addr *)&ip_header->ip_dst);
+        //IP Header
+        ip_header->ip_v = 4;
+        ip_header->ip_hl = 5;
+        ip_header->ip_len = IP_HEADER_SIZE + UDP_HEADER_SIZE + payload->pkt_size;
+        ip_header->ip_tos = 0;
+        ip_header->ip_off = 0;		    // no fragment = 0
+        ip_header->ip_ttl = 64;			    // default value = 64
+        ip_header->ip_p = IPPROTO_UDP;
+        ip_header->ip_sum = ip_checksum(datagram, ip_header->ip_len);
+        inet_pton(AF_INET, ip_src, (struct in_addr *)&ip_header->ip_src);
+        inet_pton(AF_INET, ip_dest, (struct in_addr *)&ip_header->ip_dst);
 
-    //UDP header
-    udp_header->source = htons(pac->saddr.sin_port);
-    udp_header->dest = htons(dest_port);
-    udp_header->len = htons(sizeof(struct udphdr) + payload_size);
-    udp_header->check = 0;
+        //UDP header
+        udp_header->source = htons(tmp->saddr.sin_port);
+        udp_header->dest = htons(dest_port);
+        udp_header->len = htons(UDP_HEADER_SIZE + payload->pkt_size);
+        udp_header->check = 0;
   
-    //Payload
-    memcpy(payload_ptr, payload , payload_size);
+        //Payload
+        memcpy(payload_ptr, payload->packet_ptr , payload->pkt_size);
     
-    pac->type = RAW;
-    pac->packet_ptr = datagram;
-    pac->pkt_size = ip_header->ip_len;
-    pac->payload_size = payload_size;
-    strcpy( pac->ip_dest, ip_dest);
-    pac->dest_port = dest_port;
-    
+        tmp->type = RAW;
+        tmp->packet_ptr = datagram;
+        tmp->pkt_size = ip_header->ip_len;
+        tmp->payload_size = payload->pkt_size;
+        strcpy( tmp->ip_dest, ip_dest);
+        tmp->dest_port = dest_port;
+        
+        if( NULL == firstPkt )
+        {
+            firstPkt = tmp;
+            lastPkt = tmp;
+        }
+        else
+        {
+            lastPkt->next = tmp;
+            lastPkt = tmp;
+        }
+    }
 
-    return pac;
+    return firstPkt;
+}
+
+Packet * ForgeTCP(char * ip_dest, char * ip_src, int dest_port, Packet * (*f_payload)(void * arg), void *p_arg)
+{
+    Packet *firstPkt = NULL;
+    Packet *lastPkt = NULL;
+    char *payload_ptr = NULL;               // Pointer to the beginning of payload
+    
+    if(NULL == f_payload) 
+    {
+        Efatal(ERROR_BLACKSMITH, "Internal error");
+    } 
+    
+    for(Packet *payload = f_payload(p_arg); payload != NULL; payload = payload->next)
+    {
+        Packet *tmp = CreateEmptyPacket();
+        tmp->next = NULL;
+        tmp->saddr.sin_family = AF_INET;
+        tmp->saddr.sin_port = htons(dest_port);
+        tmp->saddr.sin_addr.s_addr = inet_addr(ip_dest);
+        
+        memalloc( &payload_ptr, payload->pkt_size );
+        memcpy(payload_ptr, payload->packet_ptr , payload->pkt_size);
+    
+        tmp->type = TCP;
+        tmp->packet_ptr = payload_ptr;
+        tmp->pkt_size = payload->pkt_size;
+        tmp->payload_size = payload->pkt_size;
+        strcpy( tmp->ip_dest, ip_dest);
+        tmp->dest_port = dest_port;
+        
+        if( NULL == firstPkt )
+        {
+            firstPkt = tmp;
+            lastPkt = tmp;
+        }
+        else
+        {
+            lastPkt->next = tmp;
+            lastPkt = tmp;
+        }
+    }
+
+    return firstPkt;
 }

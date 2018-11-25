@@ -87,9 +87,12 @@ int CreateSocket( NetType p_type, bool p_blk )
     /* Setting IP_HDRINCL. */
     /* NOTE: We will provide the IP header, but enabling this option, on linux,
                 still makes the kernel calculates the checksum and total_length. */
-    if ( setsockopt(fd, IPPROTO_IP, IP_HDRINCL, &n, sizeof(n)) == -1 )
+    if(p_type == RAW)
     {
-        ELOG(ERROR_NET, "Cannot set socket options\n");
+        if ( setsockopt(fd, IPPROTO_IP, IP_HDRINCL, &n, sizeof(n)) == -1 )
+        {
+            ELOG(ERROR_NET, "Cannot set socket options\n");
+        }
     }
 
     return fd;
@@ -162,10 +165,27 @@ void ReleasePacket( Packet *p_pkt )
 
 int SendPacket(int p_socket, Packet *p_pkt)
 {
-    if( -1 == sendto(p_socket, p_pkt->packet_ptr, p_pkt->pkt_size, 0,  (struct sockaddr *) &p_pkt->saddr, sizeof(struct sockaddr_in))  )
+    switch(p_pkt->type)
     {
-        return ERROR_NET;
+        case TCP:
+            if( -1 == send(p_socket, p_pkt->packet_ptr, p_pkt->pkt_size, 0)  )
+            {
+                return ERROR_NET;
+            }
+            break;
+
+        case UDP:
+        case RAW:
+            if( -1 == sendto(p_socket, p_pkt->packet_ptr, p_pkt->pkt_size, 0,  (struct sockaddr *) &p_pkt->saddr, sizeof(struct sockaddr_in))  )
+            {
+                return ERROR_NET;
+            }
+            break;
+
+        default:
+            return ERROR_NET;
     }
+    
     return SUCCESS;
 }
 
@@ -272,4 +292,13 @@ int Setup_sendbuffer ( int p_fd, uint32_t p_n )
         }
     }
     return p_n;
+}
+
+void ConnectTCP(int p_socket, Packet *p_pkt)
+{
+    // connect the client socket to server socket 
+    if (connect(p_socket, (struct sockaddr *) &p_pkt->saddr, sizeof(struct sockaddr_in)) != 0) 
+    { 
+        Efatal(ERROR_NET, "Connection with the server failed...\n");
+    }
 }

@@ -17,13 +17,14 @@
 #define ERROR_THREAD    -40
 #define ERROR_SIGNAL    -50
 
-#define ERROR_DRAFT     -100
-#define ERROR_MIRROR    -200
-#define ERROR_INJECTOR  -300
-#define ERROR_MEMCACHED -400
-#define ERROR_ORYX      -500
-#define ERROR_CLI       -600
-#define ERROR_PLANNER   -700 
+#define ERROR_DRAFT         -100
+#define ERROR_MIRROR        -200
+#define ERROR_INJECTOR      -300
+#define ERROR_MEMCACHED     -400
+#define ERROR_ORYX          -500
+#define ERROR_CLI           -600
+#define ERROR_PLANNER       -700 
+#define ERROR_BLACKSMITH    -800 
 
 /**
  *  @brief Display error message

