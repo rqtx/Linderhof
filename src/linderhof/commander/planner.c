@@ -1,7 +1,8 @@
 #include "venus.h"
 #include "commander/planner.h"
 #include "hom/memcached.h"
-#include "hom/mirrortest.h"
+#include "hom/dns.h"
+#include "hom/ntp.h"
 
 LhfPlan * Planner( LhfDraft *p_draft )
 {
@@ -23,7 +24,7 @@ LhfPlan * Planner( LhfDraft *p_draft )
             plan->atk_cmd = ExecuteMemcachedMirror;
             break;
       
-        //Remover daqui para ordem alfabética
+        //Colocar em ordem alfabética ao implementar
         case DNS:
         case NTP:
         case SSDP:

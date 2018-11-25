@@ -45,18 +45,28 @@ O netuno é o gerenciador dos injetores de ataque. Com cada injetor podendo no m
 
 A função de chamada do mirror deve seguir o protótipo a seguir:
 
-    int func( void *p_arg );
+    int ExecuteMirrorNameMirror( void *p_arg );
 
 Sendo p_arg os argumentos necessários para executar o mirror. 
 Após o linderhof fazer a chamada da função mirror é dever dela fazer toda a preparação do ataque, com tudo pronto deve fazer a chamada da engine de injeção Netuno.
 
-Os arquivos do mirror devem ficar na pasta src/linderhof/mirrors/NOME_DO_MIRROR.
+Os arquivos do mirror devem ficar na pasta src/linderhof/hom/nome_do_mirror/.
+
+A função de chamada será declarada em src/linderhof/hom/nome_do_mirror.h
 
 ## Passo 2: Adicionar mirror ao Linderhof planner
 
+2.1 - Adicione seu mirror no enum MirrorType em src/include/venus.h
+
+Os passo seguintes serão executados no arquivo src/linderhof/commander/planner.c.
+
+2.2 - Inclua o header com a função de chamada do mirror.
+
+2.3 Atualize o switch-case da função Planner para  construir o LhfPlan do seu mirror. O ponteiro atkData deve conter os argumentos que serão utilizados pelo mirror.
 
 ## Passo 3: Adicionar mirror a engine UI Oryx
 
+No arquivo src/interface/interface.c:parserAttackOpt adicione a construção do draft do seru mirror.
 
 ## Observações
 
