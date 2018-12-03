@@ -22,7 +22,7 @@ void LogInjection( FILE * p_fp, unsigned int p_level, float p_thpCur, unsigned i
     char *curTime = GetCurrentTimeStr();
     fprintf( fp, "\n%s\n", curTime);
     fprintf( fp, "Current level:    %u\n", p_level);
-    fprintf( fp, "Probes expected:  %.0lf/s\n", pow(10,p_level));
+    fprintf( fp, "Probes expected:  %.0lf/s\n", ProbesByLevel(p_level));
     fprintf( fp, "Probes provided:  %u/s\n", p_probes);
     //fprintf( fp, "Throughput:       %f Mb/s\n", p_thpCur/MEGABYTE);
 }

