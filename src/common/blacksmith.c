@@ -105,7 +105,7 @@ Packet * ForgeUDP(char * ip_dest, char * ip_src, int dest_port, Packet * (*f_pay
     return firstPkt;
 }
 
-Packet * ForgeTCP(char * ip_dest, char * ip_src, int dest_port, Packet * (*f_payload)(void * arg), void *p_arg)
+Packet * ForgeTCP(char * ip_dest, int dest_port, Packet * (*f_payload)(void * arg), void *p_arg)
 {
     Packet *firstPkt = NULL;
     Packet *lastPkt = NULL;

@@ -8,6 +8,8 @@
 
 #include <arpa/inet.h>  //strcut sockaddr
 #include <netinet/in.h> //struct sockaddr_in
+#include <netinet/ip.h>
+#include <netinet/udp.h>
 #include "common/common.h"
 
 #define IP_HEADER_SIZE  sizeof(struct ip)
@@ -16,6 +18,7 @@
 #define BLOCK true
 #define NO_BLOCK false
 #define  SOCKADDR_SIZE sizeof(struct sockaddr)
+#define MAX_PKT_SIZE 65507
 
 typedef enum { EMPTY = 1, RAW, UDP, TCP, LHF } NetType;
 
@@ -97,4 +100,5 @@ int Setup_sendbuffer ( int p_fd, uint32_t p_n );
 
 void ConnectTCP(int p_socket, Packet *p_pkt);
 
+char * GetLocalIp();
 #endif      //NETIO_H

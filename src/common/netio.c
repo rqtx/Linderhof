@@ -1,9 +1,10 @@
-/*Code inspired on t50 */
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <net/if.h>
+#include <sys/ioctl.h>
 
 #include "common/common.h"
 
@@ -301,4 +302,25 @@ void ConnectTCP(int p_socket, Packet *p_pkt)
     { 
         Efatal(ERROR_NET, "Connection with the server failed...\n");
     }
+}
+
+char * GetLocalIp()
+{
+    int fd;
+    struct ifreq ifr;
+
+    fd = socket(AF_INET, SOCK_DGRAM, 0);
+
+    /* I want to get an IPv4 IP address */
+    ifr.ifr_addr.sa_family = AF_INET;
+
+    /* I want IP address attached to "enp3s0" */
+    strncpy(ifr.ifr_name, "enp3s0", IFNAMSIZ-1);
+
+    ioctl(fd, SIOCGIFADDR, &ifr);
+
+    close(fd);
+
+    return inet_ntoa(((struct sockaddr_in *)&ifr.ifr_addr)->sin_addr);
+
 }

@@ -33,9 +33,16 @@ static void getInjetorThp( NetunoInjector * p_netuno )
 
 static void resetBucket( NetunoInjector *p_netuno )
 {
-    for(int i = 0; i < p_netuno->injCells; i++)
+    if(p_netuno->level > 1)
     {
-        p_netuno->injectors[i]->net.bucketSize = p_netuno->bucket; 
+        for(int i = 0; i < p_netuno->injCells; i++)
+        {
+            p_netuno->injectors[i]->net.bucketSize = p_netuno->bucket; 
+        }
+    }
+    else
+    {
+        p_netuno->injectors[0]->net.bucketSize = 1;
     }
 }
 

