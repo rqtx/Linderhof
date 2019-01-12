@@ -70,6 +70,7 @@ int  ExecuteNtpMirror( void *p_draft )
     switch( draft->type )
     {
         case NTP:
+        default:
             plan = createAttackDataNTP( draft );
             break;
 
