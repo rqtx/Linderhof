@@ -1,6 +1,6 @@
 
-#ifndef DNS_H
-  #define DNS_H
+#ifndef NTP_H
+  #define NTP_H
 
 int ExecuteNtpMirror( void *p_arg );
 
