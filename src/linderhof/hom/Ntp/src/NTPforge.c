@@ -36,21 +36,21 @@ Packet * ForgeNtpBinary( void *p_arg )
 
      // key = ( uint32_t * ) (ntp_packet + sizeof( NtpBinaryRequestHeader ));
 
-     ntp_header->li_vn_mode = 0x0000;
+     ntp_header->li_vn_mode = 0x00;
      ntp_header->stratum = 0x00;
      ntp_header->poll = 0x00;
      ntp_header->precision = 0x00;
      ntp_header->rootDelay = 0x00;
-     ntp_header->rootDispersion = 0x0000;
-     ntp_header->refId = 0x0000;
-     ntp_header->refTm_s = 0x00000000;
-     ntp_header->refTm_f = 0x0000000000000000;
-     ntp_header->origTm_s = 0x00000000;
-     ntp_header->origTm_f = 0x0000000000000000;
-     ntp_header->rxTm_s = 0x00000000;
-     ntp_header->rxTm_f = 0x0000000000000000;
-     ntp_header->txTm_s = 0x00000000;
-     ntp_header->txTm_f = 0x0000000000000000;
+     ntp_header->rootDispersion = 0x00;
+     ntp_header->refId = 0x00;
+     ntp_header->refTm_s = 0x00;
+     ntp_header->refTm_f = 0x00;
+     ntp_header->origTm_s = 0x00;
+     ntp_header->origTm_f = 0x00;
+     ntp_header->rxTm_s = 0x00;
+     ntp_header->rxTm_f = 0x00;
+     ntp_header->txTm_s = 0x00;
+     ntp_header->txTm_f = 0x00;
 
      // *key =  ntohl(MEMCACHED_KEY);
      break;
