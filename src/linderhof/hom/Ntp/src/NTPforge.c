@@ -62,3 +62,37 @@ Packet * ForgeNtpBinary( void *p_arg )
 
  return pac;
 }
+
+
+Packet * ForgeNtpText(void *p_arg)
+{
+    int *opcode = (int*) p_arg;
+    char *dataBuffer = NULL;
+    char *cmd = NULL;
+    Packet *pac = NULL;
+    TextProtocolHeader *header = NULL;
+    // char *payload = NULL;
+
+    memalloc( (void *)&pac, sizeof(Packet) );
+
+    switch( *opcode ){
+
+        case NTP : 
+        default :
+            pac->pkt_size = sizeof(TextProtocolHeader) + MAXSIZE_MEMCACHED_KEY + strlen(GET_CMD);
+            memalloc( (void *)&dataBuffer, pac->pkt_size );
+            header = (TextProtocolHeader *)dataBuffer;
+            cmd = dataBuffer + sizeof(TextProtocolHeader);
+
+            header->requestID = 0;
+            header->seqNumber = 0;
+            header->nDatagrams = htons(0x01);
+            header->reserved = 0;
+
+            sprintf(cmd, GET_CMD, MEMCACHED_KEY);
+            pac->packet_ptr = dataBuffer;
+            break;
+  }
+
+  return pac;
+}

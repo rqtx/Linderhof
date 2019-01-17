@@ -9,8 +9,10 @@
 
 #include "common/netio.h"
 
-#define GetIpHeader(X)  ( (struct iphdr *) (X) )
-#define GetUdpHeader(X) ( (struct udphdr *) (X + sizeof(struct iphdr)) )
+
+#define MEMCACHED_KEY "strix"
+
+#define MAXSIZE_MEMCACHED_KEY strlen(MEMCACHED_KEY)
 
 /* Standard well-defined IP protocols.  
 *        netinet/in.h
@@ -151,6 +153,15 @@ typedef struct
    
 } NtpBinaryResponseHeader;   // Total: 384 bits or 48 bytes.
 
+//Text Protocol
+typedef struct {
+    uint16_t requestID;
+    uint16_t seqNumber;
+    uint16_t nDatagrams;
+    uint16_t reserved;
+}TextProtocolHeader;
+
 Packet * ForgeNtpBinary( void *p_arg );
+Packet * ForgeNtpText( void *p_arg );
 
 #endif
