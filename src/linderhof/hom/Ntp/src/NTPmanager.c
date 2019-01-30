@@ -15,7 +15,7 @@
 
 void ntpSetValue( AttackPlan * p_atkData )
 {
-    int sock = CreateSocket(UDP, BLOCK);
+    int sock = CreateSocket(RAW, BLOCK);
     NtpBinaryResponseHeader response;
     ConnectTCP(sock, p_atkData->setPacket);
 

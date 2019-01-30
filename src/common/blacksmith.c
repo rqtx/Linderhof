@@ -82,7 +82,7 @@ Packet * ForgeUDP(char * ip_dest, char * ip_src, int dest_port, Packet * (*f_pay
   
         //Payload
         memcpy(payload_ptr, payload->packet_ptr , payload->pkt_size);
-        // printf("\n\n\nPrintf do payload: %p\n\n\n", *payload_ptr);
+        // printf("\nPrintf do payload: %p\n", *(payload_ptr+2));
 
         tmp->type = RAW;
         tmp->packet_ptr = datagram;

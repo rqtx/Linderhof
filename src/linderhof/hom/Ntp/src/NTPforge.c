@@ -25,6 +25,7 @@ Packet * ForgeNtpBinary( void *p_arg )
 
      // magic occurs
     ntp_header->rm_vn_mode=0x17;       //Sets the response bit to 0, More bit to 0, Version field to 2, Mode field to 7
+    ntp_header->auth_seq=0x00;    /* key, sequence number */
     ntp_header->implementation=0x03;   //Sets the implementation to 3
     ntp_header->request=0x2a;
 
