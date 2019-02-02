@@ -24,7 +24,11 @@ LhfPlan * Planner( LhfDraft *p_draft )
             memcpy( plan->atkData, p_draft, sizeof(LhfDraft));
             plan->atk_cmd = ExecuteMemcachedMirror;
             break;
-      
+        case NTP:
+            plan->type = NTP;
+            memcpy( plan->atkData, p_draft, sizeof(LhfDraft));
+            plan->atk_cmd = ExecuteNtpMirror;
+            break;                
         case SSDP:
             plan->type = SSDP;
             memcpy( plan->atkData, p_draft, sizeof(LhfDraft));
@@ -33,7 +37,6 @@ LhfPlan * Planner( LhfDraft *p_draft )
 
         //Colocar em ordem alfabética ao implementar
         case DNS:
-        case NTP:
         default:
             Efatal(ERROR_PLANNER, "Mirror not implemented\n");
     }
