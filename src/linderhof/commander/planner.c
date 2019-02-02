@@ -1,6 +1,7 @@
 #include "venus.h"
 #include "commander/planner.h"
 #include "hom/memcached.h"
+#include "hom/ssdp.h"
 #include "hom/dns.h"
 #include "hom/ntp.h"
 
@@ -27,10 +28,15 @@ LhfPlan * Planner( LhfDraft *p_draft )
             plan->type = NTP;
             memcpy( plan->atkData, p_draft, sizeof(LhfDraft));
             plan->atk_cmd = ExecuteNtpMirror;
-            break;          
+            break;                
+        case SSDP:
+            plan->type = SSDP;
+            memcpy( plan->atkData, p_draft, sizeof(LhfDraft));
+            plan->atk_cmd = ExecuteSsdpMirror;
+            break;
+
         //Colocar em ordem alfabética ao implementar
         case DNS:
-        case SSDP:
         default:
             Efatal(ERROR_PLANNER, "Mirror not implemented\n");
     }

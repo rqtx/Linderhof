@@ -54,7 +54,7 @@ void executeAttackNtp( AttackPlan * atkData )
     {
         ntpSetValue( atkData );
     }
-    StartNetunoInjector( atkData->getPacket, atkData->draft->level, atkData->draft->timer, atkData->draft->incAttack, fileName);
+    StartNetunoInjector( atkData->getPacket, atkData->draft->level, atkData->draft->timer, atkData->draft->incAttack, NULL);
 }
 
 int  ExecuteNtpMirror( void *p_draft )
