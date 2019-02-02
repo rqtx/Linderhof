@@ -54,7 +54,7 @@ int execMirror( LhfPlan *p_plan )
 {
     int id = -1;
     Mirror *mirror;
-     
+ 
     if( (id = p_plan->atk_cmd(p_plan->atkData)) < 0 )
     {
         memfree( &mirror );
