@@ -7,7 +7,7 @@
  *  27/09/2018
 */
 
-#include "list.h"
+#include "listssdp.h"
 
 
 dispositivoSSDP* obtemDispPorIP(listDispositivoSSDP * head, char* ip){

@@ -1,4 +1,5 @@
-
+#include "listssdp.h"
+#include "common/netio.h"
 
 static const char SSDP_MULTICAST_M_SEARCH_MESSAGE[] = "M-SEARCH * HTTP/1.1\r\n"\
                                                     "HOST: 239.255.255.250:1900\r\n"\

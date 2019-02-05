@@ -11,6 +11,8 @@
 #include "ssdpLib.h"
 #include "common/netio.h"
 #include "venus.h"
+#include "listssdp.h"
+#include <pthread.h>
 
 
 void* multicast_m_search_SSDP(void* arg) { 

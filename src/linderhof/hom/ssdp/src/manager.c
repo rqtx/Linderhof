@@ -1,13 +1,12 @@
 
 
+#include "venus.h"
 #include "ssdpLib.h"
+#include "listssdp.h"
 
 
-AttackPlan createAttackSSDP(LhfDraft *draft){
+void createAttackSSDP(LhfDraft *draft){
     
-    AttackPlan *newData;
-    memalloc( (void *)&newData, sizeof( AttackPlan ) );
-
 
     listDispositivoSSDP* listaDispositivos;
 	configuracaoAtaque* configuracao = NULL;
@@ -30,18 +29,13 @@ AttackPlan createAttackSSDP(LhfDraft *draft){
 
 	iniciaAtaqueSSDP(configuracao, pckAttack, 1);
 
-
-
 }
 
 
 // p_draft = argumentos que o ataque vai precisar.
 int  ExecuteSsdpMirror( void *p_draft )
 {
-    AttackPlan *plan;
-    LhfDraft *draft = (LhfDraft *)p_draft;
-
-    createAttackSSDP(draft);
+    createAttackSSDP(p_draft);
 
     return 0;
 }

@@ -6,7 +6,8 @@
  *  Matricula: 110010876
  *  27/09/2018
 */
-
+#ifndef LISTSSDP_H
+    #define LISTSSDP_H
 #include <stdio.h>
 #include <string.h>	
 #include <stdlib.h>	
@@ -48,4 +49,4 @@ int contaBytesTodosRefletores(listDispositivoSSDP* listaDispositivos);
 
 // depois fazer as funcoes para remover os elementos da lista.
 
-
+#endif
