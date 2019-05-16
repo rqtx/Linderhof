@@ -25,7 +25,8 @@
 #define ERROR_CLI           -600
 #define ERROR_PLANNER       -700 
 #define ERROR_BLACKSMITH    -800 
-#define ERROR_NTP		    -900 
+#define ERROR_NTP		    -900
+#define ERROR_DNS		    -1000  
 
 /**
  *  @brief Display error message

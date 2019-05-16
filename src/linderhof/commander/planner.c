@@ -14,6 +14,13 @@ LhfPlan * Planner( LhfDraft *p_draft )
 
     switch (p_draft->type)
     {
+        case DNS:
+            plan->type = DNS;
+            memcpy( plan->atkData, p_draft, sizeof(LhfDraft));
+            plan->atk_cmd = ExecuteDnsMirror;
+            break;
+        // default:
+        //     Efatal(ERROR_PLANNER, "Mirror not implemented\n");
         case MEMCACHED_GETSET:
             plan->type = MEMCACHED_GETSET;
             memcpy( plan->atkData, p_draft, sizeof(LhfDraft));
@@ -36,9 +43,6 @@ LhfPlan * Planner( LhfDraft *p_draft )
             break;
 
         //Colocar em ordem alfabética ao implementar
-        case DNS:
-        default:
-            Efatal(ERROR_PLANNER, "Mirror not implemented\n");
     }
 
     return plan;

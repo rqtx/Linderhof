@@ -1,20 +1,36 @@
-#include <arpa/inet.h>
-#include <netinet/in.h>
-#include <netinet/ip.h>
-#include <netinet/udp.h>
-#include <sys/socket.h>
-#include <sys/types.h>
+#ifndef PACKETFURNACE_H
+  #define PACKETFURNACE_H
 
-typedef struct
-{
-	unsigned short id; 		// ID
-	unsigned short flags;	// DNS Flags
-	unsigned short qcount;	// Question Count
-	unsigned short ans;		// Answer Count
-	unsigned short auth;	// Authority RR
-	unsigned short add;		// Additional RR
-}dns_hdr;
+#include "common/netio.h"
 
-void dns_header(dns_hdr *dns);
+//char domain[] = "unb.br";
 
-void dns_format(unsigned char * dns,unsigned char * host);
+typedef struct {
+    unsigned short id; 
+ 
+    unsigned char qr; 
+    unsigned char opcode;
+    unsigned char aa; 
+    unsigned char tc; 
+    unsigned char rd; 
+    unsigned char ra; 
+    unsigned char z; 
+    unsigned char ad; 
+    unsigned char cd; 
+    unsigned char rcode;
+  
+    unsigned short q_count; 
+    unsigned short ans_count;
+    unsigned short auth_count;
+    unsigned short add_count; 
+}DNSheader;
+
+struct QUESTION{
+    unsigned short qtype;
+    unsigned short qclass;
+};
+
+
+Packet * ForgeDNS( void *p_arg );
+
+#endif

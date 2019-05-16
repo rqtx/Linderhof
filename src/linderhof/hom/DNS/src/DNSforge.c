@@ -1,32 +1,107 @@
-// #include<DNSforge.h>
-//
-// //DNS query
-// void dns_format(unsigned char * dns,unsigned char * host)
+#include <arpa/inet.h>
+#include <netinet/in.h>
+#include <netinet/ip.h>
+#include <netinet/udp.h>
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <unistd.h>
+
+#include "strix.h"
+#include "DNSforge.h"
+
+// Packet * ForgeDnsBinary( void *p_arg, char * domain)
 // {
-// 	int lock = 0 , i;
-// 	strcat((char*)host,".");
-// 	for(i = 0 ; i < strlen((char*)host) ; i++)
-// 	{
-// 		if(host[i]=='.')
-// 		{
-// 			*dns++ = i-lock;
-// 			for(;lock<i;lock++)
-// 			{
-// 				*dns++=host[lock];
-// 			}
-// 			lock++;
-// 		}
-// 	}
-// 	*dns++=0x00;
+// 	Packet *pac = NULL;
+// 	char *name, *buf;
+//     struct DNS_H *dns = NULL;
+//     struct QUESTION *info = NULL;
+//     dns = (struct DNS_H *) buf;
+//     int packetSize = 0;
+
+//     memalloc( (void *)&pac, sizeof(Packet) );
+
+    
+//     dns->id = (unsigned short) htons(getpid());
+
+//     dns->qr = 0; 
+//     dns->opcode = 0; 
+//     dns->aa = 0; 
+//     dns->tc = 0; 
+//     dns->rd = 1;
+//     dns->ra = 0;
+//     dns->z = 0;
+//     dns->ad = 0;
+//     dns->cd = 0;
+//     dns->rcode = 0;
+
+//     dns->q_count = 1; 
+//     dns->ans_count = 0;
+//     dns->auth_count = 0;
+//     dns->add_count = 0;
+
+//     name =(unsigned char*)&buf[sizeof(struct DNS_H)];
+//     int lock = 0 , i;
+//     strcat((char*)domain,".");
+     
+//     for(i = 0 ; i < strlen((char*)domain) ; i++) 
+//     {
+//         if(domain[i]=='.') 
+//         {
+//             *name++ = i-lock;
+//             for(;lock<i;lock++) 
+//             {
+//                 *name++=domain[lock];
+//             }
+//             lock++;
+//         }
+//     }
+//     *name++='\0';
+
+//     info =(struct QUESTION*)&buf[sizeof(struct DNS_H) + (strlen((const char*)name) + 1)]; 
+//     info->qtype = htons(1); 
+//     info->qclass = htons(1);
+
+//     packetSize = sizeof(info);
+//     pac->packet_ptr = info;
+//     pac->pkt_size = packetSize;
+
+// 	return pac;
 // }
-//
-// //Cria o payload do DNS
-// void dns_header(dns_hdr *dns)
-// {
-// 	dns->id = (unsigned short) htons(getpid());
-// 	dns->flags = htons(0x0100);
-// 	dns->qcount = htons(1);
-// 	dns->ans = 0;
-// 	dns->auth = 0;
-// 	dns->add = 0;
-// }
+
+Packet * ForgeDNS( void *p_arg ){
+	
+	Packet *pac = NULL;
+	char * dns_packet;
+	DNSheader * dns = NULL;
+	int packetSize = 0;
+
+	memalloc( (void *)&pac, sizeof(Packet) );
+
+    packetSize = sizeof( DNSheader );
+    memalloc( (void *)&dns_packet, packetSize );
+
+    dns = ( DNSheader *) dns_packet;
+
+    dns->id = (unsigned short) htons(getpid());
+
+    dns->qr = 0; 
+    dns->opcode = 0; 
+    dns->aa = 0; 
+    dns->tc = 0; 
+    dns->rd = 1;
+    dns->ra = 0;
+    dns->z = 0;
+    dns->ad = 0;
+    dns->cd = 0;
+    dns->rcode = 0;
+
+    dns->q_count = 1; 
+    dns->ans_count = 0;
+    dns->auth_count = 0;
+    dns->add_count = 0;
+
+	pac->packet_ptr = dns_packet;
+	pac->pkt_size = packetSize;
+
+	return pac;
+}
