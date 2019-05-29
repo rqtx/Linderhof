@@ -3,8 +3,6 @@
 
 #include "common/netio.h"
 
-unsigned char * strDomain;
-
 typedef struct {
     unsigned short id; // identification number
 
@@ -25,21 +23,12 @@ typedef struct {
     unsigned short auth_count; // number of authority entries
     unsigned short add_count; // number of resource entries
 
-    // unsigned char * nome;
-    // unsigned short ttype;
-    // unsigned short cclass;
-
 }DNSheader;
 
 typedef struct {
     unsigned short qtype;
     unsigned short qclass;
 }QUESTION;
-
-// typedef struct{
-//     unsigned char *nome;
-//     struct QUESTION *question;
-// }QUERY;
 
 Packet * ForgeDNS(void *p_arg);
 
