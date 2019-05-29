@@ -1,3 +1,4 @@
+
 #include "venus.h"
 #include "strix.h"
 #include "DNSforge.h"
@@ -26,7 +27,7 @@ void dnsSetValue( AttackPlan * p_atkData )
             Efatal(ERROR_DNS, "error DNS\n");
         }
 
-        recv(sock, &response, sizeof( DNSheader ) + 256 + sizeof(QUESTION), 0);
+        recv(sock, &response, sizeof( DNSheader ) + strlen((const char*)strDomain) + 1 + sizeof(QUESTION), 0);
     }
     CloseSocket(sock);
 }
@@ -70,5 +71,3 @@ int  ExecuteDnsMirror( void *p_draft )
     executeAttackDNS(plan);
     return 0;
 }
-
-

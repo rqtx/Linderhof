@@ -14,12 +14,11 @@
 char dominio[] = "unb.br";
 
 Packet * ForgeDNS(void *p_arg ){
-	
+    
     Packet *pac = NULL;
     DNSheader * dns = NULL;
     QUESTION * ques = NULL;
     char * dns_packet = NULL;
-    unsigned char * strDomain;
     unsigned char * name;
     int packetSize = 0;
 
@@ -31,7 +30,7 @@ Packet * ForgeDNS(void *p_arg ){
     
     dns = ( DNSheader *) dns_packet;
     name = (unsigned char *)(dns_packet + sizeof(DNSheader));
-    ques = ( QUESTION * )(dns_packet + sizeof(DNSheader) + (strlen((const char*)name) + 1)); 
+    ques = ( QUESTION * )(dns_packet + sizeof(DNSheader) + strlen((const char*)strDomain) + 1); 
 
     dns->id = (unsigned short) htons(getpid());
     dns->qr = 0; //This is a query
@@ -48,17 +47,18 @@ Packet * ForgeDNS(void *p_arg ){
     dns->q_count = htons(1); //we have only 1 question
     dns->ans_count = 0;
     dns->auth_count = 0;
-    dns->add_count = htons(1);
+    dns->add_count = 0;
 
     ChangetoDnsNameFormat(name , strDomain);
+    printf("%s - \n", name);
 
     ques->qtype = htons(255);
     ques->qclass = htons(1);
 
-	pac->packet_ptr = dns_packet;
-	pac->pkt_size = packetSize;
+    pac->packet_ptr = dns_packet;
+    pac->pkt_size = packetSize;
 
-	return pac;
+    return pac;
 }
 
 void ChangetoDnsNameFormat(unsigned char* name, unsigned char * strDomain){

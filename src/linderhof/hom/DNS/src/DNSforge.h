@@ -3,6 +3,8 @@
 
 #include "common/netio.h"
 
+unsigned char * strDomain;
+
 typedef struct {
     unsigned short id; // identification number
 
@@ -42,5 +44,7 @@ typedef struct {
 Packet * ForgeDNS(void *p_arg);
 
 void ChangetoDnsNameFormat(unsigned char* name, unsigned char* strDomain);
+
+uint32_t rand_cmwc(void);
 
 #endif
